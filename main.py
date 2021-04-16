@@ -96,13 +96,13 @@ class Game:
         self.selectBlock = 2
 
         # LOADING WORLD
-        f = open("save.mov", "r")
         readTEMP = []
 
-        for line in f:
-            readTEMP.append(int(line.split(",")[0]))
-            readTEMP.append(int(line.split(",")[1]))
-            readTEMP.append(int(line.split(",")[2].split("\n")[0]))
+        with open("save.mov", "r") as f:
+            for line in f:
+                readTEMP.append(int(line.split(",")[0]))
+                readTEMP.append(int(line.split(",")[1]))
+                readTEMP.append(int(line.split(",")[2].split("\n")[0]))
 
         for i in range(3, int(len(readTEMP)/3)):
             self.blockFileRead.append(readTEMP[i * 3])
@@ -115,12 +115,14 @@ class Game:
         size = 1920, 1080
         self.screen = pygame.display.set_mode(size)
 
-        # COLORS
+        # TEXTURES
         self.dirt = pygame.image.load('textures/dirt.png').convert_alpha()
         self.log = pygame.image.load('textures/log.png').convert_alpha()
         self.grass = pygame.image.load('textures/grass.png').convert_alpha()
         self.stone = pygame.image.load('textures/stone.png').convert_alpha()
         self.leaves = pygame.image.load('textures/leaves_oak.png').convert_alpha()
+        self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves}
+
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
         self.chest = 150, 100, 50
@@ -158,12 +160,10 @@ class Game:
             swiatFileToWrite = []
 
             for i in range(int(len(self.blockFileRead) / 3)):
-                swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}")
+                swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}\n")
 
-            swiatFileToWrite = [line + "\n" for line in swiatFileToWrite]
-            f = open("save.mov", "w")
-
-            f.writelines(swiatFileToWrite)
+            with open("save.mov", "w") as f:
+                f.writelines(swiatFileToWrite)
 
             self.saveImageDisplay = 0
 
@@ -174,19 +174,11 @@ class Game:
                     self.blockRemoving(self.blockFileRead[3 * i + 2], i)
                     self.blockSetter(self.blockFileRead[3 * i + 2], i)
 
-                    if self.blockFileRead[3 * i + 2] == 0:
-                        pass
-                    elif self.blockFileRead[3 * i + 2] == 1:
-                        self.screen.blit(self.stone, (int(self.blockFileRead[3 * i]) + self.xPosCam, int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
-                    elif self.blockFileRead[3 * i + 2] == 2:
-                        self.screen.blit(self.dirt, (int(self.blockFileRead[3 * i]) + self.xPosCam, int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
-                    elif self.blockFileRead[3 * i + 2] == 3:
-                        self.screen.blit(self.grass, (int(self.blockFileRead[3 * i]) + self.xPosCam, int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
-                    elif self.blockFileRead[3 * i + 2] == 4:
-                        self.screen.blit(self.log, (int(self.blockFileRead[3 * i]) + self.xPosCam, int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
-                    elif self.blockFileRead[3 * i + 2] == 5:
-                        self.screen.blit(self.leaves, (int(self.blockFileRead[3 * i]) + self.xPosCam, int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
-                    else:
+                    try:
+                        self.screen.blit(self.typeBlockTexture[self.blockFileRead[3 * i + 2]], (
+                        int(self.blockFileRead[3 * i]) + self.xPosCam,
+                        int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
+                    except Exception:
                         pass
 
         except Exception:
