@@ -74,7 +74,7 @@ class Game:
     def __init__(self):
 
         # CONFIG
-        self.saveTimeWorld = 1   # Time in minutes how many times the world should record. Set to 0 to disable.
+        self.saveTimeWorld = 3   # Time in minutes how many times the world should record. Set to 0 to disable.
 
         #
         pygame.init()

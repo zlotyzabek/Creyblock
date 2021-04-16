@@ -182,27 +182,62 @@ elif trybGeneratora == "def":
     saveTemp = []
 
     for szerokosc in range(dlugosc):
+        treeSize = random.randint(1, 4)
         for wysokosc in range(99):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
                 try:
-                    swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
-                                                                ::-1].replace("0,", "4,", 1)[::-1]
-                    swiatFileToWrite[szerokosc][wysokosc - 2] = str(swiatFileToWrite[szerokosc][wysokosc - 2])[
-                                                                ::-1].replace("0,", "4,", 1)[::-1]
-                    swiatFileToWrite[szerokosc - 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 2])[
+                    if treeSize == 1:
+                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
+                                                                    ::-1].replace("0,", "4,", 1)[::-1]
+                        swiatFileToWrite[szerokosc][wysokosc - 2] = str(swiatFileToWrite[szerokosc][wysokosc - 2])[
+                                                                    ::-1].replace("0,", "4,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 2])[
+                                                                        ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc + 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 2])[
+                                                                        ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 1])[
+                                                                        ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc + 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 1])[
+                                                                        ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc][wysokosc - 3] = str(swiatFileToWrite[szerokosc][wysokosc - 3])[
                                                                     ::-1].replace("0,", "5,", 1)[::-1]
-                    swiatFileToWrite[szerokosc + 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 2])[
+                        break
+
+                    if treeSize == 2:
+                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
+                                                                    ::-1].replace("0,", "4,", 1)[::-1]
+                        swiatFileToWrite[szerokosc][wysokosc - 2] = str(swiatFileToWrite[szerokosc][wysokosc - 2])[
+                                                                    ::-1].replace("0,", "4,", 1)[::-1]
+                        swiatFileToWrite[szerokosc][wysokosc - 3] = str(swiatFileToWrite[szerokosc][wysokosc - 3])[
+                                                                    ::-1].replace("0,", "4,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - 1][wysokosc - 3] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 3])[
                                                                     ::-1].replace("0,", "5,", 1)[::-1]
-                    swiatFileToWrite[szerokosc - 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 1])[
+                        swiatFileToWrite[szerokosc + 1][wysokosc - 3] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 3])[
                                                                     ::-1].replace("0,", "5,", 1)[::-1]
-                    swiatFileToWrite[szerokosc + 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 1])[
+                        swiatFileToWrite[szerokosc - 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 2])[
                                                                     ::-1].replace("0,", "5,", 1)[::-1]
-                    swiatFileToWrite[szerokosc][wysokosc - 3] = str(swiatFileToWrite[szerokosc][wysokosc - 3])[
-                                                                ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc + 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 2])[
+                                                                    ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 1])[
+                                                                    ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc + 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 1])[
+                                                                    ::-1].replace("0,", "5,", 1)[::-1]
+                        swiatFileToWrite[szerokosc][wysokosc - 4] = str(swiatFileToWrite[szerokosc][wysokosc - 4])[
+                                                                    ::-1].replace("0,", "5,", 1)[::-1]
+                        break
+
+                    if treeSize == 3:
+                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
+                                                                    ::-1].replace("0,", "5,", 1)[::-1]
+                        break
+
+                    if treeSize == 4:
+                        swiatFileToWrite[szerokosc][wysokosc] = str(swiatFileToWrite[szerokosc][wysokosc])[
+                                                                    ::-1].replace("4,", "5,", 1)[::-1]
+                        break
 
                 except Exception:
                     pass
-                break
 
     for szerokosc in range(dlugosc):
         for wysokosc in range(99):
