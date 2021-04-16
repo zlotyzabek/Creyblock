@@ -96,13 +96,13 @@ class Game:
         self.selectBlock = 2
 
         # LOADING WORLD
-        f = open("save.mov", "r")
         readTEMP = []
 
-        for line in f:
-            readTEMP.append(int(line.split(",")[0]))
-            readTEMP.append(int(line.split(",")[1]))
-            readTEMP.append(int(line.split(",")[2].split("\n")[0]))
+        with open("save.mov", "r") as f:
+            for line in f:
+                readTEMP.append(int(line.split(",")[0]))
+                readTEMP.append(int(line.split(",")[1]))
+                readTEMP.append(int(line.split(",")[2].split("\n")[0]))
 
         for i in range(3, int(len(readTEMP)/3)):
             self.blockFileRead.append(readTEMP[i * 3])
@@ -161,9 +161,9 @@ class Game:
                 swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}")
 
             swiatFileToWrite = [line + "\n" for line in swiatFileToWrite]
-            f = open("save.mov", "w")
 
-            f.writelines(swiatFileToWrite)
+            with open("save.mov", "w") as f:
+                f.writelines(swiatFileToWrite)
 
             self.saveImageDisplay = 0
 
@@ -173,7 +173,6 @@ class Game:
                 if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
                     self.blockRemoving(self.blockFileRead[3 * i + 2], i)
                     self.blockSetter(self.blockFileRead[3 * i + 2], i)
-
                     if self.blockFileRead[3 * i + 2] == 0:
                         pass
                     elif self.blockFileRead[3 * i + 2] == 1:
