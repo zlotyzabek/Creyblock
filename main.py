@@ -93,6 +93,8 @@ class Game:
 
         self.blockFileRead = []
 
+        self.selectBlock = 2
+
         # LOADING WORLD
         f = open("save.mov", "r")
         readTEMP = []
@@ -167,7 +169,7 @@ class Game:
 
     def drawing(self):
         try:
-            for i in range((int((-1 * self.xPosCam + 100) * 2.0624888899999999999999)),  (int((-1 * self.xPosCam + 1820) * 2.0624888899999999999999))):
+            for i in range((int((-1 * self.xPosCam - 200) * 2.0624888899999999999999)),  (int((-1 * self.xPosCam + 2120) * 2.0624888899999999999999))):
                 if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
                     self.blockRemoving(self.blockFileRead[3 * i + 2], i)
                     self.blockSetter(self.blockFileRead[3 * i + 2], i)
@@ -216,7 +218,7 @@ class Game:
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[2]:
             if color == 0 and collide:
-                self.blockFileRead[blockIdNumber * 3 + 2] = 2
+                self.blockFileRead[blockIdNumber * 3 + 2] = self.selectBlock
 
     def controls(self):
         keys = pygame.key.get_pressed()
@@ -229,7 +231,7 @@ class Game:
         elif keys[pygame.K_d]:
             self.xPosCam += -3
             if keys[pygame.K_LSHIFT]:
-                self.xPosCam -= 1000
+                self.xPosCam -= 3
 
         if keys[pygame.K_w]:
             self.yPosCam += 3
@@ -240,6 +242,33 @@ class Game:
             self.yPosCam += -3
             if keys[pygame.K_LSHIFT]:
                 self.yPosCam -= 3
+
+        if keys[pygame.K_1]:
+            self.selectBlock = 1
+
+        elif keys[pygame.K_2]:
+            self.selectBlock = 2
+
+        elif keys[pygame.K_3]:
+            self.selectBlock = 3
+
+        elif keys[pygame.K_4]:
+            self.selectBlock = 4
+
+        elif keys[pygame.K_5]:
+            self.selectBlock = 5
+
+        elif keys[pygame.K_6]:
+            pass
+
+        elif keys[pygame.K_7]:
+            pass
+
+        elif keys[pygame.K_8]:
+            pass
+
+        elif keys[pygame.K_9]:
+            pass
 
 if __name__ == "__main__":
     Main()
