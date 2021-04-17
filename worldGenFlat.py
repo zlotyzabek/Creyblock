@@ -186,7 +186,7 @@ elif trybGeneratora == "def":
 
     saveTemp = []
 
-    """for szerokosc in range(dlugosc):
+    for szerokosc in range(dlugosc):
         for wysokosc in range(96):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
                 treeSize = random.randint(1, 5)
@@ -307,7 +307,7 @@ elif trybGeneratora == "def":
                         break
 
                 except Exception:
-                    pass"""
+                    pass
 
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
