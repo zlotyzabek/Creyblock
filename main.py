@@ -14,11 +14,11 @@ class Main:
         pygame.init()
 
         size = 1920, 1080
-        self.screen = pygame.display.set_mode(size)
+        self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
 
         # TEXTURES AND STRINGS PRINT
-        self.mainWallpeper = pygame.image.load('textures/mainWallpeper.png').convert_alpha()
-        self.mainButton = pygame.image.load('textures/mainButtonTexture.png').convert_alpha()
+        self.mainWallpeper = pygame.image.load('assest/textures/mainWallpeper.png').convert_alpha()
+        self.mainButton = pygame.image.load('assest/textures/mainButtonTexture.png').convert_alpha()
         self.mainFontB = pygame.font.SysFont("Showcard Gothic", 202)
         self.mainFont = pygame.font.SysFont("Showcard Gothic", 200)
 
@@ -35,7 +35,7 @@ class Main:
 
             self.drawing()
 
-            pygame.display.flip()
+            pygame.display.update()
 
             self.buttonClick()
 
@@ -98,7 +98,7 @@ class Game:
         # LOADING WORLD
         readTEMP = []
 
-        with open("save.mov", "r") as f:
+        with open("assest/saves/save.mov", "r") as f:
             for line in f:
                 readTEMP.append(int(line.split(",")[0]))
                 readTEMP.append(int(line.split(",")[1]))
@@ -116,16 +116,20 @@ class Game:
         self.screen = pygame.display.set_mode(size)
 
         # TEXTURES
-        self.dirt = pygame.image.load('textures/dirt.png').convert_alpha()
-        self.log = pygame.image.load('textures/log.png').convert_alpha()
-        self.grass = pygame.image.load('textures/grass.png').convert_alpha()
-        self.stone = pygame.image.load('textures/stone.png').convert_alpha()
-        self.leaves = pygame.image.load('textures/leaves_oak.png').convert_alpha()
-        self.planks = pygame.image.load('textures/planks.png').convert_alpha()
-        self.diamond = pygame.image.load('textures/diamond_ore.png').convert_alpha()
-        self.iron = pygame.image.load('textures/iron_ore.png').convert_alpha()
-        self.coal = pygame.image.load('textures/coal_ore.png').convert_alpha()
+        self.dirt = pygame.image.load('assest/textures/dirt.png').convert_alpha()
+        self.log = pygame.image.load('assest/textures/log.png').convert_alpha()
+        self.grass = pygame.image.load('assest/textures/grass.png').convert_alpha()
+        self.stone = pygame.image.load('assest/textures/stone.png').convert_alpha()
+        self.leaves = pygame.image.load('assest/textures/leaves_oak.png').convert_alpha()
+        self.planks = pygame.image.load('assest/textures/planks.png').convert_alpha()
+        self.diamond = pygame.image.load('assest/textures/diamond_ore.png').convert_alpha()
+        self.iron = pygame.image.load('assest/textures/iron_ore.png').convert_alpha()
+        self.coal = pygame.image.load('assest/textures/coal_ore.png').convert_alpha()
+
         self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves, 6: self.planks, 7: self.coal, 8: self.iron, 9: self.diamond}
+
+        for i in range(1, len(self.typeBlockTexture)):
+            self.typeBlockTexture[i] = pygame.transform.scale(self.typeBlockTexture[i], (48, 48))
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -148,7 +152,7 @@ class Game:
 
             self.screen.fill(self.skyColor)
             self.drawing()
-            pygame.display.flip()
+            pygame.display.update()
 
     def ticking(self):
         self.controls()
@@ -166,7 +170,7 @@ class Game:
             for i in range(int(len(self.blockFileRead) / 3)):
                 swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}\n")
 
-            with open("save.mov", "w") as f:
+            with open("assest/saves/save.mov", "w") as f:
                 f.writelines(swiatFileToWrite)
 
             self.saveImageDisplay = 0
