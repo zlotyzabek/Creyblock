@@ -121,7 +121,11 @@ class Game:
         self.grass = pygame.image.load('textures/grass.png').convert_alpha()
         self.stone = pygame.image.load('textures/stone.png').convert_alpha()
         self.leaves = pygame.image.load('textures/leaves_oak.png').convert_alpha()
-        self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves}
+        self.planks = pygame.image.load('textures/planks.png').convert_alpha()
+        self.diamond = pygame.image.load('textures/diamond_ore.png').convert_alpha()
+        self.iron = pygame.image.load('textures/iron_ore.png').convert_alpha()
+        self.coal = pygame.image.load('textures/coal_ore.png').convert_alpha()
+        self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves, 6: self.planks, 7: self.coal, 8: self.iron, 9: self.diamond}
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -215,52 +219,52 @@ class Game:
     def controls(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_a]:
+        if keys[97]:
             self.xPosCam += 3
             if keys[pygame.K_LSHIFT]:
                 self.xPosCam += 3
 
-        elif keys[pygame.K_d]:
+        elif keys[100]:
             self.xPosCam += -3
             if keys[pygame.K_LSHIFT]:
                 self.xPosCam -= 3
 
-        if keys[pygame.K_w]:
+        if keys[119]:
             self.yPosCam += 3
             if keys[pygame.K_LSHIFT]:
                 self.yPosCam += 3
 
-        elif keys[pygame.K_s]:
+        elif keys[115]:
             self.yPosCam += -3
             if keys[pygame.K_LSHIFT]:
                 self.yPosCam -= 3
 
-        if keys[pygame.K_1]:
+        if keys[49]:
             self.selectBlock = 1
 
-        elif keys[pygame.K_2]:
+        elif keys[50]:
             self.selectBlock = 2
 
-        elif keys[pygame.K_3]:
+        elif keys[51]:
             self.selectBlock = 3
 
-        elif keys[pygame.K_4]:
+        elif keys[52]:
             self.selectBlock = 4
 
-        elif keys[pygame.K_5]:
+        elif keys[53]:
             self.selectBlock = 5
 
-        elif keys[pygame.K_6]:
-            pass
+        elif keys[54]:
+            self.selectBlock = 6
 
-        elif keys[pygame.K_7]:
-            pass
+        elif keys[55]:
+            self.selectBlock = 7
 
-        elif keys[pygame.K_8]:
-            pass
+        elif keys[56]:
+            self.selectBlock = 8
 
-        elif keys[pygame.K_9]:
-            pass
+        elif keys[57]:
+            self.selectBlock = 9
 
 if __name__ == "__main__":
     Main()
