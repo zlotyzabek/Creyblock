@@ -9,7 +9,6 @@ def ifRandomRSet(n, r1, r2):
     else:
         return None
 
-
 def GenerateTerainGrassland(szerokosc=2048):
     for i in range(szerokosc):
 
@@ -29,19 +28,20 @@ def GenerateTerainGrassland(szerokosc=2048):
         if r != None:
             t.append(r)
 
-        r = ifRandomRSet(4, 3, 6)
+        r = ifRandomRSet(4, 3, 4)
         if r != None:
             t.append(r)
-
-
-        r = ifRandomRSet(5, 4, 5)
-        if r != None:
-            t.append(r)
-            t.append(4)
 
     return t
 
+def treeSpawning(szerokosc):
+    treeSpawningList = [0]
+    for i in range(szerokosc):
+        treeSpawningList.append(random.randint(1,9))
+        if treeSpawningList[i] == 1:
+            treeSpawningList.append(0)
 
+    return treeSpawningList
 
 print("Generator Świata")
 print("Wybierz tryb generowania świata flat/def")
@@ -51,16 +51,16 @@ if trybGeneratora == "flat":
     dlugosc = int(input("->"))
 
     def swiat0(sz):
-        for i in range(35 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{792 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(35 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{696 - i},0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 69 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     swiatFileToWrite = []
 
@@ -71,10 +71,10 @@ if trybGeneratora == "flat":
     saveTemp = []
 
     for szerokosc in range(dlugosc):
-        for wysokosc in range(99):
+        for wysokosc in range(96):
             saveTemp.append(swiatFileToWrite[szerokosc][wysokosc])
 
-    f = open("save.mov", "w")
+    f = open("assest/saves/save.mov", "w")
 
     f.writelines(saveTemp)
 
@@ -86,94 +86,99 @@ elif trybGeneratora == "def":
 
     swiatFileToWrite = []
 
+    treeSpawningList = treeSpawning(dlugosc)
+
     def swiat0(sz):
-        for i in range(35 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{792 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(34 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{696 - i},0\n")
+        if treeSpawningList[sz] == 1:
+            swiatFileToWrite[sz].append(f"{sz * 96},696,4\n")
+        else:
+            swiatFileToWrite[sz].append(f"{sz * 96},696,0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 69 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat1(sz):
-        for i in range(34 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{744 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},792,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(33 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{600 - i},0\n")
+        if treeSpawningList[sz] == 1:
+            swiatFileToWrite[sz].append(f"{sz * 96},600,4\n")
+        else:
+            swiatFileToWrite[sz].append(f"{sz * 96},600,0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},696,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 57 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat2(sz):
-        for i in range(33 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{696 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},744,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},792,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},{1032},1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},{1080},1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(32 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{504 - i},0\n")
+        if treeSpawningList[sz] == 1:
+            swiatFileToWrite[sz].append(f"{sz * 96},504,4\n")
+        else:
+            swiatFileToWrite[sz].append(f"{sz * 96},504,0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},600,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},696,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 57 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat3(sz):
-        for i in range(32 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{648 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},696,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},744,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},792,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(31 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{408 - i},0\n")
+        if treeSpawningList[sz] == 1:
+            swiatFileToWrite[sz].append(f"{sz * 96},408,4\n")
+        else:
+            swiatFileToWrite[sz].append(f"{sz * 96},408,0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},504,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},600,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},696,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 57 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat4(sz):
-        for i in range(31 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{600 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},648,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},696,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},744,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},792,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
+        for i in range(30 * 96, -96, -96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{312 - i},0\n")
+        if treeSpawningList[sz] == 1:
+            swiatFileToWrite[sz].append(f"{sz * 96},312,4\n")
+        else:
+            swiatFileToWrite[sz].append(f"{sz * 96},312,0\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},408,3\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},504,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},600,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},696,2\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},792,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},888,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},984,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
+        swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
+        for i in range(0, 57 * 96, 96):
+            swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
-    def swiat5(sz):
-        for i in range(30 * 48, -48, -48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{552 - i},0\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},600,4\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},648,3\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},696,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},744,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},792,2\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},840,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},888,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},936,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},984,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1032,1\n")
-        swiatFileToWrite[sz].append(f"{sz * 48},1080,1\n")
-        for i in range(0, 57 * 48, 48):
-            swiatFileToWrite[sz].append(f"{sz * 48},{1080 + i},1\n")
-
-    swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4, 5: swiat5}
+    swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4}
 
     for sz in range(dlugosc):
         swiatFileToWrite.append([])
@@ -181,8 +186,8 @@ elif trybGeneratora == "def":
 
     saveTemp = []
 
-    for szerokosc in range(dlugosc):
-        for wysokosc in range(99):
+    """for szerokosc in range(dlugosc):
+        for wysokosc in range(96):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
                 treeSize = random.randint(1, 5)
                 diamondDiscrybution = random.randint(1, 10)
@@ -302,12 +307,12 @@ elif trybGeneratora == "def":
                         break
 
                 except Exception:
-                    pass
+                    pass"""
 
     for szerokosc in range(dlugosc):
-        for wysokosc in range(99):
+        for wysokosc in range(96):
             saveTemp.append(swiatFileToWrite[szerokosc][wysokosc])
 
-    f = open("save.mov", "w")
+    f = open("assest/saves/save.mov", "w")
 
     f.writelines(saveTemp)

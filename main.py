@@ -52,10 +52,6 @@ class Main:
         self.screen.blit(self.mainButton, (560, 650))
         self.screen.blit(self.mainButton, (560, 800))
 
-        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.rect.Rect(560, 650, 800, 100))
-
-        #pygame.draw.rect(self.screen, (0, 0, 0), pygame.rect.Rect(560, 800, 800, 100))
-
     def buttonClick(self):
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
 
@@ -128,8 +124,8 @@ class Game:
 
         self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves, 6: self.planks, 7: self.coal, 8: self.iron, 9: self.diamond}
 
-        for i in range(1, len(self.typeBlockTexture)):
-            self.typeBlockTexture[i] = pygame.transform.scale(self.typeBlockTexture[i], (48, 48))
+        for i in range(1, len(self.typeBlockTexture) + 1):
+            self.typeBlockTexture[i] = pygame.transform.scale(self.typeBlockTexture[i], (96, 96))
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -177,7 +173,7 @@ class Game:
 
     def drawing(self):
         try:
-            for i in range((int((-1 * self.xPosCam - 200) * 2.0624888899999999999999)),  (int((-1 * self.xPosCam + 2120) * 2.0624888899999999999999))):
+            for i in range((int((-1 * self.xPosCam - 200))),  (int((-1 * self.xPosCam + 2120)))):
                 if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
                     self.blockRemoving(self.blockFileRead[3 * i + 2], i)
                     self.blockSetter(self.blockFileRead[3 * i + 2], i)
@@ -205,7 +201,7 @@ class Game:
             pygame.draw.rect(self.screen, self.chest, savingGui)
 
     def blockRemoving(self, color, blockIdNumber):
-        block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 48, 48))
+        block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[0]:
@@ -213,7 +209,7 @@ class Game:
                 self.blockFileRead[blockIdNumber * 3 + 2] = 0
 
     def blockSetter(self, color, blockIdNumber):
-        block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 48, 48))
+        block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[2]:
@@ -231,7 +227,7 @@ class Game:
         elif keys[100]:
             self.xPosCam += -3
             if keys[pygame.K_LSHIFT]:
-                self.xPosCam -= 3
+                self.xPosCam -= 30
 
         if keys[119]:
             self.yPosCam += 3
