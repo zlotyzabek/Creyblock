@@ -182,9 +182,74 @@ elif trybGeneratora == "def":
     saveTemp = []
 
     for szerokosc in range(dlugosc):
-        treeSize = random.randint(1, 4)
         for wysokosc in range(99):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
+                treeSize = random.randint(1, 5)
+                diamondDiscrybution = random.randint(1, 10)
+                ironDiscrybution = random.randint(1, 4)
+                coalDiscrybution = random.randint(1, 3)
+                try:
+                    if diamondDiscrybution == 1:
+                        wysDiamentow = []
+                        wysDiamentow.append(random.randint(40, 50))
+                        wysDiamentow.append(random.randint(50, 100))
+                        swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]] = str(swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]])[
+                                                                ::-1].replace("1,", "9,", 1)[::-1]
+
+                    elif diamondDiscrybution == 2:
+                        wysDiamentow = []
+                        wysDiamentow.append(random.randint(40, 50))
+                        wysDiamentow.append(random.randint(10, 300))
+                        swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]] = str(swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]])[
+                                                                ::-1].replace("1,", "9,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - wysDiamentow[1]+1][wysokosc + wysDiamentow[0]] = str(
+                            swiatFileToWrite[szerokosc - wysDiamentow[1]+1][wysokosc + wysDiamentow[0]])[
+                                                                ::-1].replace("1,","9,",1)[::-1]
+
+                except Exception:
+                    pass
+
+                try:
+                    if ironDiscrybution == 1:
+                        wysIron = []
+                        wysIron.append(random.randint(30, 50))
+                        wysIron.append(random.randint(50, 100))
+                        swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]] = str(swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]])[
+                                                                ::-1].replace("1,", "8,", 1)[::-1]
+
+                    elif ironDiscrybution == 2:
+                        wysIron = []
+                        wysIron.append(random.randint(30, 50))
+                        wysIron.append(random.randint(50, 100))
+                        swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]] = str(swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]])[
+                                                                ::-1].replace("1,", "8,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - wysIron[1]+1][wysokosc + wysIron[0]] = str(
+                            swiatFileToWrite[szerokosc - wysIron[1]+1][wysokosc + wysIron[0]])[
+                                                                ::-1].replace("1,","8,",1)[::-1]
+
+                except Exception:
+                    pass
+
+                try:
+                    if coalDiscrybution == 1:
+                        wysCoal = []
+                        wysCoal.append(random.randint(10, 50))
+                        wysCoal.append(random.randint(50, 1000))
+                        swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]] = str(swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]])[
+                                                                ::-1].replace("1,", "7,", 1)[::-1]
+
+                    elif coalDiscrybution == 2:
+                        wysCoal = []
+                        wysCoal.append(random.randint(21, 50))
+                        wysCoal.append(random.randint(50, 1000))
+                        swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]] = str(swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]])[
+                                                                ::-1].replace("1,", "7,", 1)[::-1]
+                        swiatFileToWrite[szerokosc - wysCoal[1]+1][wysokosc + wysCoal[0]] = str(
+                            swiatFileToWrite[szerokosc - wysCoal[1]+1][wysokosc + wysCoal[0]])[
+                                                                ::-1].replace("1,","7,",1)[::-1]
+
+                except Exception:
+                    pass
                 try:
                     if treeSize == 1:
                         swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
