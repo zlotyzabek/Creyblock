@@ -13,8 +13,6 @@ class Main:
 
     def __init__(self):
 
-        print(pyautogui.size()[0])
-
         pygame.init()
 
         self.screenReal = pygame.display.set_mode((pyautogui.size()[0], pyautogui.size()[1]), HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -86,6 +84,8 @@ class Game:
         #
         pygame.init()
 
+        self.programRun = 1
+
         self.block = []
 
         self.clock = pygame.time.Clock()
@@ -93,8 +93,6 @@ class Game:
 
         self.saveToTime = 0
         self.saveImageDisplay = 0
-
-        self.xPosCam, self.yPosCam = 0, 0
 
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
 
@@ -122,8 +120,9 @@ class Game:
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
         self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
-        pic = pygame.surface.Surface((50, 50))
-        pic.fill((255, 100, 200))
+
+        # CORDYNATS
+        self.xPosCam, self.yPosCam = int(len(self.blockFileRead) * -0.16), 0
 
         # TEXTURES
         self.dirt = pygame.image.load('assest/textures/dirt.png').convert_alpha()
@@ -153,19 +152,19 @@ class Game:
         self.always()
 
     def always(self):
-        while True:
+        while self.programRun == 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.savingWorld()
-                    sys.exit()
+                    self.programRun = 0
 
                 elif event.type == VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
             self.delta += self.clock.tick()/1000.0
-            while self.delta > 1 / 120.0:
+            while self.delta > 1 / 480.0:
                 self.ticking()
-                self.delta -= 1 / 120.0
+                self.delta -= 1 / 480.0
 
             self.screen.fill(self.skyColor)
             self.drawing()
@@ -246,24 +245,24 @@ class Game:
         keys = pygame.key.get_pressed()
 
         if keys[97]:
-            self.xPosCam += 3
+            self.xPosCam += 1
             if keys[pygame.K_LSHIFT]:
-                self.xPosCam += 3
+                self.xPosCam += 1
 
         elif keys[100]:
-            self.xPosCam += -3
+            self.xPosCam += -1
             if keys[pygame.K_LSHIFT]:
-                self.xPosCam -= 3
+                self.xPosCam -= 1
 
         if keys[119]:
-            self.yPosCam += 3
+            self.yPosCam += 1
             if keys[pygame.K_LSHIFT]:
-                self.yPosCam += 3
+                self.yPosCam += 1
 
         elif keys[115]:
-            self.yPosCam += -3
+            self.yPosCam += -1
             if keys[pygame.K_LSHIFT]:
-                self.yPosCam -= 3
+                self.yPosCam -= 1
 
         if keys[49]:
             self.selectBlock = 1

@@ -89,7 +89,7 @@ elif trybGeneratora == "def":
     treeSpawningList = treeSpawning(dlugosc)
 
     def swiat0(sz):
-        for i in range(34 * 96, -96, -96):
+        for i in range(34 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{696 - i},0\n")
         if treeSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},696,4\n")
@@ -101,11 +101,11 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,2\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 69 * 96, 96):
+        for i in range(0, 55 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat1(sz):
-        for i in range(33 * 96, -96, -96):
+        for i in range(33 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{600 - i},0\n")
         if treeSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},600,4\n")
@@ -118,11 +118,11 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 57 * 96, 96):
+        for i in range(0, 55 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat2(sz):
-        for i in range(32 * 96, -96, -96):
+        for i in range(32 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{504 - i},0\n")
         if treeSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},504,4\n")
@@ -136,11 +136,11 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 57 * 96, 96):
+        for i in range(0, 55 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat3(sz):
-        for i in range(31 * 96, -96, -96):
+        for i in range(31 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{408 - i},0\n")
         if treeSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},408,4\n")
@@ -155,11 +155,11 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 57 * 96, 96):
+        for i in range(0, 55 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat4(sz):
-        for i in range(30 * 96, -96, -96):
+        for i in range(30 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{312 - i},0\n")
         if treeSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},312,4\n")
@@ -175,7 +175,7 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 57 * 96, 96):
+        for i in range(0, 55 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4}
@@ -189,7 +189,7 @@ elif trybGeneratora == "def":
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
-                treeSize = random.randint(1, 5)
+                treeSize = random.randint(1, 4)
                 diamondDiscrybution = random.randint(1, 10)
                 ironDiscrybution = random.randint(1, 4)
                 coalDiscrybution = random.randint(1, 3)
@@ -255,59 +255,54 @@ elif trybGeneratora == "def":
 
                 except Exception:
                     pass
-                try:
-                    if treeSize == 1:
-                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
-                                                                    ::-1].replace("0,", "4,", 1)[::-1]
-                        swiatFileToWrite[szerokosc][wysokosc - 2] = str(swiatFileToWrite[szerokosc][wysokosc - 2])[
-                                                                    ::-1].replace("0,", "4,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 2])[
-                                                                        ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc + 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 2])[
-                                                                        ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 1])[
-                                                                        ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc + 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 1])[
-                                                                        ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc][wysokosc - 3] = str(swiatFileToWrite[szerokosc][wysokosc - 3])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        break
 
-                    if treeSize == 2:
-                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
-                                                                    ::-1].replace("0,", "4,", 1)[::-1]
-                        swiatFileToWrite[szerokosc][wysokosc - 2] = str(swiatFileToWrite[szerokosc][wysokosc - 2])[
-                                                                    ::-1].replace("0,", "4,", 1)[::-1]
-                        swiatFileToWrite[szerokosc][wysokosc - 3] = str(swiatFileToWrite[szerokosc][wysokosc - 3])[
-                                                                    ::-1].replace("0,", "4,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - 1][wysokosc - 3] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 3])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc + 1][wysokosc - 3] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 3])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 2])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc + 1][wysokosc - 2] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 2])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc - 1][wysokosc - 1])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc + 1][wysokosc - 1] = str(swiatFileToWrite[szerokosc + 1][wysokosc - 1])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        swiatFileToWrite[szerokosc][wysokosc - 4] = str(swiatFileToWrite[szerokosc][wysokosc - 4])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        break
+                if treeSize == 1:
+                    with open("assest/structures/trees/size1.txt", "r") as f:
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[1] = tempLineSplit[1][1:]
+                            tempLineSplit[2] = tempLineSplit[2][1:]
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
+                            print(tempLineSplit)
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
 
-                    if treeSize == 3:
-                        swiatFileToWrite[szerokosc][wysokosc - 1] = str(swiatFileToWrite[szerokosc][wysokosc - 1])[
-                                                                    ::-1].replace("0,", "5,", 1)[::-1]
-                        break
+                if treeSize == 2:
+                    with open("assest/structures/trees/size2.txt", "r") as f:
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[1] = tempLineSplit[1][1:]
+                            tempLineSplit[2] = tempLineSplit[2][1:]
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
+                            print(tempLineSplit)
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
 
-                    if treeSize == 4:
-                        swiatFileToWrite[szerokosc][wysokosc] = str(swiatFileToWrite[szerokosc][wysokosc])[
-                                                                    ::-1].replace("4,", "5,", 1)[::-1]
-                        break
+                if treeSize == 3:
+                    with open("assest/structures/trees/size3.txt", "r") as f:
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[1] = tempLineSplit[1][1:]
+                            tempLineSplit[2] = tempLineSplit[2][1:]
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
+                            print(tempLineSplit)
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
 
-                except Exception:
-                    pass
+                if treeSize == 4:
+                    with open("assest/structures/trees/size4.txt", "r") as f:
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[1] = tempLineSplit[1][1:]
+                            tempLineSplit[2] = tempLineSplit[2][1:]
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
+                            print(tempLineSplit)
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
 
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
