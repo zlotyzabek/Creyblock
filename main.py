@@ -233,7 +233,7 @@ class Game:
         elif keys[100]:
             self.xPosCam += -3
             if keys[pygame.K_LSHIFT]:
-                self.xPosCam -= 30
+                self.xPosCam -= 3
 
         if keys[119]:
             self.yPosCam += 3
