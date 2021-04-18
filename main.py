@@ -3,6 +3,7 @@ import threading
 
 import pygame
 from pygame.locals import *
+import pyautogui
 
 # Creyblock
 
@@ -12,9 +13,11 @@ class Main:
 
     def __init__(self):
 
+        print(pyautogui.size()[0])
+
         pygame.init()
 
-        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screenReal = pygame.display.set_mode((pyautogui.size()[0], pyautogui.size()[1]), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
 
         pic = pygame.surface.Surface((50, 50))
@@ -116,7 +119,7 @@ class Game:
         del readTEMP
 
         # SCREEN
-        self.sizeScreen = 1920, 1080
+        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
         self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pic = pygame.surface.Surface((50, 50))
