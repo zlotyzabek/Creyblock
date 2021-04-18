@@ -121,11 +121,15 @@ class Game:
         self.diamond = pygame.image.load('assest/textures/diamond_ore.png').convert_alpha()
         self.iron = pygame.image.load('assest/textures/iron_ore.png').convert_alpha()
         self.coal = pygame.image.load('assest/textures/coal_ore.png').convert_alpha()
-
         self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves, 6: self.planks, 7: self.coal, 8: self.iron, 9: self.diamond}
-
         for i in range(1, len(self.typeBlockTexture) + 1):
             self.typeBlockTexture[i] = pygame.transform.scale(self.typeBlockTexture[i], (96, 96))
+
+        self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha()
+        self.head = pygame.transform.scale(self.head, (64, 64))
+
+        self.legs = pygame.image.load('assest/textures/player/legs.png').convert_alpha()
+        self.legs = pygame.transform.scale(self.legs, (20, 32))
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -192,8 +196,10 @@ class Game:
 
 
     def drawBody(self):
-        body = pygame.Rect(936, 516, 48, 48)
-        pygame.draw.rect(self.screen, self.body, body)
+        self.screen.blit(self.head, (928, 492))
+
+        self.screen.blit(self.legs, (930, 556))
+        self.screen.blit(self.legs, (970, 556))
 
     def drawGui(self):
         if self.saveImageDisplay == 1:
