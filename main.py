@@ -2,6 +2,7 @@ import sys
 import threading
 
 import pygame
+from pygame.locals import *
 
 # Creyblock
 
@@ -109,7 +110,10 @@ class Game:
 
         # SCREEN
         size = 1920, 1080
-        self.screen = pygame.display.set_mode(size)
+        self.screenReal = pygame.display.set_mode(size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screen = self.screenReal.copy()
+        pic = pygame.surface.Surface((50, 50))
+        pic.fill((255, 100, 200))
 
         # TEXTURES
         self.dirt = pygame.image.load('assest/textures/dirt.png').convert_alpha()
@@ -145,6 +149,9 @@ class Game:
                     self.savingWorld()
                     sys.exit()
 
+                elif event.type == VIDEORESIZE:
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+
             self.delta += self.clock.tick()/1000.0
             while self.delta > 1 / 120.0:
                 self.ticking()
@@ -152,6 +159,7 @@ class Game:
 
             self.screen.fill(self.skyColor)
             self.drawing()
+            self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             pygame.display.update()
 
     def ticking(self):
