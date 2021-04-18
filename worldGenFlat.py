@@ -1,7 +1,7 @@
 import random
 
 t = [0]
-r = 0
+
 
 def ifRandomRSet(n, r1, r2):
     if t[-1] == n:
@@ -9,37 +9,42 @@ def ifRandomRSet(n, r1, r2):
     else:
         return None
 
-def GenerateTerainGrassland(szerokosc=2048):
+
+def GenerateTerainGrassland(szerokosc):
+    r = 0
     for i in range(szerokosc):
 
         r = ifRandomRSet(0, 0, 2)
-        if r != None:
+        if r is not None:
             t.append(r)
 
         r = ifRandomRSet(1, 0, 3)
-        if r != None:
+        if r is not None:
             t.append(r)
 
         r = ifRandomRSet(2, 1, 4)
-        if r != None:
+        if r is not None:
             t.append(r)
 
         r = ifRandomRSet(3, 2, 5)
-        if r != None:
+        if r is not None:
             t.append(r)
 
         r = ifRandomRSet(4, 3, 4)
-        if r != None:
+        if r is not None:
             t.append(r)
 
     return t
 
 def treeSpawning(szerokosc):
-    treeSpawningList = [0]
+    treeSpawningList = []
     for i in range(szerokosc):
-        treeSpawningList.append(random.randint(1,9))
-        if treeSpawningList[i] == 1:
+        randomNumber = random.randint(1,9)
+        if randomNumber == 1 and treeSpawningList[i-1] == 0:
+            treeSpawningList.append(randomNumber)
+        else:
             treeSpawningList.append(0)
+    print(treeSpawningList)
 
     return treeSpawningList
 
@@ -189,7 +194,7 @@ elif trybGeneratora == "def":
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
-                treeSize = random.randint(1, 4)
+                treeSize = random.randint(1, 5)
                 diamondDiscrybution = random.randint(1, 10)
                 ironDiscrybution = random.randint(1, 4)
                 coalDiscrybution = random.randint(1, 3)
@@ -256,53 +261,13 @@ elif trybGeneratora == "def":
                 except Exception:
                     pass
 
-                if treeSize == 1:
-                    with open("assest/structures/trees/size1.txt", "r") as f:
-                        for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[1] = tempLineSplit[1][1:]
-                            tempLineSplit[2] = tempLineSplit[2][1:]
-                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
-                            print(tempLineSplit)
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
-
-                if treeSize == 2:
-                    with open("assest/structures/trees/size2.txt", "r") as f:
-                        for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[1] = tempLineSplit[1][1:]
-                            tempLineSplit[2] = tempLineSplit[2][1:]
-                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
-                            print(tempLineSplit)
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
-
-                if treeSize == 3:
-                    with open("assest/structures/trees/size3.txt", "r") as f:
-                        for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[1] = tempLineSplit[1][1:]
-                            tempLineSplit[2] = tempLineSplit[2][1:]
-                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
-                            print(tempLineSplit)
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
-
-                if treeSize == 4:
-                    with open("assest/structures/trees/size4.txt", "r") as f:
-                        for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[1] = tempLineSplit[1][1:]
-                            tempLineSplit[2] = tempLineSplit[2][1:]
-                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0][1:]
-                            print(tempLineSplit)
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
+                with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
+                    for line in f:
+                        tempLineSplit = (line.split(","))
+                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                    ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
 
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
