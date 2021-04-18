@@ -14,8 +14,11 @@ class Main:
 
         pygame.init()
 
-        size = 1920, 1080
-        self.screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screen = self.screenReal.copy()
+
+        pic = pygame.surface.Surface((50, 50))
+        pic.fill((255, 100, 200))
 
         # TEXTURES AND STRINGS PRINT
         self.mainWallpeper = pygame.image.load('assest/textures/mainWallpeper.png').convert_alpha()
@@ -34,8 +37,12 @@ class Main:
                 if event.type == pygame.QUIT:
                     sys.exit()
 
+                elif event.type == VIDEORESIZE:
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+
             self.drawing()
 
+            self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             pygame.display.update()
 
             self.buttonClick()
@@ -109,8 +116,8 @@ class Game:
         del readTEMP
 
         # SCREEN
-        size = 1920, 1080
-        self.screenReal = pygame.display.set_mode(size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.sizeScreen = 1920, 1080
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pic = pygame.surface.Surface((50, 50))
         pic.fill((255, 100, 200))
@@ -187,6 +194,10 @@ class Game:
         try:
             for i in range((int((-1 * self.xPosCam - 200))),  (int((-1 * self.xPosCam + 2120)))):
                 if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
+
+                    self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
+                                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[1] * (
+                                                                 self.sizeScreen[1] / self.screenReal.get_rect().size[1])
                     self.blockRemoving(self.blockFileRead[3 * i + 2], i)
                     self.blockSetter(self.blockFileRead[3 * i + 2], i)
 
@@ -216,7 +227,6 @@ class Game:
 
     def blockRemoving(self, color, blockIdNumber):
         block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
-        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[0]:
             if color != 0 and collide:
@@ -224,7 +234,6 @@ class Game:
 
     def blockSetter(self, color, blockIdNumber):
         block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
-        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[2]:
             if color == 0 and collide:
