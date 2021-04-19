@@ -274,5 +274,7 @@ elif trybGeneratora == "def":
             saveTemp.append(swiatFileToWrite[szerokosc][wysokosc])
 
     f = open("assest/saves/save.mov", "w")
-
+    f.write("0,0\n")
+    f.write("0,0\n")
+    f.write("0,0\n")
     f.writelines(saveTemp)

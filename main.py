@@ -105,16 +105,12 @@ class Game:
 
         with open("assest/saves/save.mov", "r") as f:
             for line in f:
-                readTEMP.append(int(line.split(",")[0]))
-                readTEMP.append(int(line.split(",")[1]))
-                readTEMP.append(int(line.split(",")[2].split("\n")[0]))
+                readTEMP.append(line)
 
-        for i in range(3, int(len(readTEMP)/3)):
-            self.blockFileRead.append(readTEMP[i * 3])
-            self.blockFileRead.append(readTEMP[i * 3 + 1])
-            self.blockFileRead.append(readTEMP[i * 3 + 2])
-
-        del readTEMP
+        for i in range(3, int(len(readTEMP))):
+            self.blockFileRead.append(int(readTEMP[i].split(",")[0]))
+            self.blockFileRead.append(int(readTEMP[i].split(",")[1]))
+            self.blockFileRead.append(int(readTEMP[i].split(",")[2].split("\n")[0]))
 
         # SCREEN
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
@@ -148,6 +144,8 @@ class Game:
         self.errorTextures = 255, 0, 255
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
+
+        del readTEMP
 
         self.always()
 
@@ -188,6 +186,9 @@ class Game:
                 swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}\n")
 
             with open("assest/saves/save.mov", "w") as f:
+                f.write("0,0\n")
+                f.write("0,0\n")
+                f.write("0,0\n")
                 f.writelines(swiatFileToWrite)
 
             self.saveImageDisplay = 0
@@ -200,8 +201,7 @@ class Game:
                     self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
                                 self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[1] * (
                                                                  self.sizeScreen[1] / self.screenReal.get_rect().size[1])
-                    self.blockRemoving(self.blockFileRead[3 * i + 2], i)
-                    self.blockSetter(self.blockFileRead[3 * i + 2], i)
+                    self.blockRemovingAndSetter(i)
 
                     try:
                         self.screen.blit(self.typeBlockTexture[self.blockFileRead[3 * i + 2]], (
@@ -210,15 +210,13 @@ class Game:
                     except Exception:
                         pass
 
+            self.drawGui()
+            self.drawBody()
         except Exception:
             pass
-        self.drawGui()
-        self.drawBody()
-
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
-
         self.screen.blit(self.legs, (930, 556))
         self.screen.blit(self.legs, (970, 556))
 
@@ -227,18 +225,13 @@ class Game:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
 
-    def blockRemoving(self, color, blockIdNumber):
+    def blockRemovingAndSetter(self, blockIdNumber):
         block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[0]:
-            if color != 0 and collide:
+        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[3 * blockIdNumber + 2] != 0 and collide:
                 self.blockFileRead[blockIdNumber * 3 + 2] = 0
 
-    def blockSetter(self, color, blockIdNumber):
-        block = (pygame.Rect(int(self.blockFileRead[3 * blockIdNumber]) + self.xPosCam, int(self.blockFileRead[(3 * blockIdNumber) + 1]) + self.yPosCam, 96, 96))
-        collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[2]:
-            if color == 0 and collide:
+        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[3 * blockIdNumber + 2] == 0 and collide:
                 self.blockFileRead[blockIdNumber * 3 + 2] = self.selectBlock
 
     def controls(self):
