@@ -1,1 +1,1 @@
-print("Siema"[:-2])
+print("Siema"[::1])

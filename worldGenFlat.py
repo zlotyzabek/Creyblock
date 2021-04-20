@@ -39,18 +39,25 @@ def GenerateTerainGrassland(szerokosc):
 def worldStructureSpawning(szerokosc):
     worldStructureSpawningList = []
     for i in range(szerokosc):
-        randomNumber = random.randint(1,9)
+        randomNumber = random.randint(1,30)
         try:
-            if randomNumber == 1 and worldStructureSpawningList[i-1] == 0:
-                worldStructureSpawningList.append(randomNumber)
-            elif randomNumber == 2:
-                worldStructureSpawningList.append(randomNumber)
+            if randomNumber == 1 or randomNumber == 2 or randomNumber == 3 and worldStructureSpawningList[i-1] == 0:
+                worldStructureSpawningList.append(1)
+            elif randomNumber == 4:
+                worldStructureSpawningList.append(2)
+            elif randomNumber == 5:
+                worldStructureSpawningList.append(3)
+            elif randomNumber == 6:
+                worldStructureSpawningList.append(4)
             else:
                 worldStructureSpawningList.append(0)
         except Exception:
             worldStructureSpawningList.append(0)
 
     return worldStructureSpawningList
+
+def structurListEditor(list, szer, wys, rep, torep):
+   return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
 print("Generator Świata")
 print("Wybierz tryb generowania świata flat/def")
@@ -103,7 +110,11 @@ elif trybGeneratora == "def":
         if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},696,4\n")
         elif worldStructureSpawningList[sz] == 2:
-            swiatFileToWrite[sz].append(f"{sz * 96},696,7\n")
+            swiatFileToWrite[sz].append(f"{sz * 96},696,coalGen\n")
+        elif worldStructureSpawningList[sz] == 3:
+            swiatFileToWrite[sz].append(f"{sz * 96},696,ironGen\n")
+        elif worldStructureSpawningList[sz] == 4:
+            swiatFileToWrite[sz].append(f"{sz * 96},696,diamondGen\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},696,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},792,3\n")
@@ -121,7 +132,11 @@ elif trybGeneratora == "def":
         if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},600,4\n")
         elif worldStructureSpawningList[sz] == 2:
-            swiatFileToWrite[sz].append(f"{sz * 96},600,7\n")
+            swiatFileToWrite[sz].append(f"{sz * 96},600,coalGen\n")
+        elif worldStructureSpawningList[sz] == 3:
+            swiatFileToWrite[sz].append(f"{sz * 96},600,ironGen\n")
+        elif worldStructureSpawningList[sz] == 4:
+            swiatFileToWrite[sz].append(f"{sz * 96},600,diamondGen\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},600,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},696,3\n")
@@ -140,7 +155,11 @@ elif trybGeneratora == "def":
         if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},504,4\n")
         elif worldStructureSpawningList[sz] == 2:
-            swiatFileToWrite[sz].append(f"{sz * 96},504,7\n")
+            swiatFileToWrite[sz].append(f"{sz * 96},504,coalGen\n")
+        elif worldStructureSpawningList[sz] == 3:
+            swiatFileToWrite[sz].append(f"{sz * 96},504,ironGen\n")
+        elif worldStructureSpawningList[sz] == 4:
+            swiatFileToWrite[sz].append(f"{sz * 96},504,diamondGen\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},504,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},600,3\n")
@@ -160,7 +179,11 @@ elif trybGeneratora == "def":
         if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},408,4\n")
         elif worldStructureSpawningList[sz] == 2:
-            swiatFileToWrite[sz].append(f"{sz * 96},408,7\n")
+            swiatFileToWrite[sz].append(f"{sz * 96},408,coalGen\n")
+        elif worldStructureSpawningList[sz] == 3:
+            swiatFileToWrite[sz].append(f"{sz * 96},408,ironGen\n")
+        elif worldStructureSpawningList[sz] == 4:
+            swiatFileToWrite[sz].append(f"{sz * 96},408,diamondGen\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},408,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},504,3\n")
@@ -181,7 +204,11 @@ elif trybGeneratora == "def":
         if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},312,4\n")
         elif worldStructureSpawningList[sz] == 2:
-            swiatFileToWrite[sz].append(f"{sz * 96},312,7\n")
+            swiatFileToWrite[sz].append(f"{sz * 96},312,coalGen\n")
+        elif worldStructureSpawningList[sz] == 3:
+            swiatFileToWrite[sz].append(f"{sz * 96},312,ironGen\n")
+        elif worldStructureSpawningList[sz] == 4:
+            swiatFileToWrite[sz].append(f"{sz * 96},312,diamondGen\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},312,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},408,3\n")
@@ -214,31 +241,59 @@ elif trybGeneratora == "def":
                         tempLineSplit = (line.split(","))
                         tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                         try:
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]), tempLineSplit[2], tempLineSplit[3].split("\n")[0])
                         except Exception:
                             pass
+
         for wysokosc in range(96):
-            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "7":
+            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "coalGen":
                 coalSize = random.randint(1, 4)
                 coalDown = random.randint(10, 50)
                 with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
-                    swiatFileToWrite[szerokosc][wysokosc] = str(swiatFileToWrite[szerokosc][wysokosc])[::-1].replace(
-                        f"7,", f"0,", 1)[::-1]
+                    swiatFileToWrite[szerokosc][wysokosc] = \
+                        structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "coalGen", "0,")
                     for line in f:
                         tempLineSplit = (line.split(","))
                         tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                         try:
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
-                                wysokosc + int(tempLineSplit[1]) + coalDown] = str(
-                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
-                                    wysokosc + int(tempLineSplit[1]) + coalDown])[
-                                                                    ::-1].replace(f"{tempLineSplit[2]},",
-                                                                                  f"{tempLineSplit[3]},", 1)[::-1]
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+
                         except Exception:
                             pass
-                break
+
+            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "ironGen":
+                coalSize = random.randint(1, 3)
+                coalDown = random.randint(10, 50)
+                with open(f"assest/structures/ores/ironSize{coalSize}.txt", "r") as f:
+                    swiatFileToWrite[szerokosc][wysokosc] = \
+                        structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "ironGen", "0,")
+                    for line in f:
+                        tempLineSplit = (line.split(","))
+                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                        try:
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+
+                        except Exception:
+                            pass
+
+            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "diamondGen":
+                coalSize = random.randint(1, 2)
+                coalDown = random.randint(10, 50)
+                with open(f"assest/structures/ores/diamondSize{coalSize}.txt", "r") as f:
+                    swiatFileToWrite[szerokosc][wysokosc] = \
+                        structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "diamond", "0,")
+                    for line in f:
+                        tempLineSplit = (line.split(","))
+                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                        try:
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+
+                        except Exception:
+                            pass
 
 # SPAWN WORLD SETTER
     f = open("assest/saves/save.mov", "w")
