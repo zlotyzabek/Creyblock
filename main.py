@@ -118,7 +118,7 @@ class Game:
         self.screen = self.screenReal.copy()
 
         # CORDYNATS
-        self.xPosCam, self.yPosCam = int(readTEMP[0].split(",")[0]), int(readTEMP[0].split(",")[1].split("\n")[0])
+        self.xPosCam, self.yPosCam = int(readTEMP[0].split(",")[0]) * -1, int(readTEMP[0].split(",")[1].split("\n")[0])
 
         # TEXTURES
         self.dirt = pygame.image.load('assest/textures/dirt.png').convert_alpha()
@@ -186,7 +186,7 @@ class Game:
                 swiatFileToWrite.append(f"{self.blockFileRead[i * 3]},{self.blockFileRead[i * 3 + 1]},{self.blockFileRead[i * 3 + 2]}\n")
 
             with open("assest/saves/save.mov", "w") as f:
-                f.write(f"{self.xPosCam},{self.yPosCam}\n")
+                f.write(f"{self.xPosCam * -1},{self.yPosCam}\n")
                 f.write("0,0\n")
                 f.write("0,0\n")
                 f.writelines(swiatFileToWrite)

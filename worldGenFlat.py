@@ -36,17 +36,21 @@ def GenerateTerainGrassland(szerokosc):
 
     return t
 
-def treeSpawning(szerokosc):
-    treeSpawningList = []
+def worldStructureSpawning(szerokosc):
+    worldStructureSpawningList = []
     for i in range(szerokosc):
         randomNumber = random.randint(1,9)
-        if randomNumber == 1 and treeSpawningList[i-1] == 0:
-            treeSpawningList.append(randomNumber)
-        else:
-            treeSpawningList.append(0)
-    print(treeSpawningList)
+        try:
+            if randomNumber == 1 and worldStructureSpawningList[i-1] == 0:
+                worldStructureSpawningList.append(randomNumber)
+            elif randomNumber == 2:
+                worldStructureSpawningList.append(randomNumber)
+            else:
+                worldStructureSpawningList.append(0)
+        except Exception:
+            worldStructureSpawningList.append(0)
 
-    return treeSpawningList
+    return worldStructureSpawningList
 
 print("Generator Świata")
 print("Wybierz tryb generowania świata flat/def")
@@ -91,13 +95,15 @@ elif trybGeneratora == "def":
 
     swiatFileToWrite = []
 
-    treeSpawningList = treeSpawning(dlugosc)
+    worldStructureSpawningList = worldStructureSpawning(dlugosc)
 
     def swiat0(sz):
         for i in range(34 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{696 - i},0\n")
-        if treeSpawningList[sz] == 1:
+        if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},696,4\n")
+        elif worldStructureSpawningList[sz] == 2:
+            swiatFileToWrite[sz].append(f"{sz * 96},696,7\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},696,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},792,3\n")
@@ -106,14 +112,16 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,2\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 55 * 96, 96):
+        for i in range(0, 57 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat1(sz):
         for i in range(33 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{600 - i},0\n")
-        if treeSpawningList[sz] == 1:
+        if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},600,4\n")
+        elif worldStructureSpawningList[sz] == 2:
+            swiatFileToWrite[sz].append(f"{sz * 96},600,7\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},600,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},696,3\n")
@@ -123,14 +131,16 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 55 * 96, 96):
+        for i in range(0, 57 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat2(sz):
         for i in range(32 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{504 - i},0\n")
-        if treeSpawningList[sz] == 1:
+        if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},504,4\n")
+        elif worldStructureSpawningList[sz] == 2:
+            swiatFileToWrite[sz].append(f"{sz * 96},504,7\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},504,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},600,3\n")
@@ -141,14 +151,16 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 55 * 96, 96):
+        for i in range(0, 57 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat3(sz):
         for i in range(31 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{408 - i},0\n")
-        if treeSpawningList[sz] == 1:
+        if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},408,4\n")
+        elif worldStructureSpawningList[sz] == 2:
+            swiatFileToWrite[sz].append(f"{sz * 96},408,7\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},408,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},504,3\n")
@@ -160,14 +172,16 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 55 * 96, 96):
+        for i in range(0, 57 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     def swiat4(sz):
         for i in range(30 * 96, 0, -96):
             swiatFileToWrite[sz].append(f"{sz * 96},{312 - i},0\n")
-        if treeSpawningList[sz] == 1:
+        if worldStructureSpawningList[sz] == 1:
             swiatFileToWrite[sz].append(f"{sz * 96},312,4\n")
+        elif worldStructureSpawningList[sz] == 2:
+            swiatFileToWrite[sz].append(f"{sz * 96},312,7\n")
         else:
             swiatFileToWrite[sz].append(f"{sz * 96},312,0\n")
         swiatFileToWrite[sz].append(f"{sz * 96},408,3\n")
@@ -180,7 +194,7 @@ elif trybGeneratora == "def":
         swiatFileToWrite[sz].append(f"{sz * 96},1080,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1176,1\n")
         swiatFileToWrite[sz].append(f"{sz * 96},1272,1\n")
-        for i in range(0, 55 * 96, 96):
+        for i in range(0, 57 * 96, 96):
             swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1\n")
 
     swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4}
@@ -195,86 +209,46 @@ elif trybGeneratora == "def":
         for wysokosc in range(96):
             if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "4":
                 treeSize = random.randint(1, 5)
-                diamondDiscrybution = random.randint(1, 10)
-                ironDiscrybution = random.randint(1, 4)
-                coalDiscrybution = random.randint(1, 3)
-                try:
-                    if diamondDiscrybution == 1:
-                        wysDiamentow = []
-                        wysDiamentow.append(random.randint(40, 50))
-                        wysDiamentow.append(random.randint(50, 100))
-                        swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]] = str(swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]])[
-                                                                ::-1].replace("1,", "9,", 1)[::-1]
-
-                    elif diamondDiscrybution == 2:
-                        wysDiamentow = []
-                        wysDiamentow.append(random.randint(40, 50))
-                        wysDiamentow.append(random.randint(10, 300))
-                        swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]] = str(swiatFileToWrite[szerokosc - wysDiamentow[1]][wysokosc + wysDiamentow[0]])[
-                                                                ::-1].replace("1,", "9,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - wysDiamentow[1]+1][wysokosc + wysDiamentow[0]] = str(
-                            swiatFileToWrite[szerokosc - wysDiamentow[1]+1][wysokosc + wysDiamentow[0]])[
-                                                                ::-1].replace("1,","9,",1)[::-1]
-
-                except Exception:
-                    pass
-
-                try:
-                    if ironDiscrybution == 1:
-                        wysIron = []
-                        wysIron.append(random.randint(30, 50))
-                        wysIron.append(random.randint(50, 100))
-                        swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]] = str(swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]])[
-                                                                ::-1].replace("1,", "8,", 1)[::-1]
-
-                    elif ironDiscrybution == 2:
-                        wysIron = []
-                        wysIron.append(random.randint(30, 50))
-                        wysIron.append(random.randint(50, 100))
-                        swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]] = str(swiatFileToWrite[szerokosc - wysIron[1]][wysokosc + wysIron[0]])[
-                                                                ::-1].replace("1,", "8,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - wysIron[1]+1][wysokosc + wysIron[0]] = str(
-                            swiatFileToWrite[szerokosc - wysIron[1]+1][wysokosc + wysIron[0]])[
-                                                                ::-1].replace("1,","8,",1)[::-1]
-
-                except Exception:
-                    pass
-
-                try:
-                    if coalDiscrybution == 1:
-                        wysCoal = []
-                        wysCoal.append(random.randint(10, 50))
-                        wysCoal.append(random.randint(50, 1000))
-                        swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]] = str(swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]])[
-                                                                ::-1].replace("1,", "7,", 1)[::-1]
-
-                    elif coalDiscrybution == 2:
-                        wysCoal = []
-                        wysCoal.append(random.randint(21, 50))
-                        wysCoal.append(random.randint(50, 1000))
-                        swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]] = str(swiatFileToWrite[szerokosc - wysCoal[1]][wysokosc + wysCoal[0]])[
-                                                                ::-1].replace("1,", "7,", 1)[::-1]
-                        swiatFileToWrite[szerokosc - wysCoal[1]+1][wysokosc + wysCoal[0]] = str(
-                            swiatFileToWrite[szerokosc - wysCoal[1]+1][wysokosc + wysCoal[0]])[
-                                                                ::-1].replace("1,","7,",1)[::-1]
-
-                except Exception:
-                    pass
-
                 with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
                     for line in f:
                         tempLineSplit = (line.split(","))
                         tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
-                                                                    ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
+                        try:
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])])[
+                                                                        ::-1].replace(f"{tempLineSplit[2]},", f"{tempLineSplit[3]},", 1)[::-1]
+                        except Exception:
+                            pass
+        for wysokosc in range(96):
+            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "7":
+                coalSize = random.randint(1, 4)
+                coalDown = random.randint(10, 50)
+                with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
+                    swiatFileToWrite[szerokosc][wysokosc] = str(swiatFileToWrite[szerokosc][wysokosc])[::-1].replace(
+                        f"7,", f"0,", 1)[::-1]
+                    for line in f:
+                        tempLineSplit = (line.split(","))
+                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                        try:
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                wysokosc + int(tempLineSplit[1]) + coalDown] = str(
+                                swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                    wysokosc + int(tempLineSplit[1]) + coalDown])[
+                                                                    ::-1].replace(f"{tempLineSplit[2]},",
+                                                                                  f"{tempLineSplit[3]},", 1)[::-1]
+                        except Exception:
+                            pass
+                break
+
+# SPAWN WORLD SETTER
+    f = open("assest/saves/save.mov", "w")
+
+    f.write(f"{dlugosc * 48},600\n")
 
     for szerokosc in range(dlugosc):
         for wysokosc in range(96):
             saveTemp.append(swiatFileToWrite[szerokosc][wysokosc])
 
-    f = open("assest/saves/save.mov", "w")
-    f.write("0,0\n")
     f.write("0,0\n")
     f.write("0,0\n")
     f.writelines(saveTemp)
