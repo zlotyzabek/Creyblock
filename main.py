@@ -195,18 +195,19 @@ class Game:
 
     def drawing(self):
         try:
-            for i in range((int((-1 * self.xPosCam - 200))),  (int((-1 * self.xPosCam + 2120)))):
-                if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
+            for i in range((int((-1 * self.xPosCam - 200))), (int((-1 * self.xPosCam + 2120)))):
+                if -100 < int(self.blockFileRead[i * 3]) + self.xPosCam < 2020 and -100 < int(
+                        self.blockFileRead[i * 3 + 1]) + self.yPosCam < 1180:
 
                     self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
-                                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[1] * (
-                                                                 self.sizeScreen[1] / self.screenReal.get_rect().size[1])
+                            self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[1] * (
+                                                             self.sizeScreen[1] / self.screenReal.get_rect().size[1])
                     self.blockRemovingAndSetter(i)
 
                     try:
                         self.screen.blit(self.typeBlockTexture[self.blockFileRead[3 * i + 2]], (
-                        int(self.blockFileRead[3 * i]) + self.xPosCam,
-                        int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
+                            int(self.blockFileRead[3 * i]) + self.xPosCam,
+                            int(self.blockFileRead[(3 * i) + 1]) + self.yPosCam))
                     except Exception:
                         pass
 

@@ -39,15 +39,17 @@ def GenerateTerainGrassland(szerokosc):
 def worldStructureSpawning(szerokosc):
     worldStructureSpawningList = []
     for i in range(szerokosc):
-        randomNumber = random.randint(1,30)
+        ifTreeSpawn = random.randint(1,2)
+        ifOreSpawn = random.randint(1,3)
+        randomSpawn = random.randint(1,150)
         try:
-            if randomNumber == 1 or randomNumber == 2 or randomNumber == 3 and worldStructureSpawningList[i-1] == 0:
+            if 0 <= randomSpawn <= 75  and worldStructureSpawningList[i-1] == 0 and ifTreeSpawn == 1:
                 worldStructureSpawningList.append(1)
-            elif randomNumber == 4:
+            elif 76 <= randomSpawn <= 89 and ifOreSpawn == 1:
                 worldStructureSpawningList.append(2)
-            elif randomNumber == 5:
+            elif 90 <= randomSpawn <= 97 and ifOreSpawn == 1:
                 worldStructureSpawningList.append(3)
-            elif randomNumber == 6:
+            elif 98 <= randomSpawn <= 100 and ifOreSpawn == 1:
                 worldStructureSpawningList.append(4)
             else:
                 worldStructureSpawningList.append(0)
@@ -263,37 +265,38 @@ elif trybGeneratora == "def":
                         except Exception:
                             pass
 
-            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "ironGen":
-                coalSize = random.randint(1, 3)
-                coalDown = random.randint(10, 50)
-                with open(f"assest/structures/ores/ironSize{coalSize}.txt", "r") as f:
+            elif swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "ironGen":
+                ironSize = random.randint(1, 3)
+                ironDown = random.randint(10, 50)
+                with open(f"assest/structures/ores/ironSize{ironSize}.txt", "r") as f:
                     swiatFileToWrite[szerokosc][wysokosc] = \
                         structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "ironGen", "0,")
                     for line in f:
                         tempLineSplit = (line.split(","))
                         tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                         try:
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
-                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + ironDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + ironDown, tempLineSplit[2], tempLineSplit[3])
 
                         except Exception:
                             pass
 
-            if swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "diamondGen":
-                coalSize = random.randint(1, 2)
-                coalDown = random.randint(10, 50)
-                with open(f"assest/structures/ores/diamondSize{coalSize}.txt", "r") as f:
+            elif swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "diamondGen":
+                diamondSize = random.randint(1, 2)
+                diamondDown = random.randint(10, 50)
+                with open(f"assest/structures/ores/diamondSize{diamondSize}.txt", "r") as f:
                     swiatFileToWrite[szerokosc][wysokosc] = \
                         structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "diamond", "0,")
                     for line in f:
                         tempLineSplit = (line.split(","))
                         tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                         try:
-                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
-                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+                            swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + diamondDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + diamondDown, tempLineSplit[2], tempLineSplit[3])
 
                         except Exception:
                             pass
+
 
 # SPAWN WORLD SETTER
     f = open("assest/saves/save.mov", "w")
