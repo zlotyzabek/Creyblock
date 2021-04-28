@@ -27,6 +27,9 @@ class new_World():
         self.mainFontB = pygame.font.SysFont("Showcard Gothic", 90)
 
         self.always()
+        
+    def __del__(self):
+        print("Usuwanie")
 
     def always(self):
         while True:
