@@ -1,0 +1,9 @@
+assest/textures/stone.png
+assest/textures/dirt.png
+assest/textures/grass.png
+assest/textures/log.png
+assest/textures/leaves_oak.png
+assest/textures/planks.png
+assest/textures/coal_ore.png
+assest/textures/iron_ore.png
+assest/textures/diamond_ore.png

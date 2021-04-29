@@ -1,4 +1,5 @@
 import threading
+import ast
 
 import pygame
 from pygame.locals import *
@@ -33,10 +34,9 @@ class Game:
 
         # LOADING WORLD
         with open("assest/saves/save.mov", "r") as f:
-            readTEMP = str(f.read()).split('\n')[:-1]
-
-        for i in range(3, len(readTEMP)):
-            self.blockFileRead.extend(map(int, readTEMP[i].split(",")))
+            for line in f:
+                x = line.split('\n')[:-1][0]
+                self.blockFileRead.append(ast.literal_eval(str(x)))
 
         # SCREEN
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
@@ -44,30 +44,18 @@ class Game:
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - GAME")
 
-        # PHYSIC
-        self.acceleration = Vector2(0, 0)
-        self.speed = Vector2(0, 0)
-        self.blokada = 0
-
         # CORDYNATS
-        self.PosCam = Vector2(int(readTEMP[0].split(",")[0]) * -1, int(readTEMP[0].split(",")[1]))
+        self.PosCam = Vector2(int(self.blockFileRead[0][0]) * -1, int(self.blockFileRead[0][1]))
 
         # COLIZION
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
 
         # TEXTURES
-        self.dirt = pygame.image.load('assest/textures/dirt.png').convert_alpha()
-        self.log = pygame.image.load('assest/textures/log.png').convert_alpha()
-        self.grass = pygame.image.load('assest/textures/grass.png').convert_alpha()
-        self.stone = pygame.image.load('assest/textures/stone.png').convert_alpha()
-        self.leaves = pygame.image.load('assest/textures/leaves_oak.png').convert_alpha()
-        self.planks = pygame.image.load('assest/textures/planks.png').convert_alpha()
-        self.diamond = pygame.image.load('assest/textures/diamond_ore.png').convert_alpha()
-        self.iron = pygame.image.load('assest/textures/iron_ore.png').convert_alpha()
-        self.coal = pygame.image.load('assest/textures/coal_ore.png').convert_alpha()
-        self.typeBlockTexture = {1: self.stone, 2: self.dirt, 3: self.grass, 4: self.log, 5: self.leaves, 6: self.planks, 7: self.coal, 8: self.iron, 9: self.diamond}
-        for i in range(1, len(self.typeBlockTexture) + 1):
-            self.typeBlockTexture[i] = pygame.transform.scale(self.typeBlockTexture[i], (96, 96))
+        with open("assest/textures/texturesLoad.txt", "r") as f:
+            readTEMPtextures = str(f.read()).split('\n')[:-1]
+        self.typeBlockTexture = {}
+        for i, list in enumerate(readTEMPtextures):
+            self.typeBlockTexture[i + 1] = pygame.transform.scale(pygame.image.load(list).convert_alpha(), (96, 96))
 
         self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha()
         self.head = pygame.transform.scale(self.head, (64, 64))
@@ -80,8 +68,6 @@ class Game:
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
 
-        del readTEMP
-
         self.always()
 
     def always(self):
@@ -93,6 +79,10 @@ class Game:
 
                 elif event.type == VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and self.blockCollizionDetect[7] > 0 and self.blockCollizionDetect[6] < 1:
+                        threading.Thread(target=self.controlsJump()).start()
 
             self.delta += self.clock.tick()/1000.0
             while self.delta > 1 / 360.0:
@@ -109,48 +99,45 @@ class Game:
         if self.saveToTime >= self.saveTimeWorld * 7200:
             threading.Thread(target=self.savingWorld).start()
 
-        self.speed *= 0.9
-        self.speed += self.acceleration
-        self.PosCam += self.speed
-        self.acceleration *= 0
-
         self.saveToTime += 1
 
     def savingWorld(self):
         if self.saveTimeWorld != 0:
             self.saveImageDisplay = 1
             self.saveToTime = 0
-            swiatFileToWrite = []
-
-            for i in range(0, len(self.blockFileRead), 3):
-                swiatFileToWrite.append(f"{self.blockFileRead[i]},{self.blockFileRead[i + 1]},{self.blockFileRead[i + 2]}\n")
+            swiatFileToWrite = self.blockFileRead
 
             with open("assest/saves/save.mov", "w") as f:
-                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y)}\n")
+                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y) + 96}\n")
                 f.write("0,0\n")
                 f.write("0,0\n")
-                f.writelines(swiatFileToWrite)
+
+                for szerokosc in range(3, len(swiatFileToWrite) - 3):
+                    f.write(str(swiatFileToWrite[szerokosc]) + "\n")
 
             self.saveImageDisplay = 0
 
     def drawing(self):
-        try:
-            self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
-            for i in range((int((-1 * self.PosCam.x - 200))), (int((-1 * self.PosCam.x + 2120)))):
-                if -100 < int(self.blockFileRead[i * 3]) + self.PosCam.x < 2020 and -100 < int(
-                        self.blockFileRead[i * 3 + 1]) + self.PosCam.y < 1180:
-                    block = (pygame.Rect(int(self.blockFileRead[3 * i]) + self.PosCam.x,
-                                         int(self.blockFileRead[(3 * i) + 1]) + self.PosCam.y, 96, 96))
-                    self.blockRemovingAndSetter(i, block)
-                    if self.blockFileRead[3 * i + 2] != 0:
-                        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
-                                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[1] * (
-                                                                 self.sizeScreen[1] / self.screenReal.get_rect().size[1])
+        self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
+        for szer in range(int((-1 * self.PosCam.x + 200) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
+            for wys in range(96):
+                if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
+                        self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
+                    block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
+                                         int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
+
+                    self.blockRemovingAndSetter((szer, wys), block)
+
+                    if self.blockFileRead[szer][wys].split(",")[2] != "0":
+                        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
+                                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
+                                                             1] * (self.sizeScreen[1] /
+                                                                 self.screenReal.get_rect().size[1])
                         try:
-                            self.screen.blit(self.typeBlockTexture[self.blockFileRead[3 * i + 2]], (
-                                int(self.blockFileRead[3 * i]) + self.PosCam.x,
-                                int(self.blockFileRead[(3 * i) + 1]) + self.PosCam.y))
+                            self.screen.blit(self.typeBlockTexture[int(self.blockFileRead[szer][wys].split(",")[2])], (
+                                int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
+                                int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
                             if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
                                 self.blockCollizionDetect[2] += 1
                             if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
@@ -171,10 +158,9 @@ class Game:
                         except Exception:
                             pass
 
-            self.drawGui()
-            self.drawBody()
-        except Exception:
-            pass
+                    self.drawGui()
+                    self.drawBody()
+
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
@@ -186,13 +172,15 @@ class Game:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
 
-    def blockRemovingAndSetter(self, blockIdNumber, block):
+    def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[3 * blockIdNumber + 2] != 0 and collide:
-                self.blockFileRead[blockIdNumber * 3 + 2] = 0
+        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide:
+            temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
+            self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
-        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[3 * blockIdNumber + 2] == 0 and collide:
-                self.blockFileRead[blockIdNumber * 3 + 2] = self.selectBlock
+        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] == "0" and collide:
+            temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
+            self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.selectBlock}"
 
     def controls(self):
         keys = pygame.key.get_pressed()
@@ -200,34 +188,31 @@ class Game:
 # RIGH AND LEFT
 
         if keys[97] and self.blockCollizionDetect[4] < 1:
-            self.acceleration += Vector2(0.1, 0)
+            self.PosCam += Vector2(1, 0)
             if keys[pygame.K_LSHIFT]:
-                self.acceleration += Vector2(0.1, 0)
+                self.PosCam += Vector2(1, 0)
 
         elif self.blockCollizionDetect[0] > 0:
-            self.speed += Vector2(-0.1, 0)
+            self.PosCam += Vector2(-0.1, 0)
 
         if keys[100] and self.blockCollizionDetect[5] < 1:
-            self.acceleration += Vector2(-0.1, 0)
+            self.PosCam += Vector2(-1, 0)
             if keys[pygame.K_LSHIFT]:
-                self.acceleration += Vector2(-0.1, 0)
+                self.PosCam += Vector2(-1, 0)
 
         elif self.blockCollizionDetect[1] > 0:
-            self.speed += Vector2(0.1, 0)
+            self.PosCam += Vector2(0.1, 0)
 
 # JUMP AND GRAVITY
         if self.blockCollizionDetect[7] < 1:
-            self.speed += Vector2(0, -0.1)
+            self.PosCam += Vector2(0, -2)
 
         elif self.blockCollizionDetect[3] > 0:
-            self.speed += Vector2(0, 0.05)
-
-        if keys[119] and  self.blockCollizionDetect[7] > 0 and self.blockCollizionDetect[6] < 1:
-            threading.Thread(target=self.controlsJump()).start()
+            self.PosCam += Vector2(0, 0.1)
 
 # UP
-        if self.blockCollizionDetect[6] > 0:
-            self.speed += Vector2(0, -0.5)
+        if self.blockCollizionDetect[2] > 0:
+            self.PosCam += Vector2(0, -2.1)
 
 # EQ
         for i in range(49, 58):
@@ -237,5 +222,5 @@ class Game:
 
 
     def controlsJump(self):
-        for i in range(4000):
-            self.acceleration += Vector2(0, 0.001)
+        for i in range(220):
+            self.PosCam += Vector2(0, 1)
