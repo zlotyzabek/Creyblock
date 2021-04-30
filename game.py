@@ -109,7 +109,7 @@ class Game:
             swiatFileToWrite = self.blockFileRead
 
             with open("assest/saves/save.mov", "w") as f:
-                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y) + 96}\n")
+                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y) - 48}\n")
                 f.write("0,0\n")
                 f.write("0,0\n")
 
@@ -166,8 +166,8 @@ class Game:
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
-        self.screen.blit(self.legs, (930, 556))
-        self.screen.blit(self.legs, (970, 556))
+        #self.screen.blit(self.legs, (930, 556))
+        #self.screen.blit(self.legs, (970, 556))
 
     def drawGui(self):
         if self.saveImageDisplay == 1:

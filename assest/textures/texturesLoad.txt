@@ -7,3 +7,4 @@ assest/textures/planks.png
 assest/textures/coal_ore.png
 assest/textures/iron_ore.png
 assest/textures/diamond_ore.png
+assest/textures/air.png
