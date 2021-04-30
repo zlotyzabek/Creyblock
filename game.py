@@ -1,5 +1,6 @@
 import threading
 import ast
+import random
 
 import pygame
 from pygame.locals import *
@@ -112,8 +113,8 @@ class Game:
                 f.write("0,0\n")
                 f.write("0,0\n")
 
-                for szerokosc in range(3, len(swiatFileToWrite) - 3):
-                    f.write(str(swiatFileToWrite[szerokosc]) + "\n")
+                for szerokosc in range(3, len(swiatFileToWrite)):
+                    f.write(f"{swiatFileToWrite[szerokosc]}\n")
 
             self.saveImageDisplay = 0
 
@@ -128,6 +129,7 @@ class Game:
                                          int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
 
                     self.blockRemovingAndSetter((szer, wys), block)
+                    #self.structurSpawnerReplace()
 
                     if self.blockFileRead[szer][wys].split(",")[2] != "0":
                         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
@@ -171,6 +173,78 @@ class Game:
         if self.saveImageDisplay == 1:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
+
+    def structurSpawnerReplace(self, szer, wys):
+        if self.blockFileRead[szer][wys].split(",")[2].split("\n")[0] == "treeGen":
+            treeSize = random.randint(1, 5)
+            with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                               wysokosc + int(tempLineSplit[1]), tempLineSplit[2],
+                                               tempLineSplit[3].split("\n")[0])
+                    except Exception:
+                        pass
+        elif swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "coalGen":
+            coalSize = random.randint(1, 4)
+            coalDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
+                swiatFileToWrite[szerokosc][wysokosc] = \
+                    structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "coalGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                            wysokosc + int(tempLineSplit[1]) + coalDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                               wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2],
+                                               tempLineSplit[3])
+
+                    except Exception:
+                        pass
+        elif swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "ironGen":
+            ironSize = random.randint(1, 3)
+            ironDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/ironSize{ironSize}.txt", "r") as f:
+                swiatFileToWrite[szerokosc][wysokosc] = \
+                    structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "ironGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                            wysokosc + int(tempLineSplit[1]) + ironDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                               wysokosc + int(tempLineSplit[1]) + ironDown, tempLineSplit[2],
+                                               tempLineSplit[3])
+
+                    except Exception:
+                        pass
+
+        elif swiatFileToWrite[szerokosc][wysokosc].split(",")[2].split("\n")[0] == "diamondGen":
+            diamondSize = random.randint(1, 2)
+            diamondDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/diamondSize{diamondSize}.txt", "r") as f:
+                swiatFileToWrite[szerokosc][wysokosc] = \
+                    structurListEditor(swiatFileToWrite, szerokosc, wysokosc, "diamondGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                            wysokosc + int(tempLineSplit[1]) + diamondDown] = \
+                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                               wysokosc + int(tempLineSplit[1]) + diamondDown, tempLineSplit[2],
+                                               tempLineSplit[3])
+
+                    except Exception:
+
+                        pass
+
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
