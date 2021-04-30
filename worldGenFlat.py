@@ -330,8 +330,11 @@ class new_World():
                                     tempLineSplit = (line.split(","))
                                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                                     try:
-                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1])] = \
-                                        structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]), tempLineSplit[2], tempLineSplit[3].split("\n")[0])
+                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                            wysokosc + int(tempLineSplit[1])] = \
+                                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                                               wysokosc + int(tempLineSplit[1]), tempLineSplit[2],
+                                                               tempLineSplit[3].split("\n")[0])
                                     except Exception:
                                         pass
                             break
@@ -346,8 +349,11 @@ class new_World():
                                     tempLineSplit = (line.split(","))
                                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                                     try:
-                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + coalDown] = \
-                                        structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + coalDown, tempLineSplit[2], tempLineSplit[3])
+                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                            wysokosc + int(tempLineSplit[1]) + coalDown] = \
+                                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                                               wysokosc + int(tempLineSplit[1]) + coalDown,
+                                                               tempLineSplit[2], tempLineSplit[3])
 
                                     except Exception:
                                         pass
@@ -363,8 +369,11 @@ class new_World():
                                     tempLineSplit = (line.split(","))
                                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                                     try:
-                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + ironDown] = \
-                                        structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + ironDown, tempLineSplit[2], tempLineSplit[3])
+                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                            wysokosc + int(tempLineSplit[1]) + ironDown] = \
+                                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                                               wysokosc + int(tempLineSplit[1]) + ironDown,
+                                                               tempLineSplit[2], tempLineSplit[3])
 
                                     except Exception:
                                         pass
@@ -380,13 +389,17 @@ class new_World():
                                     tempLineSplit = (line.split(","))
                                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                                     try:
-                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][wysokosc + int(tempLineSplit[1]) + diamondDown] = \
-                                        structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]), wysokosc + int(tempLineSplit[1]) + diamondDown, tempLineSplit[2], tempLineSplit[3])
+                                        swiatFileToWrite[szerokosc + int(tempLineSplit[0])][
+                                            wysokosc + int(tempLineSplit[1]) + diamondDown] = \
+                                            structurListEditor(swiatFileToWrite, szerokosc + int(tempLineSplit[0]),
+                                                               wysokosc + int(tempLineSplit[1]) + diamondDown,
+                                                               tempLineSplit[2], tempLineSplit[3])
 
                                     except Exception:
 
                                         pass
                             break
+
 
             # SPAWN WORLD SETTER
                 f = open("assest/saves/save.mov", "w")
