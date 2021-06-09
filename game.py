@@ -1,10 +1,12 @@
 import threading
 import ast
+import random
 
 import pygame
 from pygame.locals import *
 from pygame.math import Vector2
 import pyautogui
+import sys
 
 
 class Game:
@@ -16,6 +18,12 @@ class Game:
 
         pygame.init()
 
+        # LOADING WORLD
+        with open("assest/saves/save.mov", "r") as f:
+            self.blockFileRead = []
+            for line in f:
+                x = line.split('\n')[:-1][0]
+                self.blockFileRead.append(ast.literal_eval(str(x)))
         self.programRun = 1
 
         self.block = []
@@ -28,15 +36,7 @@ class Game:
 
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
 
-        self.blockFileRead = []
-
         self.selectBlock = 2
-
-        # LOADING WORLD
-        with open("assest/saves/save.mov", "r") as f:
-            for line in f:
-                x = line.split('\n')[:-1][0]
-                self.blockFileRead.append(ast.literal_eval(str(x)))
 
         # SCREEN
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
@@ -71,17 +71,17 @@ class Game:
         self.always()
 
     def always(self):
-        while self.programRun == 1:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.savingWorld()
-                    self.programRun = 0
+                    sys.exit()
 
                 elif event.type == VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE and self.blockCollizionDetect[7] > 0 and self.blockCollizionDetect[6] < 1:
+                    if event.key == pygame.K_SPACE and self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
                         threading.Thread(target=self.controlsJump()).start()
 
             self.delta += self.clock.tick()/1000.0
@@ -108,12 +108,14 @@ class Game:
             swiatFileToWrite = self.blockFileRead
 
             with open("assest/saves/save.mov", "w") as f:
-                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y) - 48}\n")
+                f.write(f"{int(self.PosCam.x * -1)},{int(self.PosCam.y)}\n")
                 f.write("0,0\n")
                 f.write("0,0\n")
 
                 for szerokosc in range(3, len(swiatFileToWrite)):
                     f.write(f"{swiatFileToWrite[szerokosc]}\n")
+
+                f.close()
 
             self.saveImageDisplay = 0
 
@@ -123,6 +125,8 @@ class Game:
             for wys in range(96):
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
                         self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
+
+                    self.worldGen(szer, wys)
 
                     block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                          int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
@@ -140,21 +144,21 @@ class Game:
                                 int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
                             if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
                                 self.blockCollizionDetect[2] += 1
+                                # UP
                             if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
                                 self.blockCollizionDetect[0] += 1
+                                # LEFT
                             if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
                                 self.blockCollizionDetect[1] += 1
+                                # RIGHT
                             if block.colliderect(pygame.Rect(936, 556, 48, 1)) == 1:
                                 self.blockCollizionDetect[3] += 1
+                                # DOWN
 
-                            if block.colliderect(pygame.Rect(936, 481, 48, 1)) == 1:
-                                self.blockCollizionDetect[6] += 1
-                            if block.colliderect(pygame.Rect(925, 500, 1, 48)) == 1:
+                            if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
                                 self.blockCollizionDetect[4] += 1
-                            if block.colliderect(pygame.Rect(994, 500, 1, 48)) == 1:
-                                self.blockCollizionDetect[5] += 1
-                            if block.colliderect(pygame.Rect(936, 558, 48, 1)) == 1:
-                                self.blockCollizionDetect[7] += 1
+                                # DOWN 2
+
                         except Exception:
                             pass
 
@@ -164,8 +168,80 @@ class Game:
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
-        #self.screen.blit(self.legs, (930, 556))
-        #self.screen.blit(self.legs, (970, 556))
+
+    def worldGen(self, szer, wys):
+        if self.blockFileRead[szer][wys].split(",")[2] == "treeGen":
+            treeSize = random.randint(1, 5)
+            with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        self.blockFileRead[szer + int(tempLineSplit[0])][
+                            wys + int(tempLineSplit[1])] = \
+                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                               wys + int(tempLineSplit[1]), tempLineSplit[2],
+                                               tempLineSplit[3].split("\n")[0])
+                    except Exception:
+                        pass
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "coalGen":
+            coalSize = random.randint(1, 4)
+            coalDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
+                self.blockFileRead[szer][wys] = \
+                    self.structurListEditor(self.blockFileRead, szer, wys, "coalGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        self.blockFileRead[szer + int(tempLineSplit[0])][
+                            wys + int(tempLineSplit[1]) + coalDown] = \
+                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                               wys + int(tempLineSplit[1]) + coalDown,
+                                               tempLineSplit[2], tempLineSplit[3])
+
+                    except Exception:
+                        pass
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "ironGen":
+            ironSize = random.randint(1, 3)
+            ironDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/ironSize{ironSize}.txt", "r") as f:
+                self.blockFileRead[szer][wys] = \
+                    self.structurListEditor(self.blockFileRead, szer, wys, "ironGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        self.blockFileRead[szer + int(tempLineSplit[0])][
+                            wys + int(tempLineSplit[1]) + ironDown] = \
+                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                               wys + int(tempLineSplit[1]) + ironDown,
+                                               tempLineSplit[2], tempLineSplit[3])
+
+                    except Exception:
+                        pass
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "diamondGen":
+            diamondSize = random.randint(1, 2)
+            diamondDown = random.randint(10, 50)
+            with open(f"assest/structures/ores/diamondSize{diamondSize}.txt", "r") as f:
+                self.blockFileRead[szer][wys] = \
+                    self.structurListEditor(self.blockFileRead, szer, wys, "diamondGen", "0")
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                    try:
+                        self.blockFileRead[szer + int(tempLineSplit[0])][
+                            wys + int(tempLineSplit[1]) + diamondDown] = \
+                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                               wys + int(tempLineSplit[1]) + diamondDown,
+                                               tempLineSplit[2], tempLineSplit[3])
+
+                    except Exception:
+
+                        pass
 
     def drawGui(self):
         if self.saveImageDisplay == 1:
@@ -175,6 +251,7 @@ class Game:
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide:
+            print(self.blockFileRead[blockColor[0]][blockColor[1]])
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
@@ -182,12 +259,15 @@ class Game:
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.selectBlock}"
 
+    def structurListEditor(self, list, szer, wys, rep, torep):
+        return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
+
     def controls(self):
         keys = pygame.key.get_pressed()
 
 # RIGH AND LEFT
 
-        if keys[97] and self.blockCollizionDetect[4] < 1:
+        if keys[97] and self.blockCollizionDetect[0] < 1:
             self.PosCam += Vector2(1, 0)
             if keys[pygame.K_LSHIFT]:
                 self.PosCam += Vector2(1, 0)
@@ -195,7 +275,8 @@ class Game:
         elif self.blockCollizionDetect[0] > 0:
             self.PosCam += Vector2(-0.1, 0)
 
-        if keys[100] and self.blockCollizionDetect[5] < 1:
+
+        if keys[100] and self.blockCollizionDetect[1] < 1:
             self.PosCam += Vector2(-1, 0)
             if keys[pygame.K_LSHIFT]:
                 self.PosCam += Vector2(-1, 0)
@@ -203,16 +284,15 @@ class Game:
         elif self.blockCollizionDetect[1] > 0:
             self.PosCam += Vector2(0.1, 0)
 
-# JUMP AND GRAVITY
-        if self.blockCollizionDetect[7] < 1:
+# JUMP AND GRAVITY AND UP
+        if self.blockCollizionDetect[3] > 0:
+            self.PosCam += Vector2(0, 1)
+
+        if self.blockCollizionDetect[4] < 1:
             self.PosCam += Vector2(0, -2)
 
-        elif self.blockCollizionDetect[3] > 0:
-            self.PosCam += Vector2(0, 0.1)
-
-# UP
         if self.blockCollizionDetect[2] > 0:
-            self.PosCam += Vector2(0, -2.1)
+            self.PosCam += Vector2(0, -2)
 
 # EQ
         for i in range(49, 58):
