@@ -9,10 +9,12 @@ import main
 class new_World():
     def __init__(self):
         pygame.init()
-        self.screenReal = pygame.display.set_mode((pyautogui.size()[0], pyautogui.size()[1]),
-                                                  HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - WorldCreator")
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
         self.generateWorldSize = 2
         self.generateWorldType = "def"
@@ -67,7 +69,11 @@ class new_World():
 
 
     def buttonClick(self):
-        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
+        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
+                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
+                                             1] * (self.sizeScreen[1] /
+                                                   self.screenReal.get_rect().size[1])
         if pygame.mouse.get_pressed(3)[0]:
             self.buttonSize()
             self.buttonGenerateWorld()
@@ -146,9 +152,6 @@ class new_World():
                         worldStructureSpawningList.append(0)
 
                 return worldStructureSpawningList
-
-            def structurListEditor(list, szer, wys, rep, torep):
-               return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
             trybGeneratora = self.generateWorldType
             dlugosc = self.generateWorldSize

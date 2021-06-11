@@ -15,9 +15,11 @@ class Main:
 
         pygame.init()
 
-        self.screenReal = pygame.display.set_mode((pyautogui.size()[0], pyautogui.size()[1]), HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
         self.screen = self.screenReal.copy()
-        pygame.display.set_caption("CreyBlock - MENU")
+        pygame.display.set_caption("CreyBlock - Menu")
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
 
         pic = pygame.surface.Surface((50, 50))
         pic.fill((255, 100, 200))
@@ -38,7 +40,7 @@ class Main:
                     sys.exit()
 
                 elif event.type == VIDEORESIZE:
-                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
 
             self.drawing()
 
@@ -66,8 +68,11 @@ class Main:
         self.screen.blit(self.mainFontType.render("Settings", True, (250, 250, 250)), (720, 810))
 
     def buttonClick(self):
-        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()
-
+        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
+                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
+                                             1] * (self.sizeScreen[1] /
+                                                   self.screenReal.get_rect().size[1])
         if pygame.mouse.get_pressed(3)[0]:
             self.buttonSinglePlayer()
             self.buttonNewWorld()

@@ -40,15 +40,20 @@ class Game:
 
         # SCREEN
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
-        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - GAME")
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
 
         # CORDYNATS
         self.PosCam = Vector2(int(self.blockFileRead[0][0]) * -1, int(self.blockFileRead[0][1]))
 
         # COLIZION
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        # EQU
+        self.minEqShow = 1
+        self.maxEqShow = 0
 
         # TEXTURES
         with open("assest/textures/texturesLoad.txt", "r") as f:
@@ -59,9 +64,6 @@ class Game:
 
         self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha()
         self.head = pygame.transform.scale(self.head, (64, 64))
-
-        self.legs = pygame.image.load('assest/textures/player/legs.png').convert_alpha()
-        self.legs = pygame.transform.scale(self.legs, (20, 32))
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -78,20 +80,21 @@ class Game:
                     sys.exit()
 
                 elif event.type == VIDEORESIZE:
-                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
                         threading.Thread(target=self.controlsJump()).start()
 
             self.delta += self.clock.tick()/1000.0
-            while self.delta > 1 / 360.0:
+            while self.delta > 1 / 60.0:
                 self.ticking()
-                self.delta -= 1 / 360.0
+                self.delta -= 1 / 60.0
 
             self.screen.fill(self.skyColor)
             self.drawing()
             self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
+            self.colides()
             pygame.display.update()
 
     def ticking(self):
@@ -126,7 +129,6 @@ class Game:
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
                         self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
-                    self.worldGen(szer, wys)
 
                     block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                          int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
@@ -151,7 +153,7 @@ class Game:
                             if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
                                 self.blockCollizionDetect[1] += 1
                                 # RIGHT
-                            if block.colliderect(pygame.Rect(936, 556, 48, 1)) == 1:
+                            if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
                                 self.blockCollizionDetect[3] += 1
                                 # DOWN
 
@@ -160,10 +162,9 @@ class Game:
                                 # DOWN 2
 
                         except Exception:
-                            pass
+                            self.worldGen(szer, wys)
 
                     self.drawGui()
-                    self.drawBody()
 
 
     def drawBody(self):
@@ -244,6 +245,14 @@ class Game:
                         pass
 
     def drawGui(self):
+        self.drawBody()
+
+        #if self.minEqShow == 1:
+            #pygame.draw.rect(self.screen, (0,0,0), pygame.Rect(460, 920, 1000, 100))
+
+        #if self.maxEqShow == 1:
+            #pass
+
         if self.saveImageDisplay == 1:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
@@ -262,37 +271,37 @@ class Game:
     def structurListEditor(self, list, szer, wys, rep, torep):
         return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
+    def colides(self):
+        if self.blockCollizionDetect[0] > 0:
+            self.PosCam += Vector2(-6, 0)
+
+        if self.blockCollizionDetect[1] > 0:
+            self.PosCam += Vector2(6, 0)
+
     def controls(self):
         keys = pygame.key.get_pressed()
 
 # RIGH AND LEFT
 
         if keys[97] and self.blockCollizionDetect[0] < 1:
-            self.PosCam += Vector2(1, 0)
+            self.PosCam += Vector2(6, 0)
             if keys[pygame.K_LSHIFT]:
-                self.PosCam += Vector2(1, 0)
-
-        elif self.blockCollizionDetect[0] > 0:
-            self.PosCam += Vector2(-0.1, 0)
-
+                self.PosCam += Vector2(6, 0)
 
         if keys[100] and self.blockCollizionDetect[1] < 1:
-            self.PosCam += Vector2(-1, 0)
+            self.PosCam += Vector2(-6, 0)
             if keys[pygame.K_LSHIFT]:
-                self.PosCam += Vector2(-1, 0)
-
-        elif self.blockCollizionDetect[1] > 0:
-            self.PosCam += Vector2(0.1, 0)
+                self.PosCam += Vector2(-6, 0)
 
 # JUMP AND GRAVITY AND UP
         if self.blockCollizionDetect[3] > 0:
-            self.PosCam += Vector2(0, 1)
+            self.PosCam += Vector2(0, 6)
 
         if self.blockCollizionDetect[4] < 1:
-            self.PosCam += Vector2(0, -2)
+            self.PosCam += Vector2(0, -6)
 
         if self.blockCollizionDetect[2] > 0:
-            self.PosCam += Vector2(0, -2)
+            self.PosCam += Vector2(0, -6)
 
 # EQ
         for i in range(49, 58):
