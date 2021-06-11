@@ -153,6 +153,12 @@ class Game:
                             if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
                                 self.blockCollizionDetect[1] += 1
                                 # RIGHT
+                            if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[5] += 1
+                                # LEFT 2
+                            if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[6] += 1
+                                # RIGHT 2
                             if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
                                 self.blockCollizionDetect[3] += 1
                                 # DOWN
@@ -160,6 +166,8 @@ class Game:
                             if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
                                 self.blockCollizionDetect[4] += 1
                                 # DOWN 2
+
+                                pygame.Rect(0,0,100,100)
 
                         except Exception:
                             self.worldGen(szer, wys)
@@ -283,12 +291,12 @@ class Game:
 
 # RIGH AND LEFT
 
-        if keys[97] and self.blockCollizionDetect[0] < 1:
+        if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1:
             self.PosCam += Vector2(6, 0)
             if keys[pygame.K_LSHIFT]:
                 self.PosCam += Vector2(6, 0)
 
-        if keys[100] and self.blockCollizionDetect[1] < 1:
+        if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1:
             self.PosCam += Vector2(-6, 0)
             if keys[pygame.K_LSHIFT]:
                 self.PosCam += Vector2(-6, 0)
