@@ -83,8 +83,13 @@ class Game:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
 
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE and self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
-                        threading.Thread(target=self.controlsJump()).start()
+                    if event.key == pygame.K_SPACE:
+                        if self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[7] > 0:
+                            threading.Thread(target=self.controlsJumpLow()).start()
+                        elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[8] > 0:
+                            threading.Thread(target=self.controlsJumpMedium()).start()
+                        elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
+                            threading.Thread(target=self.controlsJumpHigh()).start()
 
             self.delta += self.clock.tick()/1000.0
             while self.delta > 1 / 60.0:
@@ -123,7 +128,7 @@ class Game:
             self.saveImageDisplay = 0
 
     def drawing(self):
-        self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         for szer in range(int((-1 * self.PosCam.x + 200) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
@@ -147,6 +152,12 @@ class Game:
                             if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
                                 self.blockCollizionDetect[2] += 1
                                 # UP
+                            if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
+                                self.blockCollizionDetect[7] += 1
+                                # UP 2
+                            if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
+                                self.blockCollizionDetect[8] += 1
+                                # UP 3
                             if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
                                 self.blockCollizionDetect[0] += 1
                                 # LEFT
@@ -167,7 +178,6 @@ class Game:
                                 self.blockCollizionDetect[4] += 1
                                 # DOWN 2
 
-                                pygame.Rect(0,0,100,100)
 
                         except Exception:
                             self.worldGen(szer, wys)
@@ -268,13 +278,14 @@ class Game:
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
         if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide:
-            print(self.blockFileRead[blockColor[0]][blockColor[1]])
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
         elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] == "0" and collide:
-            temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
-            self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.selectBlock}"
+            collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
+            if not collideHuman:
+                temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
+                self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.selectBlock}"
 
     def structurListEditor(self, list, szer, wys, rep, torep):
         return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
@@ -318,6 +329,14 @@ class Game:
                 break
 
 
-    def controlsJump(self):
+    def controlsJumpHigh(self):
         for i in range(220):
+            self.PosCam += Vector2(0, 1)
+
+    def controlsJumpMedium(self):
+        for i in range(128):
+            self.PosCam += Vector2(0, 1)
+
+    def controlsJumpLow(self):
+        for i in range(32):
             self.PosCam += Vector2(0, 1)
