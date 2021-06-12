@@ -4,6 +4,8 @@ import pygame
 from pygame.locals import *
 import pyautogui
 import main
+import pickle
+import os
 
 
 class new_World():
@@ -82,12 +84,12 @@ class new_World():
         hitBox = pygame.rect.Rect(260, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            self.generateWorldSize = 2048
+            self.generateWorldSize = 4096
 
         hitBox = pygame.rect.Rect(760, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            self.generateWorldSize = 8196
+            self.generateWorldSize = 16384
 
         hitBox = pygame.rect.Rect(1260, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
@@ -320,16 +322,17 @@ class new_World():
                     swiatFileToWrite.append([])
                     swiatGenSetting[swiat[sz]](sz)
 
-                saveTemp = [[dlugosc * 48, 600, dlugosc], swiatFileToWrite]
-                saveTemp = []
+                playerInfo = [dlugosc * 48, 600, dlugosc]
             # SPAWN WORLD SETTER
-                f = open("assest/saves/save.mov", "w")
+                try:
+                    os.makedirs("assest/saves/save")
+                except Exception:
+                    pass
 
-                f.write(f"{dlugosc * 48},600\n")
-                f.write("0,0\n")
-                f.write("0,0\n")
+                with open('assest/saves/save/worldSave.data', 'wb') as filehandle:
+                    pickle.dump(swiatFileToWrite, filehandle)
 
-                f.writelines(saveTemp)
-                for szerokosc in range(dlugosc):
-                        f.write(str(swiatFileToWrite[szerokosc]) + "\n")
+                with open('assest/saves/save/playerSave.data', 'wb') as filehandle:
+                    pickle.dump(playerInfo, filehandle)
+
                 main.Main()
