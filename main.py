@@ -16,10 +16,10 @@ class Main:
         pygame.init()
 
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
-        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - Menu")
-        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
         pic = pygame.surface.Surface((50, 50))
         pic.fill((255, 100, 200))
@@ -40,7 +40,7 @@ class Main:
                     sys.exit()
 
                 elif event.type == VIDEORESIZE:
-                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
             self.drawing()
 
