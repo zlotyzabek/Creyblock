@@ -41,10 +41,12 @@ class Game:
 
         # SCREEN
         self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
-        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+        self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - GAME")
-        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+        self.screenReal = pygame.display.set_mode(self.sizeScreen, HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+        self.fullscreen = 0
 
         # CORDYNATS
         self.PosCam = Vector2(int(self.playerInfo[0]) * -1, int(self.playerInfo[1]))
@@ -80,8 +82,8 @@ class Game:
                     self.savingWorld()
                     sys.exit()
 
-                elif event.type == VIDEORESIZE:
-                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE | FULLSCREEN)
+                elif event.type == pygame.VIDEORESIZE:
+                    self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
