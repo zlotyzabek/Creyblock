@@ -112,8 +112,8 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 4:
                         self.selectBlock += 1
-                        if self.selectBlock == 11:
-                            self.selectBlock = 1
+                        if self.selectBlock == 10:
+                            self.selectBlock = 0
                     if event.button == 5:
                         self.selectBlock -= 1
                         if self.selectBlock == -1:
