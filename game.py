@@ -181,53 +181,56 @@ class Game:
         self.screen.fill(self.skyColor)
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
-                self.worldGen(szer, wys)
-                if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
-                        self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
+                try:
+                    self.worldGen(szer, wys)
+                    if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
+                            self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
 
-                    block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
-                                         int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
+                        block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
+                                             int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
 
 
-                    self.blockRemovingAndSetter((szer, wys), block)
+                        self.blockRemovingAndSetter((szer, wys), block)
 
-                    if self.blockFileRead[szer][wys].split(",")[2] != "0":
-                        self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
-                                self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
-                                                             1] * (self.sizeScreen[1] /
-                                                                 self.screenReal.get_rect().size[1])
-                        self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])], (
-                            int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
-                            int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
-                        if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
-                            self.blockCollizionDetect[2] += 1
-                            # UP
-                        if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
-                            self.blockCollizionDetect[7] += 1
-                            # UP 2
-                        if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
-                            self.blockCollizionDetect[8] += 1
-                            # UP 3
-                        if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
-                            self.blockCollizionDetect[0] += 1
-                            # LEFT
-                        if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
-                            self.blockCollizionDetect[1] += 1
-                            # RIGHT
-                        if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
-                            self.blockCollizionDetect[5] += 1
-                            # LEFT 2
-                        if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
-                            self.blockCollizionDetect[6] += 1
-                            # RIGHT 2
-                        if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
-                            self.blockCollizionDetect[3] += 1
-                            # DOWN
+                        if self.blockFileRead[szer][wys].split(",")[2] != "0":
+                            self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
+                                    self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
+                                                                 1] * (self.sizeScreen[1] /
+                                                                     self.screenReal.get_rect().size[1])
+                            self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])], (
+                                int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
+                                int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
+                            if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
+                                self.blockCollizionDetect[2] += 1
+                                # UP
+                            if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
+                                self.blockCollizionDetect[7] += 1
+                                # UP 2
+                            if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
+                                self.blockCollizionDetect[8] += 1
+                                # UP 3
+                            if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[0] += 1
+                                # LEFT
+                            if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[1] += 1
+                                # RIGHT
+                            if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[5] += 1
+                                # LEFT 2
+                            if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
+                                self.blockCollizionDetect[6] += 1
+                                # RIGHT 2
+                            if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
+                                self.blockCollizionDetect[3] += 1
+                                # DOWN
 
-                        if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
-                            self.blockCollizionDetect[4] += 1
-                            # DOWN 2
+                            if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
+                                self.blockCollizionDetect[4] += 1
+                                # DOWN 2
+                except Exception:
+                    pass
         self.drawGui()
 
     def drawBody(self):
