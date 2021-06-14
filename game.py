@@ -55,23 +55,47 @@ class Game:
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0]
 
         # EQU
-        self.minEqShow = 1
+        #self.minEqShow = 1
         self.maxEqShow = 0
 
         # TEXTURES
-        with open("assest/textures/texturesLoad.txt", "r") as f:
+        with open("assest/textures/texturesBlockLoad.txt", "r") as f:
             readTEMPtextures = str(f.read()).split('\n')[:-1]
-        self.typeBlockTexture = {}
+        self.typeBlockTextureBlock = {}
+        self.typeBlockTextureInventory = {}
         for i, list in enumerate(readTEMPtextures):
-            self.typeBlockTexture[i + 1] = pygame.transform.scale(pygame.image.load(list).convert_alpha(), (96, 96))
+            if list.split(",")[1] == "c":
+                self.typeBlockTextureBlock[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (96, 96))
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (64, 64))
+            if list.split(",")[1] == "a":
+                self.typeBlockTextureBlock[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96))
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
 
-        self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha()
+        self.itemAndBlockID = {}
+
+        for i in range(len(self.typeBlockTextureInventory)):
+            self.itemAndBlockID[self.typeBlockTextureInventory[i + 1]] = {self.typeBlockTextureBlock[i + 1]}
+
+        self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
+
+        self.hotBarTexture = pygame.image.load('assest/textures/hotBar.png').convert()
+        self.hotBarTexture = pygame.transform.scale(self.hotBarTexture, (1000, 100))
+
+        self.eqTexture = pygame.image.load('assest/textures/equipment.png').convert_alpha()
+        self.eqTexture = pygame.transform.scale(self.eqTexture, (1379, 580))
+
+        self.eqSelectTexture = pygame.image.load('assest/textures/selection_equipment.png').convert_alpha()
+        self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
+
+        self.mEqShowItems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
+
+        self.fallSpeed = 6.00
 
         self.always()
 
@@ -86,7 +110,7 @@ class Game:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE and self.maxEqShow == 0:
                         if self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[7] > 0:
                             threading.Thread(target=self.controlsJumpLow()).start()
                         elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[8] > 0:
@@ -94,12 +118,17 @@ class Game:
                         elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
                             threading.Thread(target=self.controlsJumpHigh()).start()
 
+                    #elif event.key == pygame.K_TAB:
+                    #    if self.maxEqShow == 0:
+                    #        self.maxEqShow = 1
+                    #    else:
+                    #        self.maxEqShow = 0
+
             self.delta += self.clock.tick()/1000.0
             while self.delta > 1 / 60.0:
                 self.ticking()
                 self.delta -= 1 / 60.0
 
-            self.screen.fill(self.skyColor)
             self.drawing()
             self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             self.colides()
@@ -130,6 +159,7 @@ class Game:
 
     def drawing(self):
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.screen.fill(self.skyColor)
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
@@ -148,7 +178,7 @@ class Game:
                                 self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                                              1] * (self.sizeScreen[1] /
                                                                  self.screenReal.get_rect().size[1])
-                        self.screen.blit(self.typeBlockTexture[int(self.blockFileRead[szer][wys].split(",")[2])], (
+                        self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])], (
                             int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                             int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
                         if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
@@ -179,9 +209,7 @@ class Game:
                         if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
                             self.blockCollizionDetect[4] += 1
                             # DOWN 2
-
-                    self.drawGui()
-
+        self.drawGui()
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
@@ -263,15 +291,23 @@ class Game:
     def drawGui(self):
         self.drawBody()
 
-        #if self.minEqShow == 1:
-            #pygame.draw.rect(self.screen, (0,0,0), pygame.Rect(460, 920, 1000, 100))
+        self.screen.blit(self.hotBarTexture, (460, 920))
 
-        #if self.maxEqShow == 1:
-            #pass
+        for i in range(10):
+            if self.mEqShowItems[i] != 0:
+
+                self.screen.blit(self.typeBlockTextureInventory[self.mEqShowItems[i]], (485 + (i * 99), 941))
+
+        self.screen.blit(self.eqSelectTexture, (479 + (self.selectBlock * 99), 935))
+
+        if self.maxEqShow == 1:
+            self.screen.blit(self.eqTexture, (200, 160))
 
         if self.saveImageDisplay == 1:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
+
+            #self.itemAndBlockID
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
@@ -283,7 +319,7 @@ class Game:
             collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
             if not collideHuman:
                 temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
-                self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.selectBlock}"
+                self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.mEqShowItems[self.selectBlock]}"
 
     def structurListEditor(self, list, szer, wys, rep, torep):
         return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
@@ -300,28 +336,36 @@ class Game:
 
 # RIGH AND LEFT
 
-        if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1:
-            self.PosCam += Vector2(6, 0)
-            if keys[pygame.K_LSHIFT]:
+        if self.maxEqShow == 0:
+            if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1:
                 self.PosCam += Vector2(6, 0)
+                if keys[pygame.K_LSHIFT]:
+                    self.PosCam += Vector2(6, 0)
 
-        if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1:
-            self.PosCam += Vector2(-6, 0)
-            if keys[pygame.K_LSHIFT]:
+            if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1:
                 self.PosCam += Vector2(-6, 0)
+                if keys[pygame.K_LSHIFT]:
+                    self.PosCam += Vector2(-6, 0)
 
-# JUMP AND GRAVITY AND UP
+    # GRAVITY AND UP self.fallSpeed
         if self.blockCollizionDetect[3] > 0:
             self.PosCam += Vector2(0, 6)
 
-        if self.blockCollizionDetect[4] < 1:
+        elif self.blockCollizionDetect[4] < 1:
+            self.PosCam += Vector2(0, self.fallSpeed * -1)
+            self.fallSpeed *= 1.04
+            if self.fallSpeed > 20.0:
+                self.fallSpeed = 20.0
+
+        elif self.blockCollizionDetect[2] > 0:
             self.PosCam += Vector2(0, -6)
 
-        if self.blockCollizionDetect[2] > 0:
-            self.PosCam += Vector2(0, -6)
+        elif self.blockCollizionDetect[4] > 0:
+            self.fallSpeed = 6.00
+
 
 # EQ
-        for i in range(49, 58):
+        for i in range(48, 58):
             if keys[i]:
                 self.selectBlock = i - 48
                 break

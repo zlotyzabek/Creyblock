@@ -1,0 +1,12 @@
+assest/textures/stone.png,c
+assest/textures/dirt.png,c
+assest/textures/grass_block.png,c
+assest/textures/log.png,c
+assest/textures/leaves.png,a
+assest/textures/planks.png,c
+assest/textures/coal_ore.png,c
+assest/textures/iron_ore.png,c
+assest/textures/diamond_ore.png,c
+assest/textures/sand.png,c
+assest/textures/gravel.png,c
+assest/textures/air.png,c
