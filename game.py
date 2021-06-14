@@ -357,14 +357,13 @@ class Game:
         keys = pygame.key.get_pressed()
 
 # RIGH AND LEFT
-
         if self.maxEqShow == 0:
-            if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1:
+            if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1 and self.PosCam.x < -1 * (((96 * self.playerInfo[2]) / 2) - ((96 * self.playerInfo[2]) / 2)):
                 self.PosCam += Vector2(6, 0)
                 if keys[pygame.K_LSHIFT]:
                     self.PosCam += Vector2(6, 0)
 
-            if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1:
+            if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1 and self.PosCam.x - 1920 > -1 *(((96 * self.playerInfo[2]) / 2) - ((96 * (self.playerInfo[2] * -1))/2 )):
                 self.PosCam += Vector2(-6, 0)
                 if keys[pygame.K_LSHIFT]:
                     self.PosCam += Vector2(-6, 0)
