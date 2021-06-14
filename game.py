@@ -109,6 +109,16 @@ class Game:
                 elif event.type == pygame.VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 4:
+                        self.selectBlock += 1
+                        if self.selectBlock == 11:
+                            self.selectBlock = 1
+                    if event.button == 5:
+                        self.selectBlock -= 1
+                        if self.selectBlock == -1:
+                            self.selectBlock = 9
+
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.maxEqShow == 0:
                         if self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[7] > 0:
@@ -117,6 +127,15 @@ class Game:
                             threading.Thread(target=self.controlsJumpMedium()).start()
                         elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
                             threading.Thread(target=self.controlsJumpHigh()).start()
+
+
+                    for i in range(49, 58):
+                        if event.key == i:
+                            self.selectBlock = i - 49
+
+
+                    if event.key == pygame.K_0:
+                        self.selectBlock = 9
 
                     #elif event.key == pygame.K_TAB:
                     #    if self.maxEqShow == 0:
@@ -162,6 +181,7 @@ class Game:
         self.screen.fill(self.skyColor)
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
+                self.worldGen(szer, wys)
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
                         self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
@@ -169,7 +189,6 @@ class Game:
                     block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                          int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
 
-                    self.worldGen(szer, wys)
 
                     self.blockRemovingAndSetter((szer, wys), block)
 
@@ -362,14 +381,6 @@ class Game:
 
         elif self.blockCollizionDetect[4] > 0:
             self.fallSpeed = 6.00
-
-
-# EQ
-        for i in range(48, 58):
-            if keys[i]:
-                self.selectBlock = i - 48
-                break
-
 
     def controlsJumpHigh(self):
         for i in range(220):
