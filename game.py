@@ -65,16 +65,11 @@ class Game:
         self.typeBlockTextureInventory = {}
         for i, list in enumerate(readTEMPtextures):
             if list.split(",")[1] == "c":
-                self.typeBlockTextureBlock[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (96, 96))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (96, 96)), list.split(",")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (64, 64))
             if list.split(",")[1] == "a":
-                self.typeBlockTextureBlock[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96)), list.split(",")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
-
-        self.itemAndBlockID = {}
-
-        for i in range(len(self.typeBlockTextureInventory)):
-            self.itemAndBlockID[self.typeBlockTextureInventory[i + 1]] = {self.typeBlockTextureBlock[i + 1]}
 
         self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
@@ -83,7 +78,7 @@ class Game:
         self.hotBarTexture = pygame.transform.scale(self.hotBarTexture, (1000, 100))
 
         self.eqTexture = pygame.image.load('assest/textures/equipment.png').convert_alpha()
-        self.eqTexture = pygame.transform.scale(self.eqTexture, (1379, 580))
+        self.eqTexture = pygame.transform.scale(self.eqTexture, (1000, 381))
 
         self.eqSelectTexture = pygame.image.load('assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
@@ -94,6 +89,22 @@ class Game:
         self.errorTextures = 255, 0, 255
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
+
+        self.eqItemsID = [[],[],[], [], [] ,[] ,[] ,[] ,[] ,[] ,[]]
+
+        self.eqItemsID[0] = [1,2,3,4,5,6,7,8,9,10]
+        self.eqItemsID[1] = [11,12,13,14,15,16,17,0,0,0]
+        self.eqItemsID[2] = [0,0,0,0,0,0,0,0,0,0]
+        self.eqItemsID[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.eqItemsID[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.eqItemsID[5] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.eqItemsID[6] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.eqLine = 0
+
+        self.itemClick = 0
+
+        self.oneMouseClick = 0
+
 
         self.fallSpeed = 6.00
 
@@ -109,15 +120,30 @@ class Game:
                 elif event.type == pygame.VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
 
+
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.oneMouseClick = 1
+
                     if event.button == 4:
-                        self.selectBlock += 1
-                        if self.selectBlock == 10:
-                            self.selectBlock = 0
+                        if self.maxEqShow == 0:
+                            self.selectBlock += 1
+                            if self.selectBlock == 10:
+                                self.selectBlock = 0
+                        elif self.maxEqShow == 1:
+                            self.eqLine -= 1
+                            if self.eqLine == -1:
+                                self.eqLine = 0
                     if event.button == 5:
-                        self.selectBlock -= 1
-                        if self.selectBlock == -1:
-                            self.selectBlock = 9
+                        if self.maxEqShow == 0:
+                            self.selectBlock -= 1
+                            if self.selectBlock == -1:
+                                self.selectBlock = 9
+
+                        elif self.maxEqShow == 1:
+                            self.eqLine +=1
+
+
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.maxEqShow == 0:
@@ -137,11 +163,11 @@ class Game:
                     if event.key == pygame.K_0:
                         self.selectBlock = 9
 
-                    #elif event.key == pygame.K_TAB:
-                    #    if self.maxEqShow == 0:
-                    #        self.maxEqShow = 1
-                    #    else:
-                    #        self.maxEqShow = 0
+                    elif event.key == pygame.K_TAB:
+                        if self.maxEqShow == 0:
+                            self.maxEqShow = 1
+                        else:
+                            self.maxEqShow = 0
 
             self.delta += self.clock.tick()/1000.0
             while self.delta > 1 / 60.0:
@@ -198,37 +224,39 @@ class Game:
                                     self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                                                  1] * (self.sizeScreen[1] /
                                                                      self.screenReal.get_rect().size[1])
-                            self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])], (
+                            self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
                                 int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                 int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
-                            if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
-                                self.blockCollizionDetect[2] += 1
-                                # UP
-                            if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
-                                self.blockCollizionDetect[7] += 1
-                                # UP 2
-                            if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
-                                self.blockCollizionDetect[8] += 1
-                                # UP 3
-                            if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
-                                self.blockCollizionDetect[0] += 1
-                                # LEFT
-                            if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
-                                self.blockCollizionDetect[1] += 1
-                                # RIGHT
-                            if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
-                                self.blockCollizionDetect[5] += 1
-                                # LEFT 2
-                            if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
-                                self.blockCollizionDetect[6] += 1
-                                # RIGHT 2
-                            if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
-                                self.blockCollizionDetect[3] += 1
-                                # DOWN
 
-                            if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
-                                self.blockCollizionDetect[4] += 1
-                                # DOWN 2
+                            if self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][1] == "c":
+                                if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
+                                    self.blockCollizionDetect[2] += 1
+                                    # UP
+                                if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
+                                    self.blockCollizionDetect[7] += 1
+                                    # UP 2
+                                if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
+                                    self.blockCollizionDetect[8] += 1
+                                    # UP 3
+                                if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
+                                    self.blockCollizionDetect[0] += 1
+                                    # LEFT
+                                if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
+                                    self.blockCollizionDetect[1] += 1
+                                    # RIGHT
+                                if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
+                                    self.blockCollizionDetect[5] += 1
+                                    # LEFT 2
+                                if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
+                                    self.blockCollizionDetect[6] += 1
+                                    # RIGHT 2
+                                if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
+                                    self.blockCollizionDetect[3] += 1
+                                    # DOWN
+
+                                if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
+                                    self.blockCollizionDetect[4] += 1
+                                    # DOWN 2
                 except Exception:
                     pass
         self.drawGui()
@@ -236,7 +264,56 @@ class Game:
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
 
+    def drawGui(self):
+        self.drawBody()
+
+        self.screen.blit(self.hotBarTexture, (460, 920))
+
+        for i in range(10):
+            if self.mEqShowItems[i] != 0:
+                self.screen.blit(self.typeBlockTextureInventory[self.mEqShowItems[i]], (485 + (i * 99), 941))
+
+        self.screen.blit(self.eqSelectTexture, (479 + (self.selectBlock * 99), 935))
+
+        if self.maxEqShow == 1:
+            self.screen.blit(self.eqTexture, (460, 420))
+
+            hitboxesEq = []
+            for wysEq in range(3):
+                for szerEq in range(10):
+                    if self.mEqShowItems[szerEq] != 0:
+                        if self.eqItemsID[wysEq + self.eqLine][szerEq] > 0:
+                            self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
+
+                        if pygame.Rect(511 + (szerEq * 92.8), 502 + (wysEq * 92), 64, 64).collidepoint(self.xPosMouse, self.yPosMouse) and self.oneMouseClick == 1:
+                            self.oneMouseClick = 0
+                            self.itemClick = self.eqItemsID[wysEq + self.eqLine][szerEq]
+
+            if self.itemClick != 0:
+                self.screen.blit(self.typeBlockTextureInventory[self.itemClick], (self.xPosMouse - 32, self.yPosMouse - 32))
+
+                if self.oneMouseClick == 1:
+                    self.oneMouseClick = 0
+                    for i in range(10):
+                        if pygame.Rect(485 + (i * 99), 941, 64, 64).collidepoint(self.xPosMouse, self.yPosMouse):
+                            self.mEqShowItems[i] = self.itemClick
+                            self.itemClick = 0
+                            break
+                    self.itemClick = 0
+
+
+
+
+
+
+        if self.saveImageDisplay == 1:
+            savingGui = (pygame.Rect(98, 98, 48, 48))
+            pygame.draw.rect(self.screen, self.chest, savingGui)
+
     def worldGen(self, szer, wys):
+        def structurListEditor(list, szer, wys, rep, torep):
+            return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
+
         if self.blockFileRead[szer][wys].split(",")[2] == "treeGen":
             treeSize = random.randint(1, 5)
             with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
@@ -246,7 +323,7 @@ class Game:
                     try:
                         self.blockFileRead[szer + int(tempLineSplit[0])][
                             wys + int(tempLineSplit[1])] = \
-                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
                                                wys + int(tempLineSplit[1]), tempLineSplit[2],
                                                tempLineSplit[3].split("\n")[0])
                     except Exception:
@@ -257,14 +334,14 @@ class Game:
             coalDown = random.randint(10, 50)
             with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
                 self.blockFileRead[szer][wys] = \
-                    self.structurListEditor(self.blockFileRead, szer, wys, "coalGen", "0")
+                    structurListEditor(self.blockFileRead, szer, wys, "coalGen", "0")
                 for line in f:
                     tempLineSplit = (line.split(","))
                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                     try:
                         self.blockFileRead[szer + int(tempLineSplit[0])][
                             wys + int(tempLineSplit[1]) + coalDown] = \
-                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
                                                wys + int(tempLineSplit[1]) + coalDown,
                                                tempLineSplit[2], tempLineSplit[3])
 
@@ -276,14 +353,14 @@ class Game:
             ironDown = random.randint(10, 50)
             with open(f"assest/structures/ores/ironSize{ironSize}.txt", "r") as f:
                 self.blockFileRead[szer][wys] = \
-                    self.structurListEditor(self.blockFileRead, szer, wys, "ironGen", "0")
+                    structurListEditor(self.blockFileRead, szer, wys, "ironGen", "0")
                 for line in f:
                     tempLineSplit = (line.split(","))
                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                     try:
                         self.blockFileRead[szer + int(tempLineSplit[0])][
                             wys + int(tempLineSplit[1]) + ironDown] = \
-                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
                                                wys + int(tempLineSplit[1]) + ironDown,
                                                tempLineSplit[2], tempLineSplit[3])
 
@@ -295,14 +372,14 @@ class Game:
             diamondDown = random.randint(10, 50)
             with open(f"assest/structures/ores/diamondSize{diamondSize}.txt", "r") as f:
                 self.blockFileRead[szer][wys] = \
-                    self.structurListEditor(self.blockFileRead, szer, wys, "diamondGen", "0")
+                    structurListEditor(self.blockFileRead, szer, wys, "diamondGen", "0")
                 for line in f:
                     tempLineSplit = (line.split(","))
                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                     try:
                         self.blockFileRead[szer + int(tempLineSplit[0])][
                             wys + int(tempLineSplit[1]) + diamondDown] = \
-                            self.structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
                                                wys + int(tempLineSplit[1]) + diamondDown,
                                                tempLineSplit[2], tempLineSplit[3])
 
@@ -310,41 +387,17 @@ class Game:
 
                         pass
 
-    def drawGui(self):
-        self.drawBody()
-
-        self.screen.blit(self.hotBarTexture, (460, 920))
-
-        for i in range(10):
-            if self.mEqShowItems[i] != 0:
-
-                self.screen.blit(self.typeBlockTextureInventory[self.mEqShowItems[i]], (485 + (i * 99), 941))
-
-        self.screen.blit(self.eqSelectTexture, (479 + (self.selectBlock * 99), 935))
-
-        if self.maxEqShow == 1:
-            self.screen.blit(self.eqTexture, (200, 160))
-
-        if self.saveImageDisplay == 1:
-            savingGui = (pygame.Rect(98, 98, 48, 48))
-            pygame.draw.rect(self.screen, self.chest, savingGui)
-
-            #self.itemAndBlockID
-
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide:
+        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide and self.maxEqShow == 0:
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
-        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] == "0" and collide:
+        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] == "0" and collide and self.maxEqShow == 0:
             collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
             if not collideHuman:
                 temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
                 self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.mEqShowItems[self.selectBlock]}"
-
-    def structurListEditor(self, list, szer, wys, rep, torep):
-        return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
     def colides(self):
         if self.blockCollizionDetect[0] > 0:
