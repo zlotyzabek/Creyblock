@@ -15,7 +15,7 @@ class Main:
 
         pygame.init()
 
-        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.sizeScreen = 1920, 1080
         self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - Menu")
@@ -68,7 +68,7 @@ class Main:
         self.screen.blit(self.mainFontType.render("Settings", True, (250, 250, 250)), (720, 810))
 
     def buttonClick(self):
-        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.sizeScreen = 1920, 1080
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
                 self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                              1] * (self.sizeScreen[1] /

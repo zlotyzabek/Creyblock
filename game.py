@@ -40,7 +40,7 @@ class Game:
         self.selectBlock = 2
 
         # SCREEN
-        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.sizeScreen = 1920, 1080
         self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - GAME")
@@ -93,8 +93,8 @@ class Game:
         self.eqItemsID = [[],[],[], [], [] ,[] ,[] ,[] ,[] ,[] ,[]]
 
         self.eqItemsID[0] = [1,2,3,4,5,6,7,8,9,10]
-        self.eqItemsID[1] = [11,12,13,14,15,16,17,0,0,0]
-        self.eqItemsID[2] = [0,0,0,0,0,0,0,0,0,0]
+        self.eqItemsID[1] = [11,12,13,14,15,16,17,18,19,20]
+        self.eqItemsID[2] = [21,0,0,0,0,0,0,0,0,0]
         self.eqItemsID[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.eqItemsID[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.eqItemsID[5] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -119,7 +119,6 @@ class Game:
 
                 elif event.type == pygame.VIDEORESIZE:
                     self.screenReal = pygame.display.set_mode(event.size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -223,7 +222,7 @@ class Game:
                             self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
                                     self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                                                  1] * (self.sizeScreen[1] /
-                                                                     self.screenReal.get_rect().size[1])
+                                                                       self.screenReal.get_rect().size[1])
                             self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
                                 int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                 int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
@@ -314,78 +313,41 @@ class Game:
         def structurListEditor(list, szer, wys, rep, torep):
             return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
-        if self.blockFileRead[szer][wys].split(",")[2] == "treeGen":
-            treeSize = random.randint(1, 5)
-            with open(f"assest/structures/trees/size{treeSize}.txt", "r") as f:
-                for line in f:
-                    tempLineSplit = (line.split(","))
-                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                    try:
-                        self.blockFileRead[szer + int(tempLineSplit[0])][
-                            wys + int(tempLineSplit[1])] = \
-                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                               wys + int(tempLineSplit[1]), tempLineSplit[2],
-                                               tempLineSplit[3].split("\n")[0])
-                    except Exception:
-                        pass
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "coalGen":
-            coalSize = random.randint(1, 4)
-            coalDown = random.randint(10, 50)
-            with open(f"assest/structures/ores/coalSize{coalSize}.txt", "r") as f:
+        def oreGenerating(maxSize, minH, maxH, oreName, type):
+            Size = random.randint(1, maxSize)
+            Down = random.randint(minH, maxH)
+            with open(f"assest/structures/{type}/{oreName}Size{Size}.txt", "r") as f:
                 self.blockFileRead[szer][wys] = \
-                    structurListEditor(self.blockFileRead, szer, wys, "coalGen", "0")
+                    structurListEditor(self.blockFileRead, szer, wys, f"{oreName}Gen", "0")
                 for line in f:
                     tempLineSplit = (line.split(","))
                     tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                     try:
                         self.blockFileRead[szer + int(tempLineSplit[0])][
-                            wys + int(tempLineSplit[1]) + coalDown] = \
+                            wys + int(tempLineSplit[1]) + Down] = \
                             structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                               wys + int(tempLineSplit[1]) + coalDown,
+                                               wys + int(tempLineSplit[1]) + Down,
                                                tempLineSplit[2], tempLineSplit[3])
-
                     except Exception:
                         pass
 
-        elif self.blockFileRead[szer][wys].split(",")[2] == "ironGen":
-            ironSize = random.randint(1, 3)
-            ironDown = random.randint(10, 50)
-            with open(f"assest/structures/ores/ironSize{ironSize}.txt", "r") as f:
-                self.blockFileRead[szer][wys] = \
-                    structurListEditor(self.blockFileRead, szer, wys, "ironGen", "0")
-                for line in f:
-                    tempLineSplit = (line.split(","))
-                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                    try:
-                        self.blockFileRead[szer + int(tempLineSplit[0])][
-                            wys + int(tempLineSplit[1]) + ironDown] = \
-                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                               wys + int(tempLineSplit[1]) + ironDown,
-                                               tempLineSplit[2], tempLineSplit[3])
+        if self.blockFileRead[szer][wys].split(",")[2] == "treGen":
+            oreGenerating(5, 0, 0, "tre", "trees")
 
-                    except Exception:
-                        pass
+        elif self.blockFileRead[szer][wys].split(",")[2] == "coaGen":
+            oreGenerating(4,10,50,"coa", "ores")
 
-        elif self.blockFileRead[szer][wys].split(",")[2] == "diamondGen":
-            diamondSize = random.randint(1, 2)
-            diamondDown = random.randint(10, 50)
-            with open(f"assest/structures/ores/diamondSize{diamondSize}.txt", "r") as f:
-                self.blockFileRead[szer][wys] = \
-                    structurListEditor(self.blockFileRead, szer, wys, "diamondGen", "0")
-                for line in f:
-                    tempLineSplit = (line.split(","))
-                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                    try:
-                        self.blockFileRead[szer + int(tempLineSplit[0])][
-                            wys + int(tempLineSplit[1]) + diamondDown] = \
-                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                               wys + int(tempLineSplit[1]) + diamondDown,
-                                               tempLineSplit[2], tempLineSplit[3])
+        elif self.blockFileRead[szer][wys].split(",")[2] == "iroGen":
+            oreGenerating(3, 10, 50, "iro", "ores")
 
-                    except Exception:
+        elif self.blockFileRead[szer][wys].split(",")[2] == "iroGen":
+            oreGenerating(2, 10, 50, "gol", "ores")
 
-                        pass
+        elif self.blockFileRead[szer][wys].split(",")[2] == "diaGen":
+            oreGenerating(2, 10, 50, "dia", "ores")
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "emeGen":
+            oreGenerating(1, 10, 50, "eme", "ores")
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)

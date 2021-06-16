@@ -12,7 +12,7 @@ class new_World():
     def __init__(self):
         pygame.init()
 
-        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.sizeScreen = 1920, 1080
         self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.screen = self.screenReal.copy()
         pygame.display.set_caption("CreyBlock - WorldCreator")
@@ -71,7 +71,7 @@ class new_World():
 
 
     def buttonClick(self):
-        self.sizeScreen = pyautogui.size()[0], pyautogui.size()[1]
+        self.sizeScreen = 1920, 1080
         self.xPosMouse, self.yPosMouse = pygame.mouse.get_pos()[0] * (
                 self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                              1] * (self.sizeScreen[1] /
@@ -140,14 +140,18 @@ class new_World():
                     ifOreSpawn = random.randint(1,3)
                     randomSpawn = random.randint(1,150)
                     try:
-                        if 0 <= randomSpawn <= 75  and worldStructureSpawningList[i-1] == 0 and ifTreeSpawn == 1:
+                        if 0 <= randomSpawn <= 69  and worldStructureSpawningList[i-1] == 0 and ifTreeSpawn == 1:
                             worldStructureSpawningList.append(1)
-                        elif 76 <= randomSpawn <= 89 and ifOreSpawn == 1:
+                        elif 70 <= randomSpawn <= 80 and ifOreSpawn == 1:
                             worldStructureSpawningList.append(2)
-                        elif 90 <= randomSpawn <= 97 and ifOreSpawn == 1:
+                        elif 81 <= randomSpawn <= 89 and ifOreSpawn == 1:
                             worldStructureSpawningList.append(3)
-                        elif 98 <= randomSpawn <= 100 and ifOreSpawn == 1:
+                        elif 90 <= randomSpawn <= 95 and ifOreSpawn == 1:
                             worldStructureSpawningList.append(4)
+                        elif 96 <= randomSpawn <= 98 and ifOreSpawn == 1:
+                            worldStructureSpawningList.append(5)
+                        elif 99 <= randomSpawn <= 101 and ifOreSpawn == 1:
+                            worldStructureSpawningList.append(6)
                         else:
                             worldStructureSpawningList.append(0)
                     except Exception:
@@ -196,125 +200,52 @@ class new_World():
 
                 worldStructureSpawningList = worldStructureSpawning(dlugosc)
 
-                def swiat0(sz):
-                    for i in range(34 * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - i},0")
+                def oreAndTreeDiscrybution(swiat):
+                    for i in range((34 - swiat) * 96, 0, -96):
+                        swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
+
                     if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},696,treeGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},treGen")
                     elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},696,coalGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},coaGen")
                     elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},696,ironGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},iroGen")
                     elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},696,diamondGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},golGen")
+                    elif worldStructureSpawningList[sz] == 5:
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},diaGen")
+                    elif worldStructureSpawningList[sz] == 6:
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},emeGen")
                     else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},696,0")
-                    swiatFileToWrite[sz].append(f"{sz * 96},792,3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},888,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},984,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1080,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1176,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1272,1")
-                    for i in range(0, 57 * 96, 96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},0")
+
+                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},15")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},14")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},14")
+
+                    for i in range((56 + swiat)):
+                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
+
+                    swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedGen")
+
+                    #for i in range(0, 57 * 96, 96):
+                    #    swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+
+                def swiat0(sz):
+                    oreAndTreeDiscrybution(0)
 
                 def swiat1(sz):
-                    for i in range(33 * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{600 - i},0")
-                    if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},600,treeGen")
-                    elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},600,coalGen")
-                    elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},600,ironGen")
-                    elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},600,diamondGen")
-                    else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},600,0")
-                    swiatFileToWrite[sz].append(f"{sz * 96},696,3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},792,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},888,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},984,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1080,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1176,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1272,1")
-                    for i in range(0, 57 * 96, 96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+                    oreAndTreeDiscrybution(1)
 
                 def swiat2(sz):
-                    for i in range(32 * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{504 - i},0")
-                    if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},504,treeGen")
-                    elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},504,coalGen")
-                    elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},504,ironGen")
-                    elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},504,diamondGen")
-                    else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},504,0")
-                    swiatFileToWrite[sz].append(f"{sz * 96},600,3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},696,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},792,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},888,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},984,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1080,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1176,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1272,1")
-                    for i in range(0, 57 * 96, 96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+                    oreAndTreeDiscrybution(2)
 
                 def swiat3(sz):
-                    for i in range(31 * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{408 - i},0")
-                    if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},408,treeGen")
-                    elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},408,coalGen")
-                    elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},408,ironGen")
-                    elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},408,diamondGen")
-                    else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},408,0")
-                    swiatFileToWrite[sz].append(f"{sz * 96},504,3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},600,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},696,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},792,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},888,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},984,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1080,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1176,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1272,1")
-                    for i in range(0, 57 * 96, 96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+                    oreAndTreeDiscrybution(3)
 
                 def swiat4(sz):
-                    for i in range(30 * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{312 - i},0")
-                    if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},312,treeGen")
-                    elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},312,coalGen")
-                    elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},312,ironGen")
-                    elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},312,diamondGen")
-                    else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},312,0")
-                    swiatFileToWrite[sz].append(f"{sz * 96},408,3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},504,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},600,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},696,2")
-                    swiatFileToWrite[sz].append(f"{sz * 96},792,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},888,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},984,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1080,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1176,1")
-                    swiatFileToWrite[sz].append(f"{sz * 96},1272,1")
-                    for i in range(0, 57 * 96, 96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{1272 + i},1")
+                    oreAndTreeDiscrybution(4)
 
                 swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4}
 
