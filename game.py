@@ -25,7 +25,6 @@ class Game:
         with open('assest/saves/save/playerSave.data', 'rb') as filehandle:
             self.playerInfo = pickle.load(filehandle)
 
-        self.programRun = 1
 
         self.block = []
 
@@ -58,6 +57,10 @@ class Game:
         #self.minEqShow = 1
         self.maxEqShow = 0
 
+        self.itemCountInInventory = {}
+        noItemLoad = 0
+
+
         # TEXTURES
         with open("assest/textures/texturesBlockLoad.txt", "r") as f:
             readTEMPtextures = str(f.read()).split('\n')[:-1]
@@ -71,6 +74,12 @@ class Game:
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96)), list.split(",")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
 
+        try:
+            self.itemCountInInventory = self.playerInfo[4]
+        except Exception:
+            for i in range(len(readTEMPtextures)):
+                self.itemCountInInventory[i + 1] = 0
+
         self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
 
@@ -83,7 +92,7 @@ class Game:
         self.eqSelectTexture = pygame.image.load('assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
 
-        self.mEqShowItems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.mEqShowItems = self.playerInfo[3]
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
@@ -94,7 +103,7 @@ class Game:
 
         self.eqItemsID[0] = [1,2,3,4,5,6,7,8,9,10]
         self.eqItemsID[1] = [11,12,13,14,15,16,17,18,19,20]
-        self.eqItemsID[2] = [21,0,0,0,0,0,0,0,0,0]
+        self.eqItemsID[2] = [21,22,0,0,0,0,0,0,0,0]
         self.eqItemsID[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.eqItemsID[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.eqItemsID[5] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -105,8 +114,12 @@ class Game:
 
         self.oneMouseClick = 0
 
-
         self.fallSpeed = 6.00
+
+        #Fonts
+        self.itemInventoryCountFont = pygame.font.SysFont("itemCountFonts", 30)
+
+        self.programRun = 1
 
         self.always()
 
@@ -165,6 +178,7 @@ class Game:
                     elif event.key == pygame.K_TAB:
                         if self.maxEqShow == 0:
                             self.maxEqShow = 1
+                            self.oneMouseClick = 0
                         else:
                             self.maxEqShow = 0
 
@@ -191,7 +205,7 @@ class Game:
             self.saveToTime = 0
             swiatFileToWrite = self.blockFileRead
 
-            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2]]
+            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory]
         # SPAWN WORLD SETTER
             with open('assest/saves/save/worldSave.data', 'wb') as filehandle:
                 pickle.dump(swiatFileToWrite, filehandle)
@@ -204,6 +218,7 @@ class Game:
     def drawing(self):
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColor)
+        self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
                 try:
@@ -258,31 +273,29 @@ class Game:
                                     # DOWN 2
                 except Exception:
                     pass
+
         self.drawGui()
 
     def drawBody(self):
         self.screen.blit(self.head, (928, 492))
 
     def drawGui(self):
-        self.drawBody()
-
         self.screen.blit(self.hotBarTexture, (460, 920))
 
         for i in range(10):
             if self.mEqShowItems[i] != 0:
                 self.screen.blit(self.typeBlockTextureInventory[self.mEqShowItems[i]], (485 + (i * 99), 941))
+                self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.mEqShowItems[i]]), 1, (250, 250, 250)), (485 + (i * 99), 980))
 
         self.screen.blit(self.eqSelectTexture, (479 + (self.selectBlock * 99), 935))
 
         if self.maxEqShow == 1:
             self.screen.blit(self.eqTexture, (460, 420))
 
-            hitboxesEq = []
             for wysEq in range(3):
                 for szerEq in range(10):
-                    if self.mEqShowItems[szerEq] != 0:
-                        if self.eqItemsID[wysEq + self.eqLine][szerEq] > 0:
-                            self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
+                    if self.eqItemsID[wysEq + self.eqLine][szerEq] > 0:
+                        self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
 
                         if pygame.Rect(511 + (szerEq * 92.8), 502 + (wysEq * 92), 64, 64).collidepoint(self.xPosMouse, self.yPosMouse) and self.oneMouseClick == 1:
                             self.oneMouseClick = 0
@@ -354,13 +367,17 @@ class Game:
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "1" and collide and self.maxEqShow == 0:
+        blockType = self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2]
+        if pygame.mouse.get_pressed(3)[0] and blockType != "0" and blockType != "1" and collide and self.maxEqShow == 0:
+            self.itemCountInInventory[int(blockType)] += 1
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
-        elif pygame.mouse.get_pressed(3)[2] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] == "0" and collide and self.maxEqShow == 0:
+
+        elif pygame.mouse.get_pressed(3)[2] and blockType == "0" and collide and self.maxEqShow == 0 and  self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] > 0:
             collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
             if not collideHuman:
+                self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] -= 1
                 temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
                 self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},{self.mEqShowItems[self.selectBlock]}"
 
@@ -387,19 +404,19 @@ class Game:
                     self.PosCam += Vector2(-6, 0)
 
     # GRAVITY AND UP self.fallSpeed
+        if self.blockCollizionDetect[2] > 0:
+            self.PosCam += Vector2(0, -6)
+
         if self.blockCollizionDetect[3] > 0:
             self.PosCam += Vector2(0, 6)
 
-        elif self.blockCollizionDetect[4] < 1:
+        if self.blockCollizionDetect[4] < 1:
             self.PosCam += Vector2(0, self.fallSpeed * -1)
             self.fallSpeed *= 1.04
             if self.fallSpeed > 20.0:
                 self.fallSpeed = 20.0
 
-        elif self.blockCollizionDetect[2] > 0:
-            self.PosCam += Vector2(0, -6)
-
-        elif self.blockCollizionDetect[4] > 0:
+        if self.blockCollizionDetect[4] > 0:
             self.fallSpeed = 6.00
 
     def controlsJumpHigh(self):

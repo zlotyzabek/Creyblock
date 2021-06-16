@@ -219,7 +219,7 @@ class new_World():
                     else:
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},0")
 
-                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},15")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},16")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},14")
                     swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},14")
@@ -253,7 +253,7 @@ class new_World():
                     swiatFileToWrite.append([])
                     swiatGenSetting[swiat[sz]](sz)
 
-                playerInfo = [dlugosc * 48, 600, dlugosc]
+                playerInfo = [dlugosc * 48, 600, dlugosc, [0,0,0,0,0,0,0,0,0,0]]
             # SPAWN WORLD SETTER
                 try:
                     os.makedirs("assest/saves/save")

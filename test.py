@@ -1,7 +1,4 @@
-zmienna = "ELOELO"
+import pickle
 
-print(zmienna[:len(zmienna) - 1])
-
-zmienna = zmienna + "g"
-
-print(zmienna)
+with open('assest/saves/save/playerSave.data', 'rb') as filehandle:
+    print(pickle.load(filehandle))
