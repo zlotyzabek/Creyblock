@@ -116,7 +116,7 @@ class Game:
         self.fallSpeed = 6.00
 
         #Fonts
-        self.itemInventoryCountFont = pygame.font.SysFont(f"{sys.path[0]}/assest/fonts/itemCountFonts.ttf", 30)
+        self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
 
         self.programRun = 1
 
@@ -284,7 +284,10 @@ class Game:
         for i in range(10):
             if self.mEqShowItems[i] != 0:
                 self.screen.blit(self.typeBlockTextureInventory[self.mEqShowItems[i]], (485 + (i * 99), 941))
-                self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.mEqShowItems[i]]), 1, (250, 250, 250)), (485 + (i * 99), 980))
+                if self.itemCountInInventory[self.mEqShowItems[i]] < 1000:
+                    self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.mEqShowItems[i]]), 1, (250, 250, 250)), (485 + (i * 99), 980))
+                else:
+                    self.screen.blit(self.itemInventoryCountFont.render(str(int(self.itemCountInInventory[self.mEqShowItems[i]] / 1000)) + "K", 1, (250, 250, 250)), (485 + (i * 99), 980))
 
         self.screen.blit(self.eqSelectTexture, (479 + (self.selectBlock * 99), 935))
 
@@ -295,6 +298,13 @@ class Game:
                 for szerEq in range(10):
                     if self.eqItemsID[wysEq + self.eqLine][szerEq] > 0:
                         self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
+
+                        if self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]] < 1000:
+                            self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]]),1, (250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
+                        else:
+                            self.screen.blit(self.itemInventoryCountFont.render(str(int(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]] / 1000)) + "K", 1,(250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
+
+                        #self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]]), 1, (250, 250, 250)),(512 + (szerEq * 92.8), 541 + (wysEq * 92)))
 
                         if pygame.Rect(511 + (szerEq * 92.8), 502 + (wysEq * 92), 64, 64).collidepoint(self.xPosMouse, self.yPosMouse) and self.oneMouseClick == 1:
                             self.oneMouseClick = 0

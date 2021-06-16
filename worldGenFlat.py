@@ -2,7 +2,6 @@ import random
 import sys
 import pygame
 from pygame.locals import *
-import pyautogui
 import main
 import pickle
 import os
@@ -27,8 +26,8 @@ class new_World():
         self.mainWallpeper = pygame.image.load(f'{sys.path[0]}/assest/textures/worldGenWapllpeper.png').convert_alpha()
         self.mainButton = pygame.image.load(f'{sys.path[0]}/assest/textures/mainButtonTexture.png').convert_alpha()
 
-        self.mainFont = pygame.font.SysFont("Showcard Gothic", 150)
-        self.mainFontB = pygame.font.SysFont("Showcard Gothic", 90)
+        self.mainFont = pygame.font.Font((f"{sys.path[0]}/assest/fonts/menu.ttf"), 150)
+        self.mainFontB = pygame.font.Font((f"{sys.path[0]}/assest/fonts/menu.ttf"), 90)
 
         self.always()
 
