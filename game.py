@@ -331,7 +331,10 @@ class Game:
                     except Exception:
                         pass
 
-        if self.blockFileRead[szer][wys].split(",")[2] == "treGen":
+        if self.blockFileRead[szer][wys].split(",")[2] == "bedGen":
+            oreGenerating(4, 0, 0, "bed", "ores")
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "treGen":
             oreGenerating(5, 0, 0, "tre", "trees")
 
         elif self.blockFileRead[szer][wys].split(",")[2] == "coaGen":
@@ -351,7 +354,7 @@ class Game:
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
-        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and collide and self.maxEqShow == 0:
+        if pygame.mouse.get_pressed(3)[0] and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "0" and self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[2] != "1" and collide and self.maxEqShow == 0:
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
