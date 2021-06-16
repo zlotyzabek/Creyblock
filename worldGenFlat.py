@@ -24,8 +24,8 @@ class new_World():
         pic = pygame.surface.Surface((50, 50))
         pic.fill((255, 100, 200))
 
-        self.mainWallpeper = pygame.image.load('assest/textures/worldGenWapllpeper.png').convert_alpha()
-        self.mainButton = pygame.image.load('assest/textures/mainButtonTexture.png').convert_alpha()
+        self.mainWallpeper = pygame.image.load(f'{sys.path[0]}/assest/textures/worldGenWapllpeper.png').convert_alpha()
+        self.mainButton = pygame.image.load(f'{sys.path[0]}/assest/textures/mainButtonTexture.png').convert_alpha()
 
         self.mainFont = pygame.font.SysFont("Showcard Gothic", 150)
         self.mainFontB = pygame.font.SysFont("Showcard Gothic", 90)
@@ -260,10 +260,10 @@ class new_World():
                 except Exception:
                     pass
 
-                with open('assest/saves/save/worldSave.data', 'wb') as filehandle:
+                with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                     pickle.dump(swiatFileToWrite, filehandle)
 
-                with open('assest/saves/save/playerSave.data', 'wb') as filehandle:
+                with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'wb') as filehandle:
                     pickle.dump(playerInfo, filehandle)
 
                 main.Main()

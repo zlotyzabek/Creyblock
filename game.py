@@ -5,7 +5,6 @@ import pickle
 import pygame
 from pygame.locals import *
 from pygame.math import Vector2
-import pyautogui
 import sys
 
 
@@ -19,10 +18,10 @@ class Game:
         pygame.init()
 
         # LOADING WORLD
-        with open('assest/saves/save/worldSave.data', 'rb') as filehandle:
+        with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'rb') as filehandle:
             self.blockFileRead = pickle.load(filehandle)
 
-        with open('assest/saves/save/playerSave.data', 'rb') as filehandle:
+        with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'rb') as filehandle:
             self.playerInfo = pickle.load(filehandle)
 
 
@@ -62,7 +61,7 @@ class Game:
 
 
         # TEXTURES
-        with open("assest/textures/texturesBlockLoad.txt", "r") as f:
+        with open(f"{sys.path[0]}/assest/textures/texturesBlockLoad.txt", "r") as f:
             readTEMPtextures = str(f.read()).split('\n')[:-1]
         self.typeBlockTextureBlock = {}
         self.typeBlockTextureInventory = {}
@@ -80,16 +79,16 @@ class Game:
             for i in range(len(readTEMPtextures)):
                 self.itemCountInInventory[i + 1] = 0
 
-        self.head = pygame.image.load('assest/textures/player/head.png').convert_alpha().convert()
+        self.head = pygame.image.load(f'{sys.path[0]}/assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
 
-        self.hotBarTexture = pygame.image.load('assest/textures/hotBar.png').convert()
+        self.hotBarTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/hotBar.png').convert()
         self.hotBarTexture = pygame.transform.scale(self.hotBarTexture, (1000, 100))
 
-        self.eqTexture = pygame.image.load('assest/textures/equipment.png').convert_alpha()
+        self.eqTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/equipment.png').convert_alpha()
         self.eqTexture = pygame.transform.scale(self.eqTexture, (1000, 381))
 
-        self.eqSelectTexture = pygame.image.load('assest/textures/selection_equipment.png').convert_alpha()
+        self.eqSelectTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
 
         self.mEqShowItems = self.playerInfo[3]
@@ -117,7 +116,7 @@ class Game:
         self.fallSpeed = 6.00
 
         #Fonts
-        self.itemInventoryCountFont = pygame.font.SysFont("itemCountFonts", 30)
+        self.itemInventoryCountFont = pygame.font.SysFont(f"{sys.path[0]}/assest/fonts/itemCountFonts.ttf", 30)
 
         self.programRun = 1
 
@@ -207,10 +206,10 @@ class Game:
 
             playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory]
         # SPAWN WORLD SETTER
-            with open('assest/saves/save/worldSave.data', 'wb') as filehandle:
+            with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                 pickle.dump(swiatFileToWrite, filehandle)
 
-            with open('assest/saves/save/playerSave.data', 'wb') as filehandle:
+            with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'wb') as filehandle:
                 pickle.dump(playerInfo, filehandle)
 
             self.saveImageDisplay = 0
@@ -329,7 +328,7 @@ class Game:
         def oreGenerating(maxSize, minH, maxH, oreName, type):
             Size = random.randint(1, maxSize)
             Down = random.randint(minH, maxH)
-            with open(f"assest/structures/{type}/{oreName}Size{Size}.txt", "r") as f:
+            with open(f"{sys.path[0]}/assest/structures/{type}/{oreName}Size{Size}.txt", "r") as f:
                 self.blockFileRead[szer][wys] = \
                     structurListEditor(self.blockFileRead, szer, wys, f"{oreName}Gen", "0")
                 for line in f:

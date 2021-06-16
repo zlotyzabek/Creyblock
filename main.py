@@ -25,8 +25,8 @@ class Main:
         pic.fill((255, 100, 200))
 
         # TEXTURES AND STRINGS PRINT
-        self.mainWallpeper = pygame.image.load('assest/textures/mainWallpeper.png').convert_alpha()
-        self.mainButton = pygame.image.load('assest/textures/mainButtonTexture.png').convert_alpha()
+        self.mainWallpeper = pygame.image.load(f'{sys.path[0]}/assest/textures/mainWallpeper.png').convert_alpha()
+        self.mainButton = pygame.image.load(f'{sys.path[0]}/assest/textures/mainButtonTexture.png').convert_alpha()
         self.mainFontB = pygame.font.SysFont("Showcard Gothic", 202)
         self.mainFont = pygame.font.SysFont("Showcard Gothic", 200)
         self.mainFontType = pygame.font.SysFont("Showcard Gothic", 100)
