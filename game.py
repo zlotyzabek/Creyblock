@@ -1,9 +1,13 @@
 import threading
 import random
 import pickle
+from PIL import Image
+from PIL import ImageEnhance
+import time
 
 import pygame
 from pygame.locals import *
+import pygame.gfxdraw
 from pygame.math import Vector2
 import sys
 
@@ -56,6 +60,8 @@ class Game:
         #self.minEqShow = 1
         self.maxEqShow = 0
 
+        self.jumpSpeed = 1.00
+
         self.itemCountInInventory = {}
         noItemLoad = 0
 
@@ -73,12 +79,6 @@ class Game:
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96)), list.split(",")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
 
-        try:
-            self.itemCountInInventory = self.playerInfo[4]
-        except Exception:
-            for i in range(len(readTEMPtextures)):
-                self.itemCountInInventory[i + 1] = 0
-
         self.head = pygame.image.load(f'{sys.path[0]}/assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
 
@@ -91,22 +91,30 @@ class Game:
         self.eqSelectTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
 
-        self.mEqShowItems = self.playerInfo[3]
+        img = Image.open("assest/textures/sky_color.png")
+        img = img.convert("RGB")
+        self.skyColorMap = []
+        for i in range(24000):
+            self.skyColorMap.append([img.getpixel((i, 0))[0], img.getpixel((i, 0))[1], img.getpixel((i, 0))][2])
+
 
         self.skyColor = 60, 210, 220
         self.errorTextures = 255, 0, 255
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
 
-        self.eqItemsID = [[],[],[], [], [] ,[] ,[] ,[] ,[] ,[] ,[]]
+        try:
+            self.mEqShowItems = self.playerInfo[3]
+            self.itemCountInInventory = self.playerInfo[4]
+            self.eqItemsID = self.playerInfo[5]
+            self.worldTime = self.playerInfo[6]
+        except Exception:
+            self.mEqShowItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            for i in range(len(readTEMPtextures)):
+                self.itemCountInInventory[i + 1] = 0
+            self.eqItemsID = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            self.worldTime = 0
 
-        self.eqItemsID[0] = [1,2,3,4,5,6,7,8,9,10]
-        self.eqItemsID[1] = [11,12,13,14,15,16,17,18,19,20]
-        self.eqItemsID[2] = [21,22,0,0,0,0,0,0,0,0]
-        self.eqItemsID[3] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.eqItemsID[4] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.eqItemsID[5] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.eqItemsID[6] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.eqLine = 0
 
         self.itemClick = 0
@@ -124,6 +132,7 @@ class Game:
 
     def always(self):
         while True:
+            start = time.time()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.savingWorld()
@@ -181,18 +190,18 @@ class Game:
                         else:
                             self.maxEqShow = 0
 
-            self.delta += self.clock.tick()/1000.0
-            while self.delta > 1 / 60.0:
-                self.ticking()
-                self.delta -= 1 / 60.0
-
+            self.ticking()
             self.drawing()
             self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             self.colides()
             pygame.display.update()
+            print(str(time.time() - start))
+            self.clock.tick(60)
 
     def ticking(self):
-        self.controls()
+        self.worldTime += 0.5
+        if self.worldTime >= 23999:
+            self.worldTime = 0
         if self.saveToTime >= self.saveTimeWorld * 7200:
             threading.Thread(target=self.savingWorld).start()
 
@@ -204,7 +213,7 @@ class Game:
             self.saveToTime = 0
             swiatFileToWrite = self.blockFileRead
 
-            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory]
+            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory, self.eqItemsID, self.worldTime]
         # SPAWN WORLD SETTER
             with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                 pickle.dump(swiatFileToWrite, filehandle)
@@ -215,20 +224,17 @@ class Game:
             self.saveImageDisplay = 0
 
     def drawing(self):
+
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.screen.fill(self.skyColor)
-        self.drawBody()
+        self.screen.fill(self.skyColorMap[int(self.worldTime)])
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
                 try:
                     self.worldGen(szer, wys)
-                    if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020 and -100 < int(
-                            self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
-
+                    if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
                         block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                              int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
-
 
                         self.blockRemovingAndSetter((szer, wys), block)
 
@@ -237,9 +243,11 @@ class Game:
                                     self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                                                  1] * (self.sizeScreen[1] /
                                                                        self.screenReal.get_rect().size[1])
+
                             self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
                                 int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                 int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
+
 
                             if self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][1] == "c":
                                 if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
@@ -266,13 +274,14 @@ class Game:
                                 if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
                                     self.blockCollizionDetect[3] += 1
                                     # DOWN
-
                                 if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
                                     self.blockCollizionDetect[4] += 1
                                     # DOWN 2
+
                 except Exception:
                     pass
-
+        self.controls()
+        self.drawBody()
         self.drawGui()
 
     def drawBody(self):
@@ -296,19 +305,17 @@ class Game:
 
             for wysEq in range(3):
                 for szerEq in range(10):
-                    if self.eqItemsID[wysEq + self.eqLine][szerEq] > 0:
-                        self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
+                    if self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq] > 0:
+                        self.screen.blit(self.typeBlockTextureInventory[self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq]], (511 + (szerEq * 92.8), 502 + (wysEq * 92)))
 
-                        if self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]] < 1000:
-                            self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]]),1, (250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
+                        if self.itemCountInInventory[self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq]] < 1000:
+                            self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq]]),1, (250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
                         else:
-                            self.screen.blit(self.itemInventoryCountFont.render(str(int(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]] / 1000)) + "K", 1,(250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
-
-                        #self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.eqItemsID[wysEq + self.eqLine][szerEq]]), 1, (250, 250, 250)),(512 + (szerEq * 92.8), 541 + (wysEq * 92)))
+                            self.screen.blit(self.itemInventoryCountFont.render(str(int(self.itemCountInInventory[self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq]] / 1000)) + "K", 1,(250, 250, 250)), (512 + (szerEq * 92.8), 541 + (wysEq * 92)))
 
                         if pygame.Rect(511 + (szerEq * 92.8), 502 + (wysEq * 92), 64, 64).collidepoint(self.xPosMouse, self.yPosMouse) and self.oneMouseClick == 1:
                             self.oneMouseClick = 0
-                            self.itemClick = self.eqItemsID[wysEq + self.eqLine][szerEq]
+                            self.itemClick = self.eqItemsID[(((wysEq + self.eqLine) * 10)) + szerEq]
 
             if self.itemClick != 0:
                 self.screen.blit(self.typeBlockTextureInventory[self.itemClick], (self.xPosMouse - 32, self.yPosMouse - 32))
@@ -428,14 +435,17 @@ class Game:
         if self.blockCollizionDetect[4] > 0:
             self.fallSpeed = 6.00
 
+        self.PosCam += Vector2(0, self.jumpSpeed)
+        if self.jumpSpeed > 1:
+            self.jumpSpeed /= 1.15
+        else:
+            self.jumpSpeed = 0
+
     def controlsJumpHigh(self):
-        for i in range(220):
-            self.PosCam += Vector2(0, 1)
+        self.jumpSpeed += 50
 
     def controlsJumpMedium(self):
-        for i in range(128):
-            self.PosCam += Vector2(0, 1)
+        self.jumpSpeed += 35
 
     def controlsJumpLow(self):
-        for i in range(32):
-            self.PosCam += Vector2(0, 1)
+        self.jumpSpeed += 15

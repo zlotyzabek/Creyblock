@@ -252,7 +252,7 @@ class new_World():
                     swiatFileToWrite.append([])
                     swiatGenSetting[swiat[sz]](sz)
 
-                playerInfo = [dlugosc * 48, 600, dlugosc, [0,0,0,0,0,0,0,0,0,0]]
+                playerInfo = [dlugosc * 48, 600, dlugosc]
             # SPAWN WORLD SETTER
                 try:
                     os.makedirs("assest/saves/save")
