@@ -29,7 +29,7 @@ def firstLaunch():
     os.remove(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
     os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
     shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
-    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\laucher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
+    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\launcher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
     shell = win32com.client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(os.path.join(os.path.expanduser("~"), "desktop\\CreyBlock.lnk"))
     shortcut.Targetpath = f"C{os.getenv('APPDATA')}\\CreyBlock\\laucher\\laucher.py"
