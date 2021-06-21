@@ -151,6 +151,10 @@ class new_World():
                             worldStructureSpawningList.append(5)
                         elif 99 <= randomSpawn <= 101 and ifOreSpawn == 1:
                             worldStructureSpawningList.append(6)
+                        elif 102 <= randomSpawn <= 121:
+                            worldStructureSpawningList.append(7)
+                        elif 121 <= randomSpawn <= 131:
+                            worldStructureSpawningList.append(8)
                         else:
                             worldStructureSpawningList.append(0)
                     except Exception:
@@ -215,6 +219,10 @@ class new_World():
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},diaGen")
                     elif worldStructureSpawningList[sz] == 6:
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},emeGen")
+                    elif worldStructureSpawningList[sz] == 7:
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},graGen")
+                    elif worldStructureSpawningList[sz] == 8:
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},sgcGen")
                     else:
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},0")
 

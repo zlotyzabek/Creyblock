@@ -1,3 +1,4 @@
+
 import threading
 import random
 import pickle
@@ -224,7 +225,6 @@ class Game:
             self.saveImageDisplay = 0
 
     def drawing(self):
-
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
@@ -372,7 +372,7 @@ class Game:
         elif self.blockFileRead[szer][wys].split(",")[2] == "iroGen":
             oreGenerating(3, 10, 50, "iro", "ores")
 
-        elif self.blockFileRead[szer][wys].split(",")[2] == "iroGen":
+        elif self.blockFileRead[szer][wys].split(",")[2] == "golGen":
             oreGenerating(2, 10, 50, "gol", "ores")
 
         elif self.blockFileRead[szer][wys].split(",")[2] == "diaGen":
@@ -380,6 +380,12 @@ class Game:
 
         elif self.blockFileRead[szer][wys].split(",")[2] == "emeGen":
             oreGenerating(1, 10, 50, "eme", "ores")
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "graGen":
+            oreGenerating(1, 0, 0, "gra", "ores")
+
+        elif self.blockFileRead[szer][wys].split(",")[2] == "sgcGen":
+            oreGenerating(1, 10, 50, "sgc", "ores")
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)

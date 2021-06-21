@@ -1,3 +1,5 @@
+#! E:\skrótyPulpit\PrograminngProject\Python\3D_Game\ven\Scripts\python.exe
+
 import sys
 
 import pygame
