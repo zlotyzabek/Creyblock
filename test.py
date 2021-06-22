@@ -1,50 +1,33 @@
-import wget
-import shutil
+"""import os, winshell
+from win32com.client import Dispatch
+desktop = winshell.desktop()
 
-import zipfile
-import os
-import stat
-
-def on_rm_error(func, path, exc_info):
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
-
-def lunchGame():
-    os.system(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\ven\\Scripts\\python.exe {os.getenv('APPDATA')}\\CreyBlock\\files\\main.py")
-
-def firstLaunch():
-    print("Folder initialization")
-    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock")
-    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\saves")
-    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\temp")
-    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
-    print("Downloading main file")
-    wget.download("https://github.com/zlotyzabek/Creyblock/archive/refs/heads/main.zip", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
-    print("Extracting main file")
-    with zipfile.ZipFile(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip", 'r') as zip_ref:
-        zip_ref.extractall(f"{os.getenv('APPDATA')}\\CreyBlock\\temp")
-    print("Deleting unnecessary files")
-    os.remove(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
-    os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
-    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
-
-def updating():
-    print("Deleting game files")
-    shutil.rmtree(f"{os.getenv('APPDATA')}\\CreyBlock\\files", onerror=on_rm_error)
-    print("Downloading main file")
-    wget.download("https://github.com/zlotyzabek/Creyblock/archive/refs/heads/main.zip",
-                  f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
-    print("Extracting main file")
-    with zipfile.ZipFile(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip", 'r') as zip_ref:
-        zip_ref.extractall(f"{os.getenv('APPDATA')}\\CreyBlock\\temp")
-    print("Deleting unnecessary files")
-    os.remove(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
-    os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main",
-              f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
-    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
-
-#updating()
-lunchGame()
-#firstLaunch()
+path = os.path.join(desktop, "myNeatWebsite.url")
+target = "http://www.google.com/"
+shortcut = open(path, 'w')
+shortcut.write('[InternetShortcut]\n')
+shortcut.write('URL=%s' % target)
+shortcut.close()"""
 
 
+#path = os.path.join(desktop, "Media Player Classic.lnk")
+#target = r"P:\Media\Media Player Classic\mplayerc.exe"
+#wDir = r"P:\Media\Media Player Classic"
+#icon = r"P:\Media\Media Player Classic\mplayerc.exe"
+#shell = Dispatch('WScript.Shell')
+#shortcut = shell.CreateShortCut(path)
+#shortcut.Targetpath = target
+#shortcut.WorkingDirectory = wDir
+#shortcut.IconLocation = icon
+#shortcut.save()
+
+
+desktop = winshell.desktop()
+path = os.path.join(desktop, 'CreyBlock.lnk')
+target = r"C:\Users\lenovo\Documents\sample2.txt"
+icon = r"C:\Users\lenovo\Documents\sample2.txt"
+shell = win32com.client.Dispatch("WScript.Shell")
+shortcut = shell.CreateShortCut(path)
+shortcut.Targetpath = target
+shortcut.IconLocation = icon
+shortcut.save()

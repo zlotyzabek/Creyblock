@@ -1,7 +1,7 @@
 import wget
 import shutil
 import win32com.client
-import pythoncom
+import winshell
 
 import zipfile
 import os
@@ -10,6 +10,17 @@ import stat
 def on_rm_error(func, path, exc_info):
     os.chmod(path, stat.S_IWRITE)
     os.unlink(path)
+
+def createShort():
+    desktop = winshell.desktop()
+    path = os.path.join(desktop, 'CreyBlock.lnk')
+    target = f"{os.getenv('APPDATA')}\\CreyBlock\\laucher\\runLauncher.py"
+    icon = r"C:\Users\lenovo\Documents\sample2.txt"
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(path)
+    shortcut.Targetpath = target
+    shortcut.IconLocation = icon
+    shortcut.save()
 
 def lunchGame():
     os.system(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\ven\\Scripts\\python.exe {os.getenv('APPDATA')}\\CreyBlock\\files\\main.py")
@@ -30,12 +41,8 @@ def firstLaunch():
     os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
     shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
     shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\launcher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
-    shell = win32com.client.Dispatch("WScript.Shell")
-    shortcut = shell.CreateShortCut(os.path.join(os.path.expanduser("~"), "desktop\\CreyBlock.lnk"))
-    shortcut.Targetpath = f"C{os.getenv('APPDATA')}\\CreyBlock\\laucher\\laucher.py"
-    #shortcut.IconLocation = icon
-    shortcut.WindowStyle = 7  # 7 - Minimized, 3 - Maximized, 1 - Normal
-    shortcut.save()
+    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\runLauncher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
+    createShort()
 
 def updating():
     print("Deleting game files")
@@ -51,6 +58,10 @@ def updating():
     os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main",
               f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
     shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
+    try:
+        createShort()
+    except Exception:
+        pass
 
 def reInstall():
     unInstall()
