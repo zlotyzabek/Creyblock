@@ -126,7 +126,23 @@ class new_World():
                     if r is not None:
                         t.append(r)
 
-                    r = ifRandomRSet(4, 3, 4)
+                    r = ifRandomRSet(4, 3, 6)
+                    if r is not None:
+                        t.append(r)
+
+                    r = ifRandomRSet(5, 4, 7)
+                    if r is not None:
+                        t.append(r)
+
+                    r = ifRandomRSet(6, 5, 8)
+                    if r is not None:
+                        t.append(r)
+
+                    r = ifRandomRSet(7, 6, 9)
+                    if r is not None:
+                        t.append(r)
+
+                    r = ifRandomRSet(8, 7, 8)
                     if r is not None:
                         t.append(r)
 
@@ -254,7 +270,20 @@ class new_World():
                 def swiat4(sz):
                     oreAndTreeDiscrybution(4)
 
-                swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4}
+                def swiat5(sz):
+                    oreAndTreeDiscrybution(5)
+
+                def swiat6(sz):
+                    oreAndTreeDiscrybution(6)
+
+                def swiat7(sz):
+                    oreAndTreeDiscrybution(7)
+
+                def swiat8(sz):
+                    oreAndTreeDiscrybution(8)
+
+
+                swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4, 5: swiat5, 6: swiat6, 7: swiat7, 8: swiat8}
 
                 for sz in range(dlugosc):
                     swiatFileToWrite.append([])

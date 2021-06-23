@@ -196,7 +196,6 @@ class Game:
             self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             self.colides()
             pygame.display.update()
-            print(str(time.time() - start))
             self.clock.tick(60)
 
     def ticking(self):
@@ -319,6 +318,10 @@ class Game:
 
             if self.itemClick != 0:
                 self.screen.blit(self.typeBlockTextureInventory[self.itemClick], (self.xPosMouse - 32, self.yPosMouse - 32))
+                if self.itemCountInInventory[self.itemClick] < 1000:
+                    self.screen.blit(self.itemInventoryCountFont.render(str(self.itemCountInInventory[self.itemClick]), 1,(250, 250, 250)), (self.xPosMouse - 32, self.yPosMouse + 8))
+                else:
+                    self.screen.blit(self.itemInventoryCountFont.render(str(int(self.itemCountInInventory[self.itemClick] / 1000)) + "K",1, (250, 250, 250)),(self.xPosMouse - 32, self.yPosMouse + 8))
 
                 if self.oneMouseClick == 1:
                     self.oneMouseClick = 0
