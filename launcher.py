@@ -14,7 +14,7 @@ def on_rm_error(func, path, exc_info):
 def createShort():
     desktop = winshell.desktop()
     path = os.path.join(desktop, 'CreyBlock.lnk')
-    target = f"{os.getenv('APPDATA')}\\CreyBlock\\laucher\\runLauncher.py"
+    target = f"{os.getenv('APPDATA')}\\CreyBlock\\launcher\\runLauncher.py"
     icon = r"C:\Users\lenovo\Documents\sample2.txt"
     shell = win32com.client.Dispatch("WScript.Shell")
     shortcut = shell.CreateShortCut(path)
@@ -30,7 +30,7 @@ def firstLaunch():
     os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock")
     os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\saves")
     os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\temp")
-    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
+    os.mkdir(f"{os.getenv('APPDATA')}\\CreyBlock\\launcher")
     print("Downloading main file")
     wget.download("https://github.com/zlotyzabek/Creyblock/archive/refs/heads/main.zip", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
     print("Extracting main file")
@@ -93,8 +93,5 @@ while True:
             options[str(options).lower]()
     except Exception:
         print("Nie ma takiego polecenia")
-
-
-
 
     options[option]()
