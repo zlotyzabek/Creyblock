@@ -40,8 +40,8 @@ def firstLaunch():
     os.remove(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main.zip")
     os.rename(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\Creyblock-main", f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files")
     shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\temp\\files", f"{os.getenv('APPDATA')}\\CreyBlock")
-    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\launcher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
-    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\runLauncher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\laucher")
+    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\launcher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\launcher")
+    shutil.move(f"{os.getenv('APPDATA')}\\CreyBlock\\files\\runLauncher.py", f"{os.getenv('APPDATA')}\\CreyBlock\\launcher")
     createShort()
 
 def updating():
@@ -74,7 +74,7 @@ def unInstall():
 while True:
     os.system("cls")
     print("==================================")
-    print("Welcome to the CreyBlock laucher")
+    print("Welcome to the CreyBlock launcher")
     print("==================================\n")
     print("Choose an option:")
     print("1. start - Starting game")
@@ -87,11 +87,9 @@ while True:
     option = input("->")
 
     try:
-        if type(1) == type(option):
-            options[int(options)]()
+        if type(1) == type(int(option)):
+            options[int(option)]()
         else:
-            options[str(options).lower]()
+            options[str(option).lower]()
     except Exception:
         print("Nie ma takiego polecenia")
-
-    options[option]()
