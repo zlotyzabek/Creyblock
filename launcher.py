@@ -72,6 +72,7 @@ def unInstall():
     shutil.rmtree(f"{os.getenv('APPDATA')}\\CreyBlock", onerror=on_rm_error)
 
 while True:
+    os.system("cls")
     print("==================================")
     print("Welcome to the CreyBlock laucher")
     print("==================================\n")
@@ -83,10 +84,17 @@ while True:
     print("5. uninstall - Deletes all game files from the computer :(")
 
     options = {1: lunchGame, 2: firstLaunch, 3: updating, 4: reInstall, 5: unInstall, "start": lunchGame, "install": firstLaunch, "update": updating, "reinstall": reInstall, "uninstall": unInstall}
+    option = input("->")
 
     try:
-        option = input("->").lower()
+        if type(1) == type(option):
+            options[int(options)]()
+        else:
+            options[str(options).lower]()
     except Exception:
-        option = int(input("->"))
+        print("Nie ma takiego polecenia")
+
+
+
 
     options[option]()
