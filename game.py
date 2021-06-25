@@ -20,6 +20,8 @@ class Game:
         # CONFIG
         self.saveTimeWorld = 3   # Time in minutes how many times the world should record. Set to 0 to disable.
 
+        self.launchGame = 1
+
         pygame.init()
 
         # LOADING WORLD
@@ -207,6 +209,7 @@ class Game:
             self.colides()
             pygame.display.update()
             self.clock.tick(60)
+            self.launchGame = 0
 
     def ticking(self):
         self.worldTime += 0.5
@@ -238,8 +241,11 @@ class Game:
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
-                try:
+                if self.launchGame == 1:
                     self.worldGen(szer, wys)
+                if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 0 or 1920 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2320:
+                    self.worldGen(szer, wys)
+                try:
                     if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
                         block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
