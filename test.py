@@ -1,14 +1,7 @@
-import random
+list1 = [20,214,214,214,64,36487,3]
+list2 = [345353,5,35,3534,5,345,345]
 
-def biomGenList(dlugosc):
-    biomList = [0]
-    while len(biomList) <= dlugosc:
-        biom = random.randint(1, 3)
-        for i in range(random.randint(250, 1000)):
-            biomList.append(biom)
+list1.append(list2)
 
-    print(biomList)
-    return biomList
-
-biomGenList(1024)
+print(list1)
 

@@ -98,8 +98,6 @@ class Main:
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
             pass
-            #worldGenFlat.new_World()
-            #sys.exit()
 
 if __name__ == "__main__":
     Main()

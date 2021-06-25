@@ -104,6 +104,16 @@ class Game:
         self.chest = 150, 100, 50
         self.body = 150, 100, 50
 
+        # STRUCTURES
+        self.structures = []
+        self.structuresGen = []
+
+        with open(f"{sys.path[0]}/assest/structures/structurList.txt", "r") as f:
+            for line in f:
+                tempLineSplit = (line.split(","))
+                tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[3]])
+
         try:
             self.mEqShowItems = self.playerInfo[3]
             self.itemCountInInventory = self.playerInfo[4]
@@ -345,50 +355,30 @@ class Game:
         def structurListEditor(list, szer, wys, rep, torep):
             return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
-        def oreGenerating(maxSize, minH, maxH, oreName, type):
-            Size = random.randint(1, maxSize)
-            Down = random.randint(minH, maxH)
-            with open(f"{sys.path[0]}/assest/structures/{type}/{oreName}Size{Size}.txt", "r") as f:
-                self.blockFileRead[szer][wys] = \
-                    structurListEditor(self.blockFileRead, szer, wys, f"{oreName}Gen", "0")
-                for line in f:
-                    tempLineSplit = (line.split(","))
-                    tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                    try:
-                        self.blockFileRead[szer + int(tempLineSplit[0])][
-                            wys + int(tempLineSplit[1]) + Down] = \
-                            structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                               wys + int(tempLineSplit[1]) + Down,
-                                               tempLineSplit[2], tempLineSplit[3])
-                    except Exception:
-                        pass
+        def oreGenerating(settingsOre):
+            if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
+                Size = random.randint(1, settingsOre[0])
+                Down = random.randint(settingsOre[1], settingsOre[2])
+                with open(f"{sys.path[0]}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
+                    self.blockFileRead[szer][wys] = \
+                        structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
+                    for line in f:
+                        tempLineSplit = (line.split(","))
+                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                        try:
+                            self.blockFileRead[szer + int(tempLineSplit[0])][
+                                wys + int(tempLineSplit[1]) + Down] = \
+                                structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                                   wys + int(tempLineSplit[1]) + Down,
+                                                   tempLineSplit[2], tempLineSplit[3])
+                        except Exception:
+                            pass
 
-        if self.blockFileRead[szer][wys].split(",")[2] == "bedGen":
-            oreGenerating(4, 0, 0, "bed", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "treGen":
-            oreGenerating(5, 0, 0, "tre", "trees")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "coaGen":
-            oreGenerating(4,10,50,"coa", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "iroGen":
-            oreGenerating(3, 10, 50, "iro", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "golGen":
-            oreGenerating(2, 10, 50, "gol", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "diaGen":
-            oreGenerating(2, 10, 50, "dia", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "emeGen":
-            oreGenerating(1, 10, 50, "eme", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "graGen":
-            oreGenerating(1, 0, 0, "gra", "ores")
-
-        elif self.blockFileRead[szer][wys].split(",")[2] == "sgcGen":
-            oreGenerating(1, 10, 50, "sgc", "ores")
+        for i in range(len(self.structures)):
+            try:
+                int(self.blockFileRead[szer][wys].split(",")[2])
+            except Exception:
+                oreGenerating(self.structures[i])
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)

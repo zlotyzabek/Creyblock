@@ -1,0 +1,9 @@
+4,0,0,bedrock
+5,0,0,tree
+4,10,50,coal
+3,10,50,iron
+2,10,50,gold
+2,10,50,diament
+1,10,50,emerald
+1,0,0,grass
+1,10,50,sgc

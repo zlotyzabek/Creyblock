@@ -99,7 +99,7 @@ class new_World():
         biomList = []
         while len(biomList) <= dlugosc:
             biom = random.randint(1, 3)
-            for i in range(random.randint(250, 1000)):
+            for i in range(random.randint(250, 500)):
                 biomList.append(biom)
 
         return biomList
@@ -204,41 +204,49 @@ class new_World():
                 def grassBiom(sz, swiat):
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},16")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},14")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},14")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},4")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
+                    for i in range((55 + swiat)):
+                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def frozenBiom(sz, swiat):
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},18")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},12")
                     swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},12")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},12")
+                    for i in range((55 + swiat)):
+                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def dessertBiome(sz, swiat):
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},3")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},3")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},3")
+                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
+                    for i in range((56 + swiat)):
+                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def oreAndTreeDiscrybution(swiat):
                     for i in range((34 - swiat) * 96, 0, -96):
                         swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
 
                     if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},treGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},tree")
                     elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},coaGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},coal")
                     elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},iroGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},iron")
                     elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},golGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},gold")
                     elif worldStructureSpawningList[sz] == 5:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},diaGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},diament")
                     elif worldStructureSpawningList[sz] == 6:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},emeGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},emerald")
                     elif worldStructureSpawningList[sz] == 7:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},graGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},grass")
                     elif worldStructureSpawningList[sz] == 8:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},sgcGen")
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},sgc")
                     else:
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},0")
 
@@ -246,46 +254,12 @@ class new_World():
 
                     biomes[biome[sz]](sz, swiat)
 
+                    swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedrock")
 
-                    for i in range((56 + swiat)):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-                    swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedGen")
-
-
-                def swiat0(sz):
-                    oreAndTreeDiscrybution(0)
-
-                def swiat1(sz):
-                    oreAndTreeDiscrybution(1)
-
-                def swiat2(sz):
-                    oreAndTreeDiscrybution(2)
-
-                def swiat3(sz):
-                    oreAndTreeDiscrybution(3)
-
-                def swiat4(sz):
-                    oreAndTreeDiscrybution(4)
-
-                def swiat5(sz):
-                    oreAndTreeDiscrybution(5)
-
-                def swiat6(sz):
-                    oreAndTreeDiscrybution(6)
-
-                def swiat7(sz):
-                    oreAndTreeDiscrybution(7)
-
-                def swiat8(sz):
-                    oreAndTreeDiscrybution(8)
-
-
-                swiatGenSetting = {0: swiat0, 1: swiat1, 2: swiat2, 3: swiat3, 4: swiat4, 5: swiat5, 6: swiat6, 7: swiat7, 8: swiat8}
 
                 for sz in range(dlugosc):
                     swiatFileToWrite.append([])
-                    swiatGenSetting[swiat[sz]](sz)
+                    oreAndTreeDiscrybution(swiat[sz])
 
                 playerInfo = [dlugosc * 48, 600, dlugosc]
             # SPAWN WORLD SETTER
