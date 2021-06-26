@@ -1,0 +1,8 @@
+65,72,log
+72,75,coal
+76,79,iron
+70,75,gold
+76,78,diament
+79,80,emerald
+80,93,cactus
+94,100,sgc

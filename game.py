@@ -124,8 +124,8 @@ class Game:
         except Exception:
             self.mEqShowItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             for i in range(len(readTEMPtextures)):
-                self.itemCountInInventory[i + 1] = 0
-            self.eqItemsID = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                self.itemCountInInventory[i + 1] = -2
+            self.eqItemsID = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             self.worldTime = 0
 
         self.eqLine = 0
@@ -239,13 +239,16 @@ class Game:
     def drawing(self):
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
+        self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
             for wys in range(96):
                 if self.launchGame == 1:
                     self.worldGen(szer, wys)
-                if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 0 or 1920 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2320:
-                    self.worldGen(szer, wys)
                 try:
+                    if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 0 or 1920 < int(
+                            self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2320:
+                        self.worldGen(szer, wys)
+
                     if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
 
                         block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
@@ -296,7 +299,6 @@ class Game:
                 except Exception:
                     pass
         self.controls()
-        self.drawBody()
         self.drawGui()
 
     def drawBody(self):
@@ -348,11 +350,6 @@ class Game:
                             break
                     self.itemClick = 0
 
-
-
-
-
-
         if self.saveImageDisplay == 1:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
@@ -362,23 +359,26 @@ class Game:
             return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
         def oreGenerating(settingsOre):
-            if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
-                Size = random.randint(1, settingsOre[0])
-                Down = random.randint(settingsOre[1], settingsOre[2])
-                with open(f"{sys.path[0]}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
-                    self.blockFileRead[szer][wys] = \
-                        structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
-                    for line in f:
-                        tempLineSplit = (line.split(","))
-                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                        try:
-                            self.blockFileRead[szer + int(tempLineSplit[0])][
-                                wys + int(tempLineSplit[1]) + Down] = \
-                                structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                                   wys + int(tempLineSplit[1]) + Down,
-                                                   tempLineSplit[2], tempLineSplit[3])
-                        except Exception:
-                            pass
+            try:
+                if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
+                    Size = random.randint(1, settingsOre[0])
+                    Down = random.randint(settingsOre[1], settingsOre[2])
+                    with open(f"{sys.path[0]}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
+                        self.blockFileRead[szer][wys] = \
+                            structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                            try:
+                                self.blockFileRead[szer + int(tempLineSplit[0])][
+                                    wys + int(tempLineSplit[1]) + Down] = \
+                                    structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                                       wys + int(tempLineSplit[1]) + Down,
+                                                       tempLineSplit[2], tempLineSplit[3])
+                            except Exception:
+                                pass
+            except Exception:
+                print(self.blockFileRead[szer])
 
         for i in range(len(self.structures)):
             try:
@@ -394,6 +394,12 @@ class Game:
             temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
             self.blockFileRead[blockColor[0]][blockColor[1]] = f"{temp[0]},{temp[1]},0"
 
+            if int(self.itemCountInInventory[int(blockType)]) == -1:
+                self.itemCountInInventory[int(blockType)] = 0
+                for i in range(len(self.eqItemsID)):
+                    if self.eqItemsID[i] == 0:
+                        self.eqItemsID[i] = int(blockType)
+                        break
 
         elif pygame.mouse.get_pressed(3)[2] and blockType == "0" and collide and self.maxEqShow == 0 and  self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] > 0:
             collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
@@ -415,14 +421,14 @@ class Game:
 # RIGH AND LEFT
         if self.maxEqShow == 0:
             if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1 and self.PosCam.x < -1 * (((96 * self.playerInfo[2]) / 2) - ((96 * self.playerInfo[2]) / 2)):
-                self.PosCam += Vector2(6, 0)
+                self.PosCam += Vector2(24, 0)
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(6, 0)
+                    self.PosCam += Vector2(24, 0)
 
             if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1 and self.PosCam.x - 1920 > -1 *(((96 * self.playerInfo[2]) / 2) - ((96 * (self.playerInfo[2] * -1))/2 )):
-                self.PosCam += Vector2(-6, 0)
+                self.PosCam += Vector2(-24, 0)
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(-6, 0)
+                    self.PosCam += Vector2(-24 , 0)
 
     # GRAVITY AND UP self.fallSpeed
         if self.blockCollizionDetect[2] > 0:

@@ -1,7 +1,6 @@
-list1 = [20,214,214,214,64,36487,3]
-list2 = [345353,5,35,3534,5,345,345]
+import sys
+import pickle
 
-list1.append(list2)
-
-print(list1)
-
+with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'rb') as filehandle:
+    blockFileRead = pickle.load(filehandle)
+print(blockFileRead)

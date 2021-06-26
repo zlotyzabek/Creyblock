@@ -158,40 +158,21 @@ class new_World():
 
                 return t
 
-            def worldStructureSpawning(szerokosc):
-                worldStructureSpawningList = []
-                for i in range(szerokosc):
-                    ifTreeSpawn = random.randint(1,2)
-                    ifOreSpawn = random.randint(1,3)
-                    randomSpawn = random.randint(1,150)
-                    try:
-                        if 0 <= randomSpawn <= 69  and worldStructureSpawningList[i-1] == 0 and ifTreeSpawn == 1:
-                            worldStructureSpawningList.append(1)
-                        elif 70 <= randomSpawn <= 80 and ifOreSpawn == 1:
-                            worldStructureSpawningList.append(2)
-                        elif 81 <= randomSpawn <= 89 and ifOreSpawn == 1:
-                            worldStructureSpawningList.append(3)
-                        elif 90 <= randomSpawn <= 95 and ifOreSpawn == 1:
-                            worldStructureSpawningList.append(4)
-                        elif 96 <= randomSpawn <= 98 and ifOreSpawn == 1:
-                            worldStructureSpawningList.append(5)
-                        elif 99 <= randomSpawn <= 101 and ifOreSpawn == 1:
-                            worldStructureSpawningList.append(6)
-                        elif 102 <= randomSpawn <= 121:
-                            worldStructureSpawningList.append(7)
-                        elif 121 <= randomSpawn <= 131:
-                            worldStructureSpawningList.append(8)
-                        else:
-                            worldStructureSpawningList.append(0)
-                    except Exception:
-                        worldStructureSpawningList.append(0)
-
-                return worldStructureSpawningList
-
             trybGeneratora = self.generateWorldType
             dlugosc = self.generateWorldSize
 
             if trybGeneratora == "def":
+                self.structursToBiome = {}
+                biomes = ["grass", "frozen", "dessert"]
+
+                for i in range(len(biomes)):
+                    with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
+                        structures = []
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[2] = tempLineSplit[2].split("\n")[0]
+                            structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), tempLineSplit[2]])
+                    self.structursToBiome[biomes[i]] = structures
 
                 swiat = GenerateTerainGrassland(dlugosc)
 
@@ -199,27 +180,40 @@ class new_World():
 
                 swiatFileToWrite = []
 
-                worldStructureSpawningList = worldStructureSpawning(dlugosc)
+                def structurs(sz, swiat, biom):
+                    randomSpawn = random.randint(1,100)
+                    spawn = 0
+                    for i in range(len(self.structursToBiome[biom])):
+                        biomGen = self.structursToBiome[biom][i]
+                        if biomGen[0] <= randomSpawn <= biomGen[1]:
+                            swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{biomGen[2]}")
+                            spawn = 1
+
+                    if spawn == 0:
+                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{0}")
 
                 def grassBiom(sz, swiat):
+                    structurs(sz, swiat, "grass")
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},16")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},4")
                     swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-                    for i in range((55 + swiat)):
+                    #swiatFileToWrite[sz].append(f"{sz * 96},{1176 - (swiat * 96)},4")
+                    for i in range((56 + swiat)):
                         swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def frozenBiom(sz, swiat):
+                    structurs(sz, swiat, "frozen")
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},18")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},12")
                     swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},12")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},12")
-                    for i in range((55 + swiat)):
+                    #swiatFileToWrite[sz].append(f"{sz * 96},{1176 - (swiat * 96)},12")
+                    for i in range((56 + swiat)):
                         swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def dessertBiome(sz, swiat):
+                    structurs(sz, swiat, "dessert")
                     swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},3")
                     swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},3")
                     swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},3")
@@ -230,25 +224,6 @@ class new_World():
                 def oreAndTreeDiscrybution(swiat):
                     for i in range((34 - swiat) * 96, 0, -96):
                         swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
-
-                    if worldStructureSpawningList[sz] == 1:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},tree")
-                    elif worldStructureSpawningList[sz] == 2:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},coal")
-                    elif worldStructureSpawningList[sz] == 3:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},iron")
-                    elif worldStructureSpawningList[sz] == 4:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},gold")
-                    elif worldStructureSpawningList[sz] == 5:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},diament")
-                    elif worldStructureSpawningList[sz] == 6:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},emerald")
-                    elif worldStructureSpawningList[sz] == 7:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},grass")
-                    elif worldStructureSpawningList[sz] == 8:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},sgc")
-                    else:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},0")
 
                     biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome}
 
