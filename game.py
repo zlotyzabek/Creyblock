@@ -3,7 +3,6 @@ import threading
 import random
 import pickle
 from PIL import Image
-from PIL import ImageEnhance
 import time
 
 import pygame
@@ -74,6 +73,7 @@ class Game:
             readTEMPtextures = str(f.read()).split('\n')[:-1]
         self.typeBlockTextureBlock = {}
         self.typeBlockTextureInventory = {}
+        self.blockData = {}
         for i, list in enumerate(readTEMPtextures):
             if list.split(",")[1] == "c":
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (96, 96)), list.split(",")[2]]
@@ -81,6 +81,7 @@ class Game:
             if list.split(",")[1] == "a":
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96)), list.split(",")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
+            self.blockData[i + 1] = list.split(",")[4]
 
         self.head = pygame.image.load(f'{sys.path[0]}/assest/textures/player/head.png').convert_alpha().convert()
         self.head = pygame.transform.scale(self.head, (64, 64))
@@ -125,7 +126,7 @@ class Game:
             self.mEqShowItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             for i in range(len(readTEMPtextures)):
                 self.itemCountInInventory[i + 1] = -2
-            self.eqItemsID = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0,0,0,0,0,0,0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            self.eqItemsID = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             self.worldTime = 0
 
         self.eqLine = 0
@@ -134,7 +135,11 @@ class Game:
 
         self.oneMouseClick = 0
 
+        self.speedTime = 0
+
         self.fallSpeed = 6.00
+
+        self.speedMultiplayer = 0.5
 
         #Fonts
         self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
@@ -212,6 +217,11 @@ class Game:
             self.launchGame = 0
 
     def ticking(self):
+        if self.speedTime > 0:
+            self.speedTime -= 1
+        else:
+            self.speedMultiplayer = 1
+
         self.worldTime += 0.5
         if self.worldTime >= 23999:
             self.worldTime = 0
@@ -237,7 +247,7 @@ class Game:
             self.saveImageDisplay = 0
 
     def drawing(self):
-        self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
@@ -265,7 +275,6 @@ class Game:
                             self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
                                 int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                 int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
-
 
                             if self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][1] == "c":
                                 if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
@@ -295,6 +304,11 @@ class Game:
                                 if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
                                     self.blockCollizionDetect[4] += 1
                                     # DOWN 2
+
+                            else:
+                                if block.colliderect(pygame.Rect(926, 494, 62, 62)) == 1:
+                                    self.blockCollizionDetect[9] += 1
+                                    self.blockAtribute(szer, wys)
 
                 except Exception:
                     pass
@@ -378,7 +392,7 @@ class Game:
                             except Exception:
                                 pass
             except Exception:
-                print(self.blockFileRead[szer])
+                pass
 
         for i in range(len(self.structures)):
             try:
@@ -410,10 +424,16 @@ class Game:
 
     def colides(self):
         if self.blockCollizionDetect[0] > 0:
-            self.PosCam += Vector2(-6, 0)
+            self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
 
         if self.blockCollizionDetect[1] > 0:
-            self.PosCam += Vector2(6, 0)
+            self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
+
+    def blockAtribute(self, szer, wys):
+        # SPEED
+        if self.blockCollizionDetect[9] > 0:
+            self.speedTime = 2
+            self.speedMultiplayer = float(self.blockData[int(self.blockFileRead[szer][wys].split(",")[2])])
 
     def controls(self):
         keys = pygame.key.get_pressed()
@@ -421,27 +441,32 @@ class Game:
 # RIGH AND LEFT
         if self.maxEqShow == 0:
             if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1 and self.PosCam.x < -1 * (((96 * self.playerInfo[2]) / 2) - ((96 * self.playerInfo[2]) / 2)):
-                self.PosCam += Vector2(6, 0)
+                self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(6, 0)
+                    self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
 
             if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1 and self.PosCam.x - 1920 > -1 *(((96 * self.playerInfo[2]) / 2) - ((96 * (self.playerInfo[2] * -1))/2 )):
-                self.PosCam += Vector2(-6, 0)
+                self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(-6 , 0)
+                    self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
 
     # GRAVITY AND UP self.fallSpeed
         if self.blockCollizionDetect[2] > 0:
-            self.PosCam += Vector2(0, -6)
+            self.PosCam += Vector2(0, -6 * self.speedMultiplayer)
 
         if self.blockCollizionDetect[3] > 0:
-            self.PosCam += Vector2(0, 6)
+            self.PosCam += Vector2(0, 6 * self.speedMultiplayer)
 
         if self.blockCollizionDetect[4] < 1:
             self.PosCam += Vector2(0, self.fallSpeed * -1)
-            self.fallSpeed *= 1.04
-            if self.fallSpeed > 20.0:
-                self.fallSpeed = 20.0
+            if self.speedMultiplayer != 1:
+                self.fallSpeed *= 1.03 * (self.speedMultiplayer / 0.51)
+                if self.fallSpeed > 20.0 * (self.speedMultiplayer / 2):
+                    self.fallSpeed = 20.0 * (self.speedMultiplayer / 2)
+            else:
+                self.fallSpeed *= 1.04
+                if self.fallSpeed > 20.0:
+                    self.fallSpeed = 20.0
 
         if self.blockCollizionDetect[4] > 0:
             self.fallSpeed = 6.00
@@ -453,10 +478,10 @@ class Game:
             self.jumpSpeed = 0
 
     def controlsJumpHigh(self):
-        self.jumpSpeed += 50
+        self.jumpSpeed += 50 * self.speedMultiplayer
 
     def controlsJumpMedium(self):
-        self.jumpSpeed += 35
+        self.jumpSpeed += 35 * self.speedMultiplayer
 
     def controlsJumpLow(self):
-        self.jumpSpeed += 15
+        self.jumpSpeed += 15 * self.speedMultiplayer
