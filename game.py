@@ -95,7 +95,7 @@ class Game:
         self.eqSelectTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
 
-        img = Image.open("assest/textures/sky_color.png")
+        img = Image.open(sys.path[0] + "\\assest\\textures\\sky_color.png")
         img = img.convert("RGB")
         self.skyColorMap = []
         for i in range(24000):
