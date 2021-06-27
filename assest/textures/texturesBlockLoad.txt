@@ -23,7 +23,8 @@ assest/textures/normal_leaves.png,a,c,u
 assest/textures/glass.png,a,u,u
 assest/textures/grass_podzol.png,c,c,u
 assest/textures/cactus.png,a,c,u
-assest/textures/snow.png,a,c,u
+assest/textures/normal_snow.png,a,c,u
+assest/textures/powdery_snow.png,a,u,u
 assest/textures/hot_leaves.png,a,c,u
 assest/textures/cold_leaves.png,a,c,u
 assest/textures/air.png,c,u,u
