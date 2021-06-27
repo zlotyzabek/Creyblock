@@ -76,11 +76,11 @@ class Game:
         self.blockData = {}
         for i, list in enumerate(readTEMPtextures):
             if list.split(",")[1] == "c":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (96, 96)), list.split(",")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha().convert(), (64, 64))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha().convert(), (96, 96)), list.split(",")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha().convert(), (64, 64))
             if list.split(",")[1] == "a":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(),(96, 96)), list.split(",")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(list.split(",")[0]).convert_alpha(), (64, 64))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha(),(96, 96)), list.split(",")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha(), (64, 64))
             self.blockData[i + 1] = list.split(",")[4]
 
         self.head = pygame.image.load(f'{sys.path[0]}/assest/textures/player/head.png').convert_alpha().convert()
