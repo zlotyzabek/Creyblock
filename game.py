@@ -1,4 +1,3 @@
-
 import threading
 import random
 import pickle
@@ -10,6 +9,7 @@ from pygame.locals import *
 import pygame.gfxdraw
 from pygame.math import Vector2
 import sys
+import ast
 
 
 class Game:
@@ -74,17 +74,21 @@ class Game:
         self.typeBlockTextureBlock = {}
         self.typeBlockTextureInventory = {}
         self.blockData = {}
-        for i, list in enumerate(readTEMPtextures):
-            if list.split(",")[1] == "c":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha().convert(), (96, 96)), list.split(",")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha().convert(), (64, 64))
-            if list.split(",")[1] == "a":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha(),(96, 96)), list.split(",")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(list.split(",")[0])).convert_alpha(), (64, 64))
-            self.blockData[i + 1] = list.split(",")[4]
+        for i, listTemp in enumerate(readTEMPtextures):
+            if listTemp.split(";")[1] == "c":
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (64, 64))
+            if listTemp.split(";")[1] == "a":
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(), (64, 64))
 
-        self.head = pygame.image.load(f'{sys.path[0]}/assest/textures/player/head.png').convert_alpha().convert()
-        self.head = pygame.transform.scale(self.head, (64, 64))
+            try:
+                self.blockData[i + 1] = ast.literal_eval(str(listTemp.split(";")[4]))
+            except Exception:
+                pass
+
+        self.playerTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/player/player.png').convert_alpha()
+        self.playerTexture = pygame.transform.scale(self.playerTexture, (64, 128))
 
         self.hotBarTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/hotBar.png').convert()
         self.hotBarTexture = pygame.transform.scale(self.hotBarTexture, (1000, 100))
@@ -122,24 +126,21 @@ class Game:
             self.itemCountInInventory = self.playerInfo[4]
             self.eqItemsID = self.playerInfo[5]
             self.worldTime = self.playerInfo[6]
+            self.health = self.playerInfo[7]
         except Exception:
             self.mEqShowItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             for i in range(len(readTEMPtextures)):
                 self.itemCountInInventory[i + 1] = -2
             self.eqItemsID = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             self.worldTime = 0
+            self.health = 100
 
         self.eqLine = 0
-
         self.itemClick = 0
-
         self.oneMouseClick = 0
-
         self.speedTime = 0
-
         self.fallSpeed = 6.00
-
-        self.speedMultiplayer = 0.5
+        self.speedMultiplayer = 1
 
         #Fonts
         self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
@@ -185,12 +186,8 @@ class Game:
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.maxEqShow == 0:
-                        if self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[7] > 0:
-                            threading.Thread(target=self.controlsJumpLow()).start()
-                        elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1 and self.blockCollizionDetect[8] > 0:
-                            threading.Thread(target=self.controlsJumpMedium()).start()
-                        elif self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
-                            threading.Thread(target=self.controlsJumpHigh()).start()
+                        if self.blockCollizionDetect[4] > 0 and self.blockCollizionDetect[2] < 1:
+                            threading.Thread(target=self.jump()).start()
 
 
                     for i in range(49, 58):
@@ -236,7 +233,7 @@ class Game:
             self.saveToTime = 0
             swiatFileToWrite = self.blockFileRead
 
-            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory, self.eqItemsID, self.worldTime]
+            playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory, self.eqItemsID, self.worldTime, self.health]
         # SPAWN WORLD SETTER
             with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                 pickle.dump(swiatFileToWrite, filehandle)
@@ -279,6 +276,7 @@ class Game:
                             if self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][1] == "c":
                                 if block.colliderect(pygame.Rect(936, 491, 48, 1)) == 1:
                                     self.blockCollizionDetect[2] += 1
+                                    self.jumpStop()
                                     # UP
                                 if block.colliderect(pygame.Rect(936, 450, 48, 1)) == 1:
                                     self.blockCollizionDetect[7] += 1
@@ -286,28 +284,27 @@ class Game:
                                 if block.colliderect(pygame.Rect(936, 354, 48, 1)) == 1:
                                     self.blockCollizionDetect[8] += 1
                                     # UP 3
-                                if block.colliderect(pygame.Rect(927, 500, 1, 48)) == 1:
+                                if block.colliderect(pygame.Rect(927, 500, 1, 112)) == 1:
                                     self.blockCollizionDetect[0] += 1
                                     # LEFT
-                                if block.colliderect(pygame.Rect(992, 500, 1, 48)) == 1:
+                                if block.colliderect(pygame.Rect(992, 500, 1, 112)) == 1:
                                     self.blockCollizionDetect[1] += 1
                                     # RIGHT
-                                if block.colliderect(pygame.Rect(921, 500, 1, 48)) == 1:
+                                if block.colliderect(pygame.Rect(921, 500, 1, 112)) == 1:
                                     self.blockCollizionDetect[5] += 1
                                     # LEFT 2
-                                if block.colliderect(pygame.Rect(998, 500, 1, 48)) == 1:
+                                if block.colliderect(pygame.Rect(998, 500, 1, 112)) == 1:
                                     self.blockCollizionDetect[6] += 1
                                     # RIGHT 2
-                                if block.colliderect(pygame.Rect(936, 552, 48, 1)) == 1:
+                                if block.colliderect(pygame.Rect(936, 616, 48, 1)) == 1:
                                     self.blockCollizionDetect[3] += 1
                                     # DOWN
-                                if block.colliderect(pygame.Rect(936, 560, 48, 1)) == 1:
+                                if block.colliderect(pygame.Rect(936, 624, 48, 1)) == 1:
                                     self.blockCollizionDetect[4] += 1
                                     # DOWN 2
 
                             else:
                                 if block.colliderect(pygame.Rect(926, 494, 62, 62)) == 1:
-                                    self.blockCollizionDetect[9] += 1
                                     self.blockAtribute(szer, wys)
 
                 except Exception:
@@ -316,10 +313,13 @@ class Game:
         self.drawGui()
 
     def drawBody(self):
-        self.screen.blit(self.head, (928, 492))
+        self.screen.blit(self.playerTexture, (928, 492))
 
     def drawGui(self):
         self.screen.blit(self.hotBarTexture, (460, 920))
+
+        pygame.draw.rect(self.screen, (0, 0, 0), pygame.Rect(98 ,1021 - 200 ,14, 200))
+        pygame.draw.rect(self.screen, (255, 0, 47), pygame.Rect(100, 1021 - (self.health * 2), 10, self.health * 2))
 
         for i in range(10):
             if self.mEqShowItems[i] != 0:
@@ -429,11 +429,18 @@ class Game:
         if self.blockCollizionDetect[1] > 0:
             self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
 
+    def jumpStop(self):
+            self.jumpSpeed = 0
+
     def blockAtribute(self, szer, wys):
-        # SPEED
-        if self.blockCollizionDetect[9] > 0:
+        blockData = self.blockData[int(self.blockFileRead[szer][wys].split(",")[2])]
+        try:
             self.speedTime = 2
-            self.speedMultiplayer = float(self.blockData[int(self.blockFileRead[szer][wys].split(",")[2])])
+            self.speedMultiplayer = float(blockData["s"])
+
+            self.health += float(blockData["h"]) / 60
+        except Exception:
+            pass
 
     def controls(self):
         keys = pygame.key.get_pressed()
@@ -477,11 +484,5 @@ class Game:
         else:
             self.jumpSpeed = 0
 
-    def controlsJumpHigh(self):
+    def jump(self):
         self.jumpSpeed += 50 * self.speedMultiplayer
-
-    def controlsJumpMedium(self):
-        self.jumpSpeed += 35 * self.speedMultiplayer
-
-    def controlsJumpLow(self):
-        self.jumpSpeed += 15 * self.speedMultiplayer
