@@ -8,6 +8,7 @@ from pygame.locals import *
 from pygame.math import Vector2
 import sys
 import ast
+import time
 
 
 class Game:
@@ -219,12 +220,14 @@ class Game:
                             self.maxEqShow = 0
 
             self.ticking()
+
             self.drawing()
             self.screenReal.blit(pygame.transform.scale(self.screen, self.screenReal.get_rect().size), (0, 0))
             self.colides()
             pygame.display.update()
             self.clock.tick(60)
             self.launchGame = 0
+
 
     def ticking(self):
         if self.speedTime > 0:
@@ -260,13 +263,13 @@ class Game:
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         self.drawBody()
-        for szer in range(int((-1 * self.PosCam.x - 800) / 96), int((-1 * self.PosCam.x + 2720) / 96)):
+        for szer in range(int((-1 * self.PosCam.x - 500) / 96), int((-1 * self.PosCam.x + 2420) / 96)):
             if str(self.blockFileRead[szer][0]).split(",")[0] == "0":
                 self.blockFileRead[szer][0] = f'1,{str(self.blockFileRead[szer][0]).split(",")[1]},{str(self.blockFileRead[szer][0]).split(",")[2]},{str(self.blockFileRead[szer][0]).split(",")[3]}'
                 self.worldGen(szer, str(self.blockFileRead[szer][0]).split(","))
 
             for wys in range(1, 97):
-                if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 0 or 1920 < int(
+                if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < -100 or 2020 < int(
                         self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2320:
                     self.structurGen(szer, wys)
 
@@ -329,7 +332,6 @@ class Game:
 
                             except Exception:
                                 pass
-
         self.controls()
         self.drawGui()
 
@@ -412,7 +414,6 @@ class Game:
             self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
             self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},4")
             self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-            # self.blockFileRead[szer].append(f"{sz * 96},{1176 - (swiat * 96)},4")
             for i in range((56 + swiat)):
                 self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
@@ -422,7 +423,6 @@ class Game:
             self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
             self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},12")
             self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},12")
-            # self.blockFileRead[szer].append(f"{sz * 96},{1176 - (swiat * 96)},12")
             for i in range((56 + swiat)):
                 self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
