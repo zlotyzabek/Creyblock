@@ -192,16 +192,16 @@ class new_World():
                         swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def oreAndTreeDiscrybution(swiat):
-                    swiatFileToWrite[sz].append(f"iBK {sz * 96}")
+                    swiatFileToWrite[sz].append(f"0,{biome[sz]},{swiat},{sz}")
 
-                    for i in range((34 - swiat) * 96, 0, -96):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
+                    #for i in range((34 - swiat) * 96, 0, -96):
+                    #    swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
 
-                    biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome}
+                    #biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome}
 
-                    biomes[biome[sz]](sz, swiat)
+                    #biomes[biome[sz]](sz, swiat)
 
-                    swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedrock")
+                    #swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedrock")
 
 
                 for sz in range(dlugosc):
