@@ -24,8 +24,8 @@ assest\\textures\\glass.png;a;u;u
 assest\\textures\\grass_podzol.png;c;c;u
 assest\\textures\\cactus.png;a;c;u
 assest\\textures\\normal_snow.png;a;c;u
-assest\\textures\\powdery_snow.png;a;u;u;{'s': 0.5, 'h': -1}
+assest\\textures\\powdery_snow.png;a;u;u;{'s': 0.5, 'h': -1, 'f': 50}
 assest\\textures\\hot_leaves.png;a;c;u
 assest\\textures\\cold_leaves.png;a;c;u
-assest\\textures\\bush.png;a;u;u;{'s': 0.6, 'h': -1}
+assest\\textures\\bush.png;a;u;u;{'s': 0.6, 'h': -1, 'f': 2}
 assest\\textures\\air.png;c;u;u

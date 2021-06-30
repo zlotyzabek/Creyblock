@@ -5,6 +5,8 @@ from pygame.locals import *
 import main
 import pickle
 import os
+import perlin
+from math import *
 
 
 class new_World():
@@ -117,44 +119,12 @@ class new_World():
                     return None
 
             def GenerateTerainGrassland(szerokosc):
-                r = 0
-                for i in range(szerokosc):
+                noise = perlin.Perlin(15)
+                t = []
 
-                    r = ifRandomRSet(0, 0, 2)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(1, 0, 3)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(2, 1, 4)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(3, 2, 5)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(4, 3, 6)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(5, 4, 7)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(6, 5, 8)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(7, 6, 9)
-                    if r is not None:
-                        t.append(r)
-
-                    r = ifRandomRSet(8, 7, 8)
-                    if r is not None:
-                        t.append(r)
+                time = [i for i in range(szerokosc)]
+                for i in time:
+                    t.append(int(noise.valueAt(i) * 5))
 
                 return t
 
@@ -222,6 +192,8 @@ class new_World():
                         swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
                 def oreAndTreeDiscrybution(swiat):
+                    swiatFileToWrite[sz].append(f"iBK {sz * 96}")
+
                     for i in range((34 - swiat) * 96, 0, -96):
                         swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
 

@@ -2,11 +2,9 @@ import threading
 import random
 import pickle
 from PIL import Image
-import time
 
 import pygame
 from pygame.locals import *
-import pygame.gfxdraw
 from pygame.math import Vector2
 import sys
 import ast
@@ -65,8 +63,6 @@ class Game:
         self.jumpSpeed = 1.00
 
         self.itemCountInInventory = {}
-        noItemLoad = 0
-
 
         # TEXTURES
         with open(f"{sys.path[0]}/assest/textures/texturesBlockLoad.txt", "r") as f:
@@ -74,6 +70,7 @@ class Game:
         self.typeBlockTextureBlock = {}
         self.typeBlockTextureInventory = {}
         self.blockData = {}
+        self.hitboxes = {}
         for i, listTemp in enumerate(readTEMPtextures):
             if listTemp.split(";")[1] == "c":
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2]]
@@ -81,6 +78,8 @@ class Game:
             if listTemp.split(";")[1] == "a":
                 self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2]]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(), (64, 64))
+
+            self.hitboxes[i + 1] = pygame.Rect(0,0,96,96)
 
             try:
                 self.blockData[i + 1] = ast.literal_eval(str(listTemp.split(";")[4]))
@@ -98,6 +97,8 @@ class Game:
 
         self.eqSelectTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
+
+        self.fallDistanse = 0
 
         img = Image.open(sys.path[0] + "\\assest\\textures\\sky_color.png")
         img = img.convert("RGB")
@@ -141,6 +142,7 @@ class Game:
         self.speedTime = 0
         self.fallSpeed = 6.00
         self.speedMultiplayer = 1
+        self.fallDamageMultiplayer = 1
 
         #Fonts
         self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
@@ -151,7 +153,6 @@ class Game:
 
     def always(self):
         while True:
-            start = time.time()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.savingWorld()
@@ -248,7 +249,7 @@ class Game:
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 400) / 96), int((-1 * self.PosCam.x + 2320) / 96)):
-            for wys in range(96):
+            for wys in range(1, 97):
                 if self.launchGame == 1:
                     self.worldGen(szer, wys)
                 try:
@@ -257,6 +258,8 @@ class Game:
                         self.worldGen(szer, wys)
 
                     if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1180:
+                        #self.hitboxes[blockType].x = int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x
+                        #self.hitboxes[blockType].y = int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y
 
                         block = (pygame.Rect(int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
                                              int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y, 96, 96))
@@ -416,7 +419,7 @@ class Game:
                         break
 
         elif pygame.mouse.get_pressed(3)[2] and blockType == "0" and collide and self.maxEqShow == 0 and  self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] > 0:
-            collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 64))
+            collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 128))
             if not collideHuman:
                 self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] -= 1
                 temp = [self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[0], self.blockFileRead[blockColor[0]][blockColor[1]].split(",")[1]]
@@ -439,6 +442,7 @@ class Game:
             self.speedMultiplayer = float(blockData["s"])
 
             self.health += float(blockData["h"]) / 60
+            self.fallDamageMultiplayer = float(blockData["f"])
         except Exception:
             pass
 
@@ -472,17 +476,23 @@ class Game:
                     self.fallSpeed = 20.0 * (self.speedMultiplayer / 2)
             else:
                 self.fallSpeed *= 1.04
+                self.fallDistanse += 1
                 if self.fallSpeed > 20.0:
                     self.fallSpeed = 20.0
 
         if self.blockCollizionDetect[4] > 0:
             self.fallSpeed = 6.00
+            if self.fallDistanse >= 44:
+                self.health -= (self.fallDistanse - 44) * 2 / self.fallDamageMultiplayer
+
+            self.fallDamageMultiplayer = 1
+            self.fallDistanse = 0
 
         self.PosCam += Vector2(0, self.jumpSpeed)
         if self.jumpSpeed > 1:
-            self.jumpSpeed /= 1.15
+            self.jumpSpeed /= 1.10
         else:
             self.jumpSpeed = 0
 
     def jump(self):
-        self.jumpSpeed += 50 * self.speedMultiplayer
+        self.jumpSpeed += 30 * self.speedMultiplayer
