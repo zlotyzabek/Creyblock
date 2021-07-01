@@ -85,17 +85,17 @@ class new_World():
         hitBox = pygame.rect.Rect(260, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            self.generateWorldSize = 8193
+            self.generateWorldSize = 32769
 
         hitBox = pygame.rect.Rect(760, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            self.generateWorldSize = 32768
+            self.generateWorldSize = 65537
 
         hitBox = pygame.rect.Rect(1260, 300, 400, 120)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            self.generateWorldSize = 65537
+            self.generateWorldSize = 131073
 
     def biomGenList(self, dlugosc):
         biomList = []

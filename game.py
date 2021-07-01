@@ -156,6 +156,8 @@ class Game:
         self.fallSpeed = 6.00
         self.speedMultiplayer = 1
         self.fallDamageMultiplayer = 1
+        self.leftAcc = 0
+        self.rightAcc = 0
 
         #Fonts
         self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
@@ -234,6 +236,18 @@ class Game:
             self.speedTime -= 1
         else:
             self.speedMultiplayer = 1
+
+        if self.leftAcc > 1:
+            self.leftAcc *= 0.8
+        else:
+            self.leftAcc = 0
+
+        if self.rightAcc < -1:
+            self.rightAcc *= 0.8
+        else:
+            self.rightAcc = 0
+
+        self.PosCam += Vector2(self.leftAcc + self.rightAcc, 0)
 
         self.worldTime += 0.5
         if self.worldTime >= 2399:
@@ -516,9 +530,11 @@ class Game:
 
     def colides(self):
         if self.blockCollizionDetect[0] > 0:
+            self.rightAccAcc = 0
             self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
 
         if self.blockCollizionDetect[1] > 0:
+            self.leftAccAcc = 0
             self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
 
     def jumpStop(self):
@@ -541,14 +557,19 @@ class Game:
 # RIGH AND LEFT
         if self.maxEqShow == 0:
             if keys[97] and self.blockCollizionDetect[0] < 1 and self.blockCollizionDetect[5] < 1 and self.PosCam.x < -1 * (((96 * self.playerInfo[2]) / 2) - ((96 * self.playerInfo[2]) / 2)):
-                self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
+                self.leftAcc = 8 * self.speedMultiplayer
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(6 * self.speedMultiplayer, 0)
+                    self.leftAcc = 16 * self.speedMultiplayer
+            else:
+                self.leftAcc = 0
 
             if keys[100] and self.blockCollizionDetect[1] < 1 and self.blockCollizionDetect[6] < 1 and self.PosCam.x - 1920 > -1 *(((96 * self.playerInfo[2]) / 2) - ((96 * (self.playerInfo[2] * -1))/2 )):
-                self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
+                self.rightAcc = -8 * self.speedMultiplayer
                 if keys[pygame.K_LSHIFT]:
-                    self.PosCam += Vector2(-6 * self.speedMultiplayer, 0)
+                    self.rightAcc = -16 * self.speedMultiplayer
+            else:
+                self.rightAcc = 0
+
 
     # GRAVITY AND UP self.fallSpeed
         if self.blockCollizionDetect[2] > 0:
