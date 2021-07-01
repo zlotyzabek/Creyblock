@@ -1,4 +1,4 @@
-0,46,n_tree
+0,46,h_tree
 47,60,coal
 61,65,iron
 66,69,gold

@@ -100,7 +100,7 @@ class new_World():
     def biomGenList(self, dlugosc):
         biomList = []
         while len(biomList) <= dlugosc:
-            biom = random.randint(1, 3)
+            biom = random.randint(1, 5)
             for i in range(random.randint(250, 500)):
                 biomList.append(biom)
 
@@ -111,13 +111,6 @@ class new_World():
         hitBox = pygame.rect.Rect(260, 750, 1400, 240)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            t = [0]
-            def ifRandomRSet(n, r1, r2):
-                if t[-1] == n:
-                    return random.randrange(r1, r2)
-                else:
-                    return None
-
             def GenerateTerainGrassland(szerokosc):
                 noise = perlin.Perlin(15)
                 t = []
@@ -133,7 +126,7 @@ class new_World():
 
             if trybGeneratora == "def":
                 self.structursToBiome = {}
-                biomes = ["grass", "frozen", "dessert"]
+                biomes = ["grass", "frozen", "dessert", "podzol", "path"]
 
                 for i in range(len(biomes)):
                     with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
@@ -162,47 +155,8 @@ class new_World():
                     if spawn == 0:
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{0}")
 
-                def grassBiom(sz, swiat):
-                    structurs(sz, swiat, "grass")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},16")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},4")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-                    #swiatFileToWrite[sz].append(f"{sz * 96},{1176 - (swiat * 96)},4")
-                    for i in range((56 + swiat)):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-                def frozenBiom(sz, swiat):
-                    structurs(sz, swiat, "frozen")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},18")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},14")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},12")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},12")
-                    #swiatFileToWrite[sz].append(f"{sz * 96},{1176 - (swiat * 96)},12")
-                    for i in range((56 + swiat)):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-                def dessertBiome(sz, swiat):
-                    structurs(sz, swiat, "dessert")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{792 - (swiat * 96)},3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{888 - (swiat * 96)},3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{984 - (swiat * 96)},3")
-                    swiatFileToWrite[sz].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-                    for i in range((56 + swiat)):
-                        swiatFileToWrite[sz].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
                 def oreAndTreeDiscrybution(swiat):
                     swiatFileToWrite[sz].append(f"0,{biome[sz]},{swiat},{sz}")
-
-                    #for i in range((34 - swiat) * 96, 0, -96):
-                    #    swiatFileToWrite[sz].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
-
-                    #biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome}
-
-                    #biomes[biome[sz]](sz, swiat)
-
-                    #swiatFileToWrite[sz].append(f"{sz * 96},{6552},bedrock")
-
 
                 for sz in range(dlugosc):
                     swiatFileToWrite.append([])

@@ -66,7 +66,7 @@ class Game:
         self.itemCountInInventory = {}
 
         self.structursToBiome = {}
-        biomes = ["grass", "frozen", "dessert"]
+        biomes = ["grass", "frozen", "dessert", "podzol", "path"]
 
         for i in range(len(biomes)):
             with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
@@ -116,7 +116,7 @@ class Game:
         img = Image.open(sys.path[0] + "\\assest\\textures\\sky_color.png")
         img = img.convert("RGB")
         self.skyColorMap = []
-        for i in range(24000):
+        for i in range(2400):
             self.skyColorMap.append([img.getpixel((i, 0))[0], img.getpixel((i, 0))[1], img.getpixel((i, 0))][2])
 
 
@@ -236,7 +236,7 @@ class Game:
             self.speedMultiplayer = 1
 
         self.worldTime += 0.5
-        if self.worldTime >= 23999:
+        if self.worldTime >= 2399:
             self.worldTime = 0
         if self.saveToTime >= self.saveTimeWorld * 7200:
             threading.Thread(target=self.savingWorld).start()
@@ -269,8 +269,8 @@ class Game:
                 self.worldGen(szer, str(self.blockFileRead[szer][0]).split(","))
 
             for wys in range(1, 97):
-                if -400 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < -100 or 2020 < int(
-                        self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2320:
+                if -300 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < -200 or 2120 < int(
+                        self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2220:
                     self.structurGen(szer, wys)
 
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020:
@@ -336,6 +336,7 @@ class Game:
         self.drawGui()
 
     def drawBody(self):
+        pass
         self.screen.blit(self.playerTexture, (928, 492))
 
     def drawGui(self):
@@ -435,10 +436,28 @@ class Game:
             for i in range((56 + swiat)):
                 self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
 
+        def podzolBiome(sz, swiat):
+            structurs(sz, swiat, "podzol")
+            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},24")
+            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
+            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},13")
+            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},13")
+            for i in range((56 + swiat)):
+                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
+
+        def pathBiome(sz, swiat):
+            structurs(sz, swiat, "path")
+            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},17")
+            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
+            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},4")
+            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},4")
+            for i in range((56 + swiat)):
+                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
+
         for i in range((34 - swiat) * 96, 0, -96):
             self.blockFileRead[szer].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
 
-        biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome}
+        biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome, 4: podzolBiome, 5: pathBiome}
 
         biomes[biome](sz, swiat)
 
