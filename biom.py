@@ -1,14 +1,14 @@
 import random
-import sys
 
 class biomGen:
 
-    def __init__(self):
+    def __init__(self, gamePath):
+        self.gamePath = gamePath
         self.structursToBiome = {}
         biomes = ["grass", "frozen", "dessert", "podzol", "path"]
 
         for i in range(len(biomes)):
-            with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
+            with open(f"{self.gamePath}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
                 structures = []
                 for line in f:
                     tempLineSplit = (line.split(","))

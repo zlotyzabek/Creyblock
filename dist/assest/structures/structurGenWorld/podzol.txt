@@ -1,0 +1,8 @@
+0,46,h_tree
+47,60,coal
+61,65,iron
+66,69,gold
+70,72,diament
+73,74,emerald
+75,93,grass
+94,100,sgc

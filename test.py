@@ -1,5 +1,2 @@
-import biom
+string = "E:\\skrótyPulpit\\PrograminngProject\\Python\\3D_Game\\dist\\library.zip"
 
-biom = biom.biomGen()
-
-print(biom.biomGen(32, 5, 1))

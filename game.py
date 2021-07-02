@@ -13,22 +13,22 @@ import biom
 
 class Game:
 
-    def __init__(self):
-
+    def __init__(self, gamePath):
         # CONFIG
+        self.gamePath = gamePath
         self.saveTimeWorld = 3   # Time in minutes how many times the world should record. Set to 0 to disable.
 
         self.launchGame = 1
 
-        self.biomGen = biom.biomGen()
+        self.biomGen = biom.biomGen(self.gamePath)
 
         pygame.init()
 
         # LOADING WORLD
-        with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'rb') as filehandle:
+        with open(f'{self.gamePath}/assest/saves/save/worldSave.data', 'rb') as filehandle:
             self.blockFileRead = pickle.load(filehandle)
 
-        with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'rb') as filehandle:
+        with open(f'{self.gamePath}/assest/saves/save/playerSave.data', 'rb') as filehandle:
             self.playerInfo = pickle.load(filehandle)
 
 
@@ -68,7 +68,7 @@ class Game:
         self.itemCountInInventory = {}
 
         # TEXTURES
-        with open(f"{sys.path[0]}/assest/textures/texturesBlockLoad.txt", "r") as f:
+        with open(f"{self.gamePath}/assest/textures/texturesBlockLoad.txt", "r") as f:
             readTEMPtextures = str(f.read()).split('\n')[:-1]
         self.typeBlockTextureBlock = {}
         self.typeBlockTextureInventory = {}
@@ -76,11 +76,11 @@ class Game:
         self.hitboxes = {}
         for i, listTemp in enumerate(readTEMPtextures):
             if listTemp.split(";")[1] == "c":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (64, 64))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (64, 64))
             if listTemp.split(";")[1] == "a":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2]]
-                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(sys.path[0] + "\\" + str(listTemp.split(";")[0])).convert_alpha(), (64, 64))
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha(), (64, 64))
 
             self.hitboxes[i + 1] = pygame.Rect(0,0,96,96)
 
@@ -89,21 +89,21 @@ class Game:
             except Exception:
                 pass
 
-        self.playerTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/player/player.png').convert_alpha()
+        self.playerTexture = pygame.image.load(f'{self.gamePath}/assest/textures/player/player.png').convert_alpha()
         self.playerTexture = pygame.transform.scale(self.playerTexture, (64, 128))
 
-        self.hotBarTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/hotBar.png').convert()
+        self.hotBarTexture = pygame.image.load(f'{self.gamePath}/assest/textures/hotBar.png').convert()
         self.hotBarTexture = pygame.transform.scale(self.hotBarTexture, (1000, 100))
 
-        self.eqTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/equipment.png').convert_alpha()
+        self.eqTexture = pygame.image.load(f'{self.gamePath}/assest/textures/equipment.png').convert_alpha()
         self.eqTexture = pygame.transform.scale(self.eqTexture, (1000, 381))
 
-        self.eqSelectTexture = pygame.image.load(f'{sys.path[0]}/assest/textures/selection_equipment.png').convert_alpha()
+        self.eqSelectTexture = pygame.image.load(f'{self.gamePath}/assest/textures/selection_equipment.png').convert_alpha()
         self.eqSelectTexture = pygame.transform.scale(self.eqSelectTexture, (76, 76))
 
         self.fallDistanse = 0
 
-        img = Image.open(sys.path[0] + "\\assest\\textures\\sky_color.png")
+        img = Image.open(self.gamePath + "\\assest\\textures\\sky_color.png")
         img = img.convert("RGB")
         self.skyColorMap = []
         for i in range(2400):
@@ -119,7 +119,7 @@ class Game:
         self.structures = []
         self.structuresGen = []
 
-        with open(f"{sys.path[0]}/assest/structures/structurList.txt", "r") as f:
+        with open(f"{self.gamePath}/assest/structures/structurList.txt", "r") as f:
             for line in f:
                 tempLineSplit = (line.split(","))
                 tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
@@ -150,7 +150,7 @@ class Game:
         self.rightAcc = 0
 
         #Fonts
-        self.itemInventoryCountFont = pygame.font.Font(f"{sys.path[0]}/assest/fonts/itemCountFont.ttf", 30)
+        self.itemInventoryCountFont = pygame.font.Font(f"{self.gamePath}/assest/fonts/itemCountFont.ttf", 30)
 
         self.programRun = 1
 
@@ -255,10 +255,10 @@ class Game:
 
             playerInfo = [int(self.PosCam.x * -1), int(self.PosCam.y), self.playerInfo[2], self.mEqShowItems, self.itemCountInInventory, self.eqItemsID, self.worldTime, self.health]
         # SPAWN WORLD SETTER
-            with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
+            with open(f'{self.gamePath}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                 pickle.dump(swiatFileToWrite, filehandle)
 
-            with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'wb') as filehandle:
+            with open(f'{self.gamePath}/assest/saves/save/playerSave.data', 'wb') as filehandle:
                 pickle.dump(playerInfo, filehandle)
 
             self.saveImageDisplay = 0
@@ -408,7 +408,7 @@ class Game:
             if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
                 Size = random.randint(1, settingsOre[0])
                 Down = random.randint(settingsOre[1], settingsOre[2])
-                with open(f"{sys.path[0]}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
+                with open(f"{self.gamePath}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
                     self.blockFileRead[szer][wys] = \
                         structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
                     for line in f:

@@ -14,6 +14,12 @@ class Main:
 
     def __init__(self):
 
+        gamePathExe = sys.path[0].split("\\")[:-1]
+        gamePathExe = ['\\'.join([str(i) for i in gamePathExe])][0]
+
+        self.gamePath = gamePathExe
+        #self.gamePath = sys.path[0]
+
         pygame.init()
 
         self.sizeScreen = 1920, 1080
@@ -26,11 +32,11 @@ class Main:
         pic.fill((255, 100, 200))
 
         # TEXTURES AND STRINGS PRINT
-        self.mainWallpeper = pygame.image.load(f'{sys.path[0]}/assest/textures/mainWallpeper.png').convert_alpha()
-        self.mainButton = pygame.image.load(f'{sys.path[0]}/assest/textures/mainButtonTexture.png').convert_alpha()
-        self.mainFontB = pygame.font.Font(f'{sys.path[0]}/assest/fonts/menu.ttf', 202)
-        self.mainFont = pygame.font.Font(f'{sys.path[0]}/assest/fonts/menu.ttf', 200)
-        self.mainFontType = pygame.font.Font(f'{sys.path[0]}/assest/fonts/menu.ttf', 100)
+        self.mainWallpeper = pygame.image.load(f'{self.gamePath}/assest/textures/mainWallpeper.png').convert_alpha()
+        self.mainButton = pygame.image.load(f'{self.gamePath}/assest/textures/mainButtonTexture.png').convert_alpha()
+        self.mainFontB = pygame.font.Font(f'{self.gamePath}/assest/fonts/menu.ttf', 202)
+        self.mainFont = pygame.font.Font(f'{self.gamePath}/assest/fonts/menu.ttf', 200)
+        self.mainFontType = pygame.font.Font(f'{self.gamePath}/assest/fonts/menu.ttf', 100)
 
         self.always()
 
@@ -82,14 +88,14 @@ class Main:
         hitBox = pygame.rect.Rect(560, 500, 800, 100)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            game.Game()
+            game.Game(self.gamePath)
             sys.exit()
 
     def buttonNewWorld(self):
         hitBox = pygame.rect.Rect(560, 650, 800, 100)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            worldGenFlat.new_World()
+            worldGenFlat.new_World(self.gamePath)
             sys.exit()
 
     def buttonSettings(self):

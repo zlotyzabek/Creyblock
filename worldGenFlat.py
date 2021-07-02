@@ -6,12 +6,13 @@ import main
 import pickle
 import os
 import perlin
-from math import *
 
 
 class new_World():
-    def __init__(self):
+    def __init__(self, gamePath):
         pygame.init()
+
+        self.gamePath = gamePath
 
         self.sizeScreen = 1920, 1080
         self.screenReal = pygame.display.set_mode((1920, 1080), HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -25,11 +26,11 @@ class new_World():
         pic = pygame.surface.Surface((50, 50))
         pic.fill((255, 100, 200))
 
-        self.mainWallpeper = pygame.image.load(f'{sys.path[0]}/assest/textures/worldGenWapllpeper.png').convert_alpha()
-        self.mainButton = pygame.image.load(f'{sys.path[0]}/assest/textures/mainButtonTexture.png').convert_alpha()
+        self.mainWallpeper = pygame.image.load(f'{self.gamePath}/assest/textures/worldGenWapllpeper.png').convert_alpha()
+        self.mainButton = pygame.image.load(f'{self.gamePath}/assest/textures/mainButtonTexture.png').convert_alpha()
 
-        self.mainFont = pygame.font.Font((f"{sys.path[0]}/assest/fonts/menu.ttf"), 150)
-        self.mainFontB = pygame.font.Font((f"{sys.path[0]}/assest/fonts/menu.ttf"), 90)
+        self.mainFont = pygame.font.Font((f"{self.gamePath}/assest/fonts/menu.ttf"), 150)
+        self.mainFontB = pygame.font.Font((f"{self.gamePath}/assest/fonts/menu.ttf"), 90)
 
         self.always()
 
@@ -129,7 +130,7 @@ class new_World():
                 biomes = ["grass", "frozen", "dessert", "podzol", "path"]
 
                 for i in range(len(biomes)):
-                    with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
+                    with open(f"{self.gamePath}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
                         structures = []
                         for line in f:
                             tempLineSplit = (line.split(","))
@@ -169,10 +170,10 @@ class new_World():
                 except Exception:
                     pass
 
-                with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'wb') as filehandle:
+                with open(f'{self.gamePath}/assest/saves/save/worldSave.data', 'wb') as filehandle:
                     pickle.dump(swiatFileToWrite, filehandle)
 
-                with open(f'{sys.path[0]}/assest/saves/save/playerSave.data', 'wb') as filehandle:
+                with open(f'{self.gamePath}/assest/saves/save/playerSave.data', 'wb') as filehandle:
                     pickle.dump(playerInfo, filehandle)
 
                 main.Main()

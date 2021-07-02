@@ -1,0 +1,14 @@
+4,0,0,bedrock
+5,0,0,n_tree
+5,0,0,h_tree
+5,0,0,f_tree
+4,10,50,coal
+3,10,50,iron
+2,10,50,gold
+2,10,50,diament
+1,10,50,emerald
+1,0,0,grass
+1,10,50,sgc
+1,0,0,bush
+4,0,0,cactus
+4,0,0,snow
