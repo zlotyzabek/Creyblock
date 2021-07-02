@@ -1,7 +1,5 @@
-import pickle
-import sys
+import biom
 
-with open(f'{sys.path[0]}/assest/saves/save/worldSave.data', 'rb') as filehandle:
-    blockFileRead = pickle.load(filehandle)
+biom = biom.biomGen()
 
-print(blockFileRead[4096])
+print(biom.biomGen(32, 5, 1))

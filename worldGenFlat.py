@@ -156,7 +156,7 @@ class new_World():
                         swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{0}")
 
                 def oreAndTreeDiscrybution(swiat):
-                    swiatFileToWrite[sz].append(f"0,{biome[sz]},{swiat},{sz}")
+                    swiatFileToWrite[sz].append(f"0,{biome[sz]},{swiat}")
 
                 for sz in range(dlugosc):
                     swiatFileToWrite.append([])

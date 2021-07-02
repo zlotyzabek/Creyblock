@@ -8,7 +8,7 @@ from pygame.locals import *
 from pygame.math import Vector2
 import sys
 import ast
-import time
+import biom
 
 
 class Game:
@@ -19,6 +19,8 @@ class Game:
         self.saveTimeWorld = 3   # Time in minutes how many times the world should record. Set to 0 to disable.
 
         self.launchGame = 1
+
+        self.biomGen = biom.biomGen()
 
         pygame.init()
 
@@ -64,18 +66,6 @@ class Game:
         self.jumpSpeed = 1.00
 
         self.itemCountInInventory = {}
-
-        self.structursToBiome = {}
-        biomes = ["grass", "frozen", "dessert", "podzol", "path"]
-
-        for i in range(len(biomes)):
-            with open(f"{sys.path[0]}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
-                structures = []
-                for line in f:
-                    tempLineSplit = (line.split(","))
-                    tempLineSplit[2] = tempLineSplit[2].split("\n")[0]
-                    structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), tempLineSplit[2]])
-            self.structursToBiome[biomes[i]] = structures
 
         # TEXTURES
         with open(f"{sys.path[0]}/assest/textures/texturesBlockLoad.txt", "r") as f:
@@ -279,7 +269,6 @@ class Game:
         self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 500) / 96), int((-1 * self.PosCam.x + 2420) / 96)):
             if str(self.blockFileRead[szer][0]).split(",")[0] == "0":
-                self.blockFileRead[szer][0] = f'1,{str(self.blockFileRead[szer][0]).split(",")[1]},{str(self.blockFileRead[szer][0]).split(",")[2]},{str(self.blockFileRead[szer][0]).split(",")[3]}'
                 self.worldGen(szer, str(self.blockFileRead[szer][0]).split(","))
 
             for wys in range(1, 97):
@@ -409,73 +398,7 @@ class Game:
     def worldGen(self, szer, blockInfo):
         biome = int(blockInfo[1])
         swiat = int(blockInfo[2])
-        sz = int(blockInfo[3])
-
-        def structurs(sz, swiat, biom):
-            randomSpawn = random.randint(1, 100)
-            spawn = 0
-            for i in range(len(self.structursToBiome[biom])):
-                biomGen = self.structursToBiome[biom][i]
-                if biomGen[0] <= randomSpawn <= biomGen[1]:
-                    self.blockFileRead[szer].append(f"{sz * 96},{696 - (swiat * 96)},{biomGen[2]}")
-                    spawn = 1
-
-            if spawn == 0:
-                self.blockFileRead[szer].append(f"{sz * 96},{696 - (swiat * 96)},{0}")
-
-        def grassBiom(sz, swiat):
-            structurs(sz, swiat, "grass")
-            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},16")
-            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
-            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},4")
-            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-            for i in range((56 + swiat)):
-                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-        def frozenBiom(sz, swiat):
-            structurs(sz, swiat, "frozen")
-            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},18")
-            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
-            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},12")
-            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},12")
-            for i in range((56 + swiat)):
-                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-        def dessertBiome(sz, swiat):
-            structurs(sz, swiat, "dessert")
-            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},3")
-            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},3")
-            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},3")
-            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-            for i in range((56 + swiat)):
-                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-        def podzolBiome(sz, swiat):
-            structurs(sz, swiat, "podzol")
-            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},24")
-            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
-            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},13")
-            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},13")
-            for i in range((56 + swiat)):
-                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-        def pathBiome(sz, swiat):
-            structurs(sz, swiat, "path")
-            self.blockFileRead[szer].append(f"{sz * 96},{792 - (swiat * 96)},17")
-            self.blockFileRead[szer].append(f"{sz * 96},{888 - (swiat * 96)},14")
-            self.blockFileRead[szer].append(f"{sz * 96},{984 - (swiat * 96)},4")
-            self.blockFileRead[szer].append(f"{sz * 96},{1080 - (swiat * 96)},4")
-            for i in range((56 + swiat)):
-                self.blockFileRead[szer].append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-
-        for i in range((34 - swiat) * 96, 0, -96):
-            self.blockFileRead[szer].append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
-
-        biomes = {1: grassBiom, 2: frozenBiom, 3: dessertBiome, 4: podzolBiome, 5: pathBiome}
-
-        biomes[biome](sz, swiat)
-
-        self.blockFileRead[szer].append(f"{sz * 96},{6552},bedrock")
+        self.blockFileRead[szer] = ["1", str(blockInfo[1]), str(blockInfo[2]), str(szer)] + self.biomGen.biomGen(szer, swiat, biome)
 
     def structurGen(self, szer, wys):
         def structurListEditor(list, szer, wys, rep, torep):
@@ -576,6 +499,7 @@ class Game:
             self.PosCam += Vector2(0, -6 * self.speedMultiplayer)
 
         if self.blockCollizionDetect[3] > 0:
+            self.fallSpeed = 0.0
             self.PosCam += Vector2(0, 6 * self.speedMultiplayer)
 
         if self.blockCollizionDetect[4] < 1:
