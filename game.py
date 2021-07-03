@@ -76,10 +76,10 @@ class Game:
         self.hitboxes = {}
         for i, listTemp in enumerate(readTEMPtextures):
             if listTemp.split(";")[1] == "c":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (96, 96)), listTemp.split(";")[2], 1]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha().convert(), (64, 64))
             if listTemp.split(";")[1] == "a":
-                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2]]
+                self.typeBlockTextureBlock[i + 1] = [pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha(),(96, 96)), listTemp.split(";")[2], 1]
                 self.typeBlockTextureInventory[i + 1] = pygame.transform.scale(pygame.image.load(self.gamePath + "\\" + str(listTemp.split(";")[0])).convert_alpha(), (64, 64))
 
             self.hitboxes[i + 1] = pygame.Rect(0,0,96,96)
@@ -123,7 +123,7 @@ class Game:
             for line in f:
                 tempLineSplit = (line.split(","))
                 tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[3]])
+                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[3], 0])
 
         try:
             self.mEqShowItems = self.playerInfo[3]
@@ -406,22 +406,27 @@ class Game:
 
         def oreGenerating(settingsOre):
             if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
-                Size = random.randint(1, settingsOre[0])
-                Down = random.randint(settingsOre[1], settingsOre[2])
-                with open(f"{self.gamePath}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
-                    self.blockFileRead[szer][wys] = \
-                        structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
-                    for line in f:
-                        tempLineSplit = (line.split(","))
-                        tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                        try:
-                            self.blockFileRead[szer + int(tempLineSplit[0])][
-                                wys + int(tempLineSplit[1]) + Down] = \
-                                structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                                   wys + int(tempLineSplit[1]) + Down,
-                                                   tempLineSplit[2], tempLineSplit[3])
-                        except Exception:
-                            pass
+                if settingsOre[4] == 1:
+                    Size = random.randint(1, settingsOre[0])
+                    Down = random.randint(settingsOre[1], settingsOre[2])
+                    with open(f"{self.gamePath}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
+                        self.blockFileRead[szer][wys] = \
+                            structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
+                        settingsOre[4] = 0
+                        for line in f:
+                            tempLineSplit = (line.split(","))
+                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
+                            try:
+                                self.blockFileRead[szer + int(tempLineSplit[0])][
+                                    wys + int(tempLineSplit[1]) + Down] = \
+                                    structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
+                                                       wys + int(tempLineSplit[1]) + Down,
+                                                       tempLineSplit[2], tempLineSplit[3])
+                            except Exception:
+                                pass
+                else:
+                    settingsOre[4] = 1
+                    self.blockFileRead[szer][wys] = (f"{szer},{wys},0")
 
         for i in range(len(self.structures)):
             try:

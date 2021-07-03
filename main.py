@@ -17,8 +17,8 @@ class Main:
         gamePathExe = sys.path[0].split("\\")[:-1]
         gamePathExe = ['\\'.join([str(i) for i in gamePathExe])][0]
 
-        self.gamePath = gamePathExe
-        #self.gamePath = sys.path[0]
+        #self.gamePath = gamePathExe
+        self.gamePath = sys.path[0]
 
         pygame.init()
 
