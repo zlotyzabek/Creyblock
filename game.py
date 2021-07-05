@@ -20,7 +20,7 @@ class Game:
 
         self.launchGame = 1
 
-        self.biomGen = biom.biomGen(self.gamePath)
+        self.biomGen = biom.BiomGen(self.gamePath)
 
         pygame.init()
 
@@ -271,12 +271,6 @@ class Game:
             if str(self.blockFileRead[szer][0][0]) == "0":
                 self.worldGen(szer)
             for wys in range(1, 97):
-                try:
-                    a = (int(self.blockFileRead[szer][wys].split(",")[0]))
-                except Exception:
-                    self.blockFileRead[szer] == list(self.blockFileRead[szer])
-                    #print(self.blockFileRead[szer])
-                    #print(len(self.blockFileRead[szer]))
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020:
                     if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1080:
                         if str(self.blockFileRead[szer][0][0]) == "1":

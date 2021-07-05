@@ -1,4 +1,4 @@
-20,59,bush
+0,59,bush
 60,64,coal
 65,69,iron
 70,75,gold

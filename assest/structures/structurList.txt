@@ -6,8 +6,8 @@
 1,44,84,0,emerald
 1,0,0,16,grass
 1,44,84,0,sgc
-1,0,0,30,bush
-4,0,0,30,cactus
+1,0,0,3,bush
+4,0,0,3,cactus
 4,0,0,18,snow
 5,0,0,16,n_tree
 5,0,0,24,h_tree

@@ -95,7 +95,7 @@ class Main:
         hitBox = pygame.rect.Rect(560, 650, 800, 100)
         collide = hitBox.collidepoint(self.xPosMouse, self.yPosMouse)
         if collide:
-            worldGenFlat.new_World(self.gamePath)
+            worldGenFlat.New_world(self.gamePath)
             sys.exit()
 
     def buttonSettings(self):

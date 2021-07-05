@@ -8,7 +8,7 @@ import os
 import perlin
 
 
-class new_World():
+class New_world:
     def __init__(self, gamePath):
         pygame.init()
 
@@ -101,8 +101,8 @@ class new_World():
     def biomGenList(self, dlugosc):
         biomList = []
         while len(biomList) <= dlugosc:
-            biom = random.randint(1, 5)
-            for i in range(random.randint(250, 500)):
+            biom = random.randint(5, 5)
+            for i in range(random.randint(200, 400)):
                 biomList.append(biom)
 
         return biomList
@@ -126,18 +126,6 @@ class new_World():
             dlugosc = self.generateWorldSize
 
             if trybGeneratora == "def":
-                self.structursToBiome = {}
-                biomes = ["grass", "frozen", "dessert", "podzol", "path"]
-
-                for i in range(len(biomes)):
-                    with open(f"{self.gamePath}/assest/structures/structurGenWorld/{biomes[i]}.txt", "r") as f:
-                        structures = []
-                        for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[2] = tempLineSplit[2].split("\n")[0]
-                            structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), tempLineSplit[2]])
-                    self.structursToBiome[biomes[i]] = structures
-
                 swiat = GenerateTerainGrassland(dlugosc)
 
                 biome = self.biomGenList(dlugosc)
@@ -145,10 +133,10 @@ class new_World():
                 swiatFileToWrite = []
 
                 def oreAndTreeDiscrybution(swiat):
-                    swiatFileToWrite[sz].append(list([0,biome[sz],swiat,0]))
+                    swiatFileToWrite.append([])
+                    swiatFileToWrite[sz].append([0,biome[sz],swiat,0])
 
                 for sz in range(dlugosc):
-                    swiatFileToWrite.append([])
                     oreAndTreeDiscrybution(swiat[sz])
 
                 playerInfo = [dlugosc * 48, 600, dlugosc]

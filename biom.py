@@ -1,6 +1,6 @@
 import random
 
-class biomGen:
+class BiomGen:
 
     def __init__(self, gamePath):
         self.gamePath = gamePath
@@ -47,7 +47,7 @@ class biomGen:
 
     def frozen(self, sz, swiat):
         worldGen = []
-        worldGen = self.structurs(sz, swiat, "grass", worldGen)
+        worldGen = self.structurs(sz, swiat, "frozen", worldGen)
         for i in range((34 - swiat) * 96, -96, -96):
             worldGen.append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
         worldGen.append(f"{sz * 96},{792 - (swiat * 96)},18")
@@ -62,7 +62,7 @@ class biomGen:
 
     def dessert(self, sz, swiat):
         worldGen = []
-        worldGen = self.structurs(sz, swiat, "grass", worldGen)
+        worldGen = self.structurs(sz, swiat, "dessert", worldGen)
         for i in range((34 - swiat) * 96, -96, -96):
             worldGen.append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
         worldGen.append(f"{sz * 96},{792 - (swiat * 96)},3")
@@ -71,13 +71,13 @@ class biomGen:
         worldGen.append(f"{sz * 96},{1080 - (swiat * 96)},4")
         for i in range((57 + swiat)):
             worldGen.append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
-        #worldGen.append(f"{sz * 96},{6552},bedrock")
+
         return worldGen
 
 
     def podzol(self, sz, swiat):
         worldGen = []
-        worldGen = self.structurs(sz, swiat, "grass", worldGen)
+        worldGen = self.structurs(sz, swiat, "podzol", worldGen)
         for i in range((34 - swiat) * 96, -96, -96):
             worldGen.append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
         worldGen.append(f"{sz * 96},{792 - (swiat * 96)},24")
@@ -92,7 +92,7 @@ class biomGen:
 
     def path(self, sz, swiat):
         worldGen = []
-        worldGen = self.structurs(sz, swiat, "grass", worldGen)
+        worldGen = self.structurs(sz, swiat, "path", worldGen)
         for i in range((34 - swiat) * 96, -96, -96):
             worldGen.append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
         worldGen.append(f"{sz * 96},{792 - (swiat * 96)},17")
