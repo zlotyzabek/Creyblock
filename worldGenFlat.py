@@ -144,20 +144,8 @@ class new_World():
 
                 swiatFileToWrite = []
 
-                def structurs(sz, swiat, biom):
-                    randomSpawn = random.randint(1,100)
-                    spawn = 0
-                    for i in range(len(self.structursToBiome[biom])):
-                        biomGen = self.structursToBiome[biom][i]
-                        if biomGen[0] <= randomSpawn <= biomGen[1]:
-                            swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{biomGen[2]}")
-                            spawn = 1
-
-                    if spawn == 0:
-                        swiatFileToWrite[sz].append(f"{sz * 96},{696 - (swiat * 96)},{0}")
-
                 def oreAndTreeDiscrybution(swiat):
-                    swiatFileToWrite[sz].append(f"0,{biome[sz]},{swiat}")
+                    swiatFileToWrite[sz].append(list([0,biome[sz],swiat,0]))
 
                 for sz in range(dlugosc):
                     swiatFileToWrite.append([])

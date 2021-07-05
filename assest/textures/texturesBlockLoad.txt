@@ -14,7 +14,7 @@ assest\\textures\\cobblestone_mossy.png;c;c;u
 assest\\textures\\dirt.png;c;c;u
 assest\\textures\\dirt_rooted.png;c;c;u
 assest\\textures\\grass_block.png;c;c;u
-assest\\textures\\grass_path.png;a;c;u
+assest\\textures\\grass_path.png;c;c;u
 assest\\textures\\grass_snow.png;c;c;u
 assest\\textures\\grass.png;a;u;u
 assest\\textures\\planks.png;c;c;u
@@ -28,4 +28,14 @@ assest\\textures\\powdery_snow.png;a;u;u;{'s': 0.5, 'h': -1, 'f': 50}
 assest\\textures\\hot_leaves.png;a;c;u
 assest\\textures\\cold_leaves.png;a;c;u
 assest\\textures\\bush.png;a;u;u;{'s': 0.6, 'h': -1, 'f': 2}
+assest\\textures\\mushroom_block_red.png;c;c;u
+assest\\textures\\mushroom_block_brown.png;c;c;u
+assest\\textures\\mushroom_block_blue.png;c;c;u
+assest\\textures\\mushroom_block_stem.png;c;c;u
+assest\\textures\\mushroom_red.png;c;c;u
+assest\\textures\\mushroom_brown.png;c;c;u
+assest\\textures\\mushroom_blue.png;c;c;u
+assest\\textures\\s_wart.png;c;c;u
+assest\\textures\\m_wart.png;c;c;u
+assest\\textures\\b_wart.png;c;c;u
 assest\\textures\\air.png;c;u;u

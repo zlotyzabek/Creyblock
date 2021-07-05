@@ -122,8 +122,8 @@ class Game:
         with open(f"{self.gamePath}/assest/structures/structurList.txt", "r") as f:
             for line in f:
                 tempLineSplit = (line.split(","))
-                tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
-                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[3], 0])
+                tempLineSplit[4] = tempLineSplit[4].split("\n")[0]
+                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[4], 0, tempLineSplit[3]])
 
         try:
             self.mEqShowItems = self.playerInfo[3]
@@ -267,17 +267,20 @@ class Game:
         self.blockCollizionDetect = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         self.drawBody()
-        for szer in range(int((-1 * self.PosCam.x - 500) / 96), int((-1 * self.PosCam.x + 2420) / 96)):
-            if str(self.blockFileRead[szer][0]).split(",")[0] == "0":
-                self.worldGen(szer, str(self.blockFileRead[szer][0]).split(","))
-
+        for szer in range(int((-1 * self.PosCam.x - 576) / 96), int((-1 * self.PosCam.x + 2496) / 96)):
+            if str(self.blockFileRead[szer][0][0]) == "0":
+                self.worldGen(szer)
             for wys in range(1, 97):
-                if -300 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < -200 or 2120 < int(
-                        self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2220:
-                    self.structurGen(szer, wys)
-
+                try:
+                    a = (int(self.blockFileRead[szer][wys].split(",")[0]))
+                except Exception:
+                    self.blockFileRead[szer] == list(self.blockFileRead[szer])
+                    #print(self.blockFileRead[szer])
+                    #print(len(self.blockFileRead[szer]))
                 if -100 < int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x < 2020:
                     if -100 < int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y < 1080:
+                        if str(self.blockFileRead[szer][0][0]) == "1":
+                            self.structurGen(szer)
                         #self.hitboxes[blockType].x = int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x
                         #self.hitboxes[blockType].y = int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y
 
@@ -291,12 +294,9 @@ class Game:
                                     self.sizeScreen[0] / self.screenReal.get_rect().size[0]), pygame.mouse.get_pos()[
                                                                  1] * (self.sizeScreen[1] /
                                                                        self.screenReal.get_rect().size[1])
-                            try:
-                                self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
-                                    int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
-                                    int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
-                            except Exception:
-                                self.structurGen(szer, wys)
+                            self.screen.blit(self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][0], (
+                                int(self.blockFileRead[szer][wys].split(",")[0]) + self.PosCam.x,
+                                int(self.blockFileRead[szer][wys].split(",")[1]) + self.PosCam.y))
 
                             try:
                                 if self.typeBlockTextureBlock[int(self.blockFileRead[szer][wys].split(",")[2])][1] == "c":
@@ -395,44 +395,44 @@ class Game:
             savingGui = (pygame.Rect(98, 98, 48, 48))
             pygame.draw.rect(self.screen, self.chest, savingGui)
 
-    def worldGen(self, szer, blockInfo):
-        biome = int(blockInfo[1])
-        swiat = int(blockInfo[2])
-        self.blockFileRead[szer] = ["1", str(blockInfo[1]), str(blockInfo[2]), str(szer)] + self.biomGen.biomGen(szer, swiat, biome)
+    def worldGen(self, szer):
+        biome = int(self.blockFileRead[szer][0][1])
+        swiat = int(self.blockFileRead[szer][0][2])
+        self.blockFileRead[szer] = self.biomGen.biomGen(szer, swiat, biome)
 
-    def structurGen(self, szer, wys):
+    def structurGen(self, szer):
         def structurListEditor(list, szer, wys, rep, torep):
             return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
         def oreGenerating(settingsOre):
-            if self.blockFileRead[szer][wys].split(",")[2] == settingsOre[3]:
+            if self.blockFileRead[szer][0][3] == settingsOre[3]:
                 if settingsOre[4] == 1:
                     Size = random.randint(1, settingsOre[0])
                     Down = random.randint(settingsOre[1], settingsOre[2])
+                    for i in range(1, 97):
+                        if str(self.blockFileRead[szer][i]).split(",")[2] == str(settingsOre[5]):
+                            Down += i - 1
+                            break
                     with open(f"{self.gamePath}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
-                        self.blockFileRead[szer][wys] = \
-                            structurListEditor(self.blockFileRead, szer, wys, f"{settingsOre[3]}", "0")
                         settingsOre[4] = 0
+                        self.blockFileRead[szer][0] = list([2] + self.blockFileRead[szer][0][1:3] + [0])
                         for line in f:
-                            tempLineSplit = (line.split(","))
-                            tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                             try:
+                                tempLineSplit = (line.split(","))
+                                tempLineSplit[3] = tempLineSplit[3].split("\n")[0]
                                 self.blockFileRead[szer + int(tempLineSplit[0])][
-                                    wys + int(tempLineSplit[1]) + Down] = \
+                                    int(tempLineSplit[1]) + Down] = \
                                     structurListEditor(self.blockFileRead, szer + int(tempLineSplit[0]),
-                                                       wys + int(tempLineSplit[1]) + Down,
+                                                       int(tempLineSplit[1]) + Down,
                                                        tempLineSplit[2], tempLineSplit[3])
                             except Exception:
                                 pass
                 else:
                     settingsOre[4] = 1
-                    self.blockFileRead[szer][wys] = (f"{szer},{wys},0")
+                    self.blockFileRead[szer][0] = list(["2"] + self.blockFileRead[szer][0][1:3] + [0])
 
         for i in range(len(self.structures)):
-            try:
-                int(self.blockFileRead[szer][wys].split(",")[2])
-            except Exception:
-                oreGenerating(self.structures[i])
+            oreGenerating(self.structures[i])
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
