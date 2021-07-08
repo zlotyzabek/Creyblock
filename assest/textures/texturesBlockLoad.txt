@@ -32,10 +32,10 @@ assest\\textures\\mushroom_block_red.png;c;c;u
 assest\\textures\\mushroom_block_brown.png;c;c;u
 assest\\textures\\mushroom_block_blue.png;c;c;u
 assest\\textures\\mushroom_block_stem.png;c;c;u
-assest\\textures\\mushroom_red.png;c;c;u
-assest\\textures\\mushroom_brown.png;c;c;u
-assest\\textures\\mushroom_blue.png;c;c;u
-assest\\textures\\s_wart.png;c;c;u
-assest\\textures\\m_wart.png;c;c;u
-assest\\textures\\b_wart.png;c;c;u
+assest\\textures\\mushroom_red.png;a;u;u
+assest\\textures\\mushroom_brown.png;a;u;u
+assest\\textures\\mushroom_blue.png;a;u;u
+assest\\textures\\s_wart.png;a;u;u
+assest\\textures\\m_wart.png;a;u;u
+assest\\textures\\b_wart.png;a;u;u
 assest\\textures\\air.png;c;u;u

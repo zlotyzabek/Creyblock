@@ -101,12 +101,11 @@ class New_world:
     def biomGenList(self, dlugosc):
         biomList = []
         while len(biomList) <= dlugosc:
-            biom = random.randint(5, 5)
+            biom = random.randint(1, len(os.listdir(f"{self.gamePath}/assest/structures")))
             for i in range(random.randint(200, 400)):
                 biomList.append(biom)
 
         return biomList
-
 
     def buttonGenerateWorld(self):
         hitBox = pygame.rect.Rect(260, 750, 1400, 240)
@@ -134,7 +133,7 @@ class New_world:
 
                 def oreAndTreeDiscrybution(swiat):
                     swiatFileToWrite.append([])
-                    swiatFileToWrite[sz].append([0,biome[sz],swiat,0])
+                    swiatFileToWrite[sz].append([0,5,swiat,0])
 
                 for sz in range(dlugosc):
                     oreAndTreeDiscrybution(swiat[sz])

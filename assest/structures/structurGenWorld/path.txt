@@ -1,6 +1,0 @@
-0,60,coal
-61,65,iron
-66,69,gold
-70,72,diament
-73,93,emerald
-94,100,sgc

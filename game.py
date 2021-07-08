@@ -8,6 +8,7 @@ from pygame.locals import *
 from pygame.math import Vector2
 import sys
 import ast
+import os
 import biom
 
 
@@ -116,14 +117,19 @@ class Game:
         self.body = 150, 100, 50
 
         # STRUCTURES
-        self.structures = []
+        self.structures = {}
         self.structuresGen = []
+        biomes = os.listdir(f"{self.gamePath}/assest/structures")
 
-        with open(f"{self.gamePath}/assest/structures/structurList.txt", "r") as f:
-            for line in f:
-                tempLineSplit = (line.split(","))
-                tempLineSplit[4] = tempLineSplit[4].split("\n")[0]
-                self.structures.append([int(tempLineSplit[0]), int(tempLineSplit[1]), int(tempLineSplit[2]), tempLineSplit[4], 0, tempLineSplit[3]])
+        for i in range(len(biomes)):
+            with open(f"{self.gamePath}/assest/structures/{biomes[i]}/{biomes[i]}.txt", "r") as f:
+                structuresTemp = []
+                for line in f:
+                    tempLineSplit = (line.split(","))
+                    tempLineSplit[6] = tempLineSplit[6].split("\n")[0]
+                    structuresTemp.append(tempLineSplit + [0])
+
+            self.structures[biomes[i]] = structuresTemp
 
         try:
             self.mEqShowItems = self.playerInfo[3]
@@ -399,16 +405,16 @@ class Game:
             return str(list[szer][wys])[::-1].replace(rep[::-1] + ",", torep[::-1] + ",", 1)[::-1]
 
         def oreGenerating(settingsOre):
-            if self.blockFileRead[szer][0][3] == settingsOre[3]:
-                if settingsOre[4] == 1:
-                    Size = random.randint(1, settingsOre[0])
-                    Down = random.randint(settingsOre[1], settingsOre[2])
+            if self.blockFileRead[szer][0][3] == settingsOre[2]:
+                if settingsOre[7] == 1:
+                    Size = random.randint(1, int(settingsOre[3]))
+                    Down = random.randint(int(settingsOre[4]), int(settingsOre[5]))
                     for i in range(1, 97):
-                        if str(self.blockFileRead[szer][i]).split(",")[2] == str(settingsOre[5]):
+                        if str(self.blockFileRead[szer][i]).split(",")[2] == str(settingsOre[6]):
                             Down += i - 1
                             break
-                    with open(f"{self.gamePath}/assest/structures/{settingsOre[3]}/{Size}.txt", "r") as f:
-                        settingsOre[4] = 0
+                    with open(f"{self.gamePath}/assest/structures/{self.blockFileRead[szer][0][1]}/{settingsOre[2]}/{Size}.txt", "r") as f:
+                        settingsOre[7] = 0
                         self.blockFileRead[szer][0] = list([2] + self.blockFileRead[szer][0][1:3] + [0])
                         for line in f:
                             try:
@@ -422,11 +428,11 @@ class Game:
                             except Exception:
                                 pass
                 else:
-                    settingsOre[4] = 1
+                    settingsOre[7] = 1
                     self.blockFileRead[szer][0] = list(["2"] + self.blockFileRead[szer][0][1:3] + [0])
 
-        for i in range(len(self.structures)):
-            oreGenerating(self.structures[i])
+        for i in range(len(self.structures[self.blockFileRead[szer][0][1]])):
+            oreGenerating(self.structures[self.blockFileRead[szer][0][1]][i])
 
     def blockRemovingAndSetter(self, blockColor, block):
         collide = block.collidepoint(self.xPosMouse, self.yPosMouse)
@@ -443,7 +449,7 @@ class Game:
                         self.eqItemsID[i] = int(blockType)
                         break
 
-        elif pygame.mouse.get_pressed(3)[2] and blockType == "0" and collide and self.maxEqShow == 0 and  self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] > 0:
+        elif self.mEqShowItems[self.selectBlock] != 0 and pygame.mouse.get_pressed(3)[2] and blockType == "0" and collide and self.maxEqShow == 0 and self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] > 0:
             collideHuman = block.colliderect(pygame.Rect(928, 492, 64, 128))
             if not collideHuman:
                 self.itemCountInInventory[self.mEqShowItems[self.selectBlock]] -= 1

@@ -1,9 +1,9 @@
-import ast
+import socket
 
-lista = ['[0, 4, -1, 0]']
+s = socket.socket()
 
-print(lista)
+port = 12345
 
-lista = [ast.literal_eval(lista[0])]
+s.connect(('192.168.1.17', port))
 
-print(lista)
+print(s.recv(1024).decode("utf-8"))

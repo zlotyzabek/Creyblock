@@ -1,8 +1,0 @@
-20,59,bush
-60,64,coal
-65,69,iron
-70,75,gold
-76,78,diament
-79,80,emerald
-81,93,cactus
-94,100,sgc
