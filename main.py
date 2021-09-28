@@ -292,7 +292,7 @@ class Hitboxes(Entity):
         self.parent = player
         self.position = pos
         self.collider = 'box'
-        self.visible = False
+        self.visible = True
 
 # SETTINGS
 gamePath = sys.path[0]
@@ -373,7 +373,6 @@ playerParts["RightLeg"] = PlayerPart((0.15, -0.31, 0), (0.2, 0.38, 0.2))
 
 #Player Hitboxes
 PlayerHitboxes = {}
-PlayerHitboxes["Player"] = Hitboxes(pos=(0,0,), scale=(0.9, 0.9, 0.9))
 PlayerHitboxes["Up 1"] = Hitboxes(pos=(0,0.48,0), scale=(0.7, 0.01, 0.1))
 PlayerHitboxes["Up 2"] = Hitboxes(pos=(0,0.51,0), scale=(0.7, 0.01, 0.1))
 PlayerHitboxes["Down 1"] = Hitboxes(pos=(0,-0.48,0), scale=(0.7, 0.01, 0.1))
@@ -382,6 +381,10 @@ PlayerHitboxes["Left 1"] = Hitboxes(pos=(-0.48,0,0), scale=(0.01, 0.7, 0.1))
 PlayerHitboxes["Right 1"] = Hitboxes(pos=(0.48,0,0), scale=(0.01, 0.7, 0.1))
 PlayerHitboxes["Left 2"] = Hitboxes(pos=(-0.51,0,0), scale=(0.01, 0.7, 0.1))
 PlayerHitboxes["Right 2"] = Hitboxes(pos=(0.51,0,0), scale=(0.01, 0.7, 0.1))
+PlayerHitboxes["Front 1"] = Hitboxes(pos=(0,0,-0.17), scale=(0.7, 0.01, 0.0,))
+PlayerHitboxes["Front 2"] = Hitboxes(pos=(0,0,-0.2), scale=(0.7, 0.01, 0.01))
+PlayerHitboxes["Back 1"] = Hitboxes(pos=(0,0,0.17), scale=(0.7, 0.01, 0.01))
+PlayerHitboxes["Back 2"] = Hitboxes(pos=(0,0,0.2), scale=(0.7, 0.01, 0.01))
 
 #Acceleration
 accLeft = Vec2(0, 0)
@@ -393,6 +396,8 @@ acc = Vec2(0, 0)
 
 def update():
     #print(blocks[(int(player.x), int(player.y))])
+
+    #print(blocks[int(player.x + 0.5), int(player.y)])
     global skyColor
     accRight.x *= 0.7
     accLeft.x *= 0.7
@@ -403,7 +408,7 @@ def update():
     if accJump.y < 0.1:
         accJump.y = 0
         if not PlayerHitboxes["Down 2"].intersects().hit:
-            accFall.y *= 1.006
+            accFall.y *= 1.003
         else:
             accFall.y = -1
 
@@ -432,6 +437,17 @@ def update():
     if PlayerHitboxes["Up 2"].intersects().hit:
         player.y -= 0.1
 
+
+    if not PlayerHitboxes["Front 2"].intersects().hit and -0.5 < player.z:
+        player.z -= (held_keys['s'] * time.dt * 2)
+    elif PlayerHitboxes["Front 1"].intersects().hit:
+        player.z += 0.1
+
+    if not PlayerHitboxes["Back 2"].intersects().hit and 2.5 > player.z:
+        player.z += (held_keys['w'] * time.dt * 2)
+    elif PlayerHitboxes["Back 1"].intersects().hit:
+        player.z -= 0.1
+
     # ROTATING HEAD
     playerParts["Head"].rotation_y = math.atan2(playerParts["Head"].position.x - mouse.x, playerParts["Head"].position.y - mouse.y) * math.pi * 18
 
@@ -458,9 +474,7 @@ def update():
                 pass
 
     mediumColor = int((int(skyColorMap[int(skyColor)][0]) + int(skyColorMap[int(skyColor)][1]) + int(skyColorMap[int(skyColor)][2])) / 3)
-    print(mediumColor)
     playerLight.color = color.rgb(mediumColor, mediumColor, mediumColor)
-    #skyLight.color = color.rgb(mediumColor, mediumColor, mediumColor)
     if skyColor >= 2390:
         skyColor = 0
     else:
