@@ -1,9 +1,12 @@
 import socket
+import ast
 
-s = socket.socket()
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 12345        # The port used by the server
 
-port = 12345
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
 
-s.connect(('192.168.1.17', port))
-
-print(s.recv(1024).decode("utf-8"))
+    while True:
+        s.sendall(bytes(input("->"), 'utf-8'))
+        print(ast.literal_eval(s.recv(10240).decode("utf-8")))

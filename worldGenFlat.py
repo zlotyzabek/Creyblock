@@ -133,7 +133,7 @@ class New_world:
 
                 def oreAndTreeDiscrybution(swiat):
                     swiatFileToWrite.append([])
-                    swiatFileToWrite[sz].append([0,5,swiat,0])
+                    swiatFileToWrite[sz].append([0,biome[sz],swiat,0])
 
                 for sz in range(dlugosc):
                     oreAndTreeDiscrybution(swiat[sz])

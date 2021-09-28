@@ -27,7 +27,7 @@ class BiomGen:
         return worldGen
 
     def biomGen(self, sz, swiat, biome):
-        biomes = {1: self.grass, 2: self.frozen, 3: self.dessert, 4: self.podzol, 5: self.path}
+        biomes = {1: self.grass, 2: self.frozen, 3: self.dessert, 4: self.podzol, 5: self.path, 6: self.mountains}
         return biomes[biome](sz, swiat)
 
 
@@ -96,6 +96,20 @@ class BiomGen:
         worldGen.append(f"{sz * 96},{888 - (swiat * 96)},14")
         worldGen.append(f"{sz * 96},{984 - (swiat * 96)},4")
         worldGen.append(f"{sz * 96},{1080 - (swiat * 96)},4")
+        for i in range((57 + swiat)):
+            worldGen.append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
+        return worldGen
+
+    def mountains(self, sz, swiat):
+        swiat *= 2
+        worldGen = []
+        worldGen = self.structurs(swiat, "mountains", worldGen)
+        for i in range((34 - swiat) * 96, -96, -96):
+            worldGen.append(f"{sz * 96},{(696 - i) - (swiat * 96)},0")
+        worldGen.append(f"{sz * 96},{792 - (swiat * 96)},26")
+        worldGen.append(f"{sz * 96},{888 - (swiat * 96)},26")
+        worldGen.append(f"{sz * 96},{984 - (swiat * 96)},12")
+        worldGen.append(f"{sz * 96},{1080 - (swiat * 96)},2")
         for i in range((57 + swiat)):
             worldGen.append(f"{sz * 96},{(1176 + i * 96) - swiat * 96},2")
         return worldGen

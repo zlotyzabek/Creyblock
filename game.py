@@ -160,6 +160,9 @@ class Game:
 
         self.programRun = 1
 
+        #self.serverConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #self.serverConnection.connect((self.host, self.port))
+
         self.always()
 
     def always(self):
@@ -274,6 +277,8 @@ class Game:
         self.screen.fill(self.skyColorMap[int(self.worldTime)])
         self.drawBody()
         for szer in range(int((-1 * self.PosCam.x - 576) / 96), int((-1 * self.PosCam.x + 2496) / 96)):
+            #self.serverConnection.sendall(bytes("r" + str(szer), 'utf-8'))
+            #blockServerData = ast.literal_eval(self.serverConnection.recv(10240).decode("utf-8"))
             if str(self.blockFileRead[szer][0][0]) == "0":
                 self.worldGen(szer)
             for wys in range(1, 97):
