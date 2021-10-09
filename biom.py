@@ -41,6 +41,7 @@ class BiomGen:
         worldGen[0 + swiat] = ([4, 4, 4, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen
 
 
@@ -52,6 +53,7 @@ class BiomGen:
         worldGen[0 + swiat] = ([12, 12, 12, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen
 
 
@@ -63,6 +65,7 @@ class BiomGen:
         worldGen[0 + swiat] = ([4, 4, 4, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen
 
 
@@ -74,6 +77,7 @@ class BiomGen:
         worldGen[0 + swiat] = ([13, 13, 13, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen
 
 
@@ -85,6 +89,7 @@ class BiomGen:
         worldGen[0 + swiat] = ([4, 4, 4, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen
 
     def mountains(self, swiat):
@@ -96,4 +101,5 @@ class BiomGen:
         worldGen[0 + swiat] = ([2, 2, 2, 0])
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-97] = ([1, 1, 1, 0])
         return worldGen

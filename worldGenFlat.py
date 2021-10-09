@@ -3,6 +3,8 @@ import sys
 import pickle
 import os
 import perlin
+from opensimplex import OpenSimplex
+tmp = OpenSimplex()
 
 
 class New_world:
@@ -17,39 +19,27 @@ class New_world:
         biomList = []
         while len(biomList) <= dlugosc:
             biom = random.randint(1, len(os.listdir(f"assest/structures")))
-            for i in range(random.randint(200, 400)):
+            for i in range(random.randint(50, 200)):
                 biomList.append(biom)
 
         return biomList
 
     def generateWorld(self):
-        def GenerateTerainGrassland(szerokosc):
-            noise = perlin.Perlin(15)
-            t = []
-
-            time = [i for i in range(szerokosc)]
-            for i in time:
-                t.append(int(noise.valueAt(i) * 5))
-
-            return t
-
         trybGeneratora = self.generateWorldType
         dlugosc = self.generateWorldSize
 
         if trybGeneratora == "def":
-            swiat =  GenerateTerainGrassland(dlugosc)
-
             biome = self.biomGenList(dlugosc)
 
             swiatFileToWrite = {}
 
-            def oreAndTreeDiscrybution(swiat):
-                swiatFileToWrite[sz] = [0,biome[sz],swiat,0]
+            def oreAndTreeDiscrybution():
+                swiatFileToWrite[sz] = [0,biome[sz],int(tmp.noise2d(x=sz / 8, y=1) * 6),0]
 
             for sz in range(dlugosc):
-                oreAndTreeDiscrybution(swiat[sz])
+                oreAndTreeDiscrybution()
 
-            playerInfo = [int(dlugosc / 2), swiat[int(dlugosc / 2)] + 2, dlugosc, []]
+            playerInfo = [int(dlugosc / 2), int(tmp.noise2d(x=int(dlugosc / 2) / 8, y=1) * 6) + 2, 0, dlugosc, []]
         # SPAWN WORLD SETTER
             try:
                 os.makedirs("assest/saves/save")
