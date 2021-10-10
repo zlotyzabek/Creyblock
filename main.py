@@ -66,7 +66,7 @@ with open(f"assest/textures/texturesBlockLoad.txt", "r") as f:
         texture = PIL.Image.open(str(readTEMPtextures[0]))
         texture = texture.convert("RGBA")
         texture = Texture(texture)
-        textureBlock[i] = [texture, readTEMPtextures[1], int(readTEMPtextures[2])]
+        textureBlock[i] = [texture, readTEMPtextures[1], int(readTEMPtextures[2]), readTEMPtextures[3]]
 
     # SKY
 img = PIL.Image.open("assest/textures/sky_color.png")
@@ -262,7 +262,6 @@ class Voxel(Button):
 
     def update(self):
         if -9 > self.x - player.x or 11 < self.x - player.x or -5 > self.y - player.y or 7 < self.y - player.y:
-            print(self.x, self.y)
             blocks[self.x, self.y][3] = 0
             destroy(self)
 
@@ -434,10 +433,8 @@ PlayerHitboxes["Up 1"] = Hitboxes(pos=(0,0.48,0), scale=(0.7, 0.01, 0.1))
 PlayerHitboxes["Up 2"] = Hitboxes(pos=(0,0.51,0), scale=(0.7, 0.01, 0.1))
 PlayerHitboxes["Down 1"] = Hitboxes(pos=(0,-0.48,0), scale=(0.7, 0.01, 0.1))
 PlayerHitboxes["Down 2"] = Hitboxes(pos=(0,-0.51,0), scale=(0.7, 0.01, 0.1))
-PlayerHitboxes["Left 1"] = Hitboxes(pos=(-0.48,0,0), scale=(0.01, 0.7, 0.1))
-PlayerHitboxes["Right 1"] = Hitboxes(pos=(0.48,0,0), scale=(0.01, 0.7, 0.1))
-PlayerHitboxes["Left 2"] = Hitboxes(pos=(-0.51,0,0), scale=(0.01, 0.7, 0.1))
-PlayerHitboxes["Right 2"] = Hitboxes(pos=(0.51,0,0), scale=(0.01, 0.7, 0.1))
+PlayerHitboxes["Left 1"] = Hitboxes(pos=(-0.51,0,0), scale=(0.01, 0.7, 0.1))
+PlayerHitboxes["Right 1"] = Hitboxes(pos=(0.51,0,0), scale=(0.01, 0.7, 0.1))
 PlayerHitboxes["Front 1"] = Hitboxes(pos=(0,0,-0.17), scale=(0.7, 0.7, 0.0))
 PlayerHitboxes["Front 2"] = Hitboxes(pos=(0,0,-0.2), scale=(0.7, 0.7, 0.01))
 PlayerHitboxes["Back 1"] = Hitboxes(pos=(0,0,0.17), scale=(0.7, 0.7, 0.0))
@@ -451,8 +448,17 @@ accFall = Vec2(-1, -1)
 
 acc = Vec2(0, 0)
 
+def blockSolid(hitbox):
+    if PlayerHitboxes[hitbox].intersects().entity != None:
+        if PlayerHitboxes[hitbox].intersects().entity.name == "solid":
+            return True
+        else:
+            return False
+    else:
+        return False
+
 def update():
-    print(player.position)
+    #print(player.position)
     global skyColor
     accRight.x *= 0.7
     accLeft.x *= 0.7
@@ -462,7 +468,7 @@ def update():
 
     if accJump.y < 0.1:
         accJump.y = 0
-        if not PlayerHitboxes["Down 2"].intersects().hit:
+        if not blockSolid("Down 2"):
             accFall.y *= 1.003
         else:
             accFall.y = -1
@@ -474,33 +480,29 @@ def update():
     accRight.x += held_keys['d'] * time.dt * 2
     accLeft.x -= held_keys['a'] * time.dt * 2
 
-    if PlayerHitboxes["Left 1"].intersects().hit:
-        player.x += 0.1
-    if PlayerHitboxes["Right 1"].intersects().hit:
-        player.x -= 0.1
-    if PlayerHitboxes["Left 2"].intersects().hit:
+    if blockSolid("Left 1"):
         accLeft.x = 0
-    if PlayerHitboxes["Right 2"].intersects().hit:
+    if blockSolid("Right 1"):
         accRight.x = 0
-    if PlayerHitboxes["Down 2"].intersects().hit:
+    if blockSolid("Down 2"):
         acc.y = 0
         accFall.y = -1
-    if PlayerHitboxes["Down 1"].intersects().hit:
+    if blockSolid("Down 1"):
         player.y += 1 * time.dt * 5
-    if PlayerHitboxes["Up 1"].intersects().hit:
+    if blockSolid("Up 1"):
         accJump.y = 0
-    if PlayerHitboxes["Up 2"].intersects().hit:
+    if blockSolid("Up 2"):
         player.y -= 0.1
 
 
-    if not PlayerHitboxes["Front 2"].intersects().hit and -0.2 < player.z:
+    if not blockSolid("Front 2") and -0.2 < player.z:
         player.z -= (held_keys['s'] * time.dt * 2)
-    elif PlayerHitboxes["Front 1"].intersects().hit:
+    elif blockSolid("Front 1"):
         player.z += 0.1
 
-    if not PlayerHitboxes["Back 2"].intersects().hit and 2.2 > player.z:
+    if not blockSolid("Back 2") and 2.2 > player.z:
         player.z += (held_keys['w'] * time.dt * 2)
-    elif PlayerHitboxes["Back 1"].intersects().hit:
+    elif blockSolid("Back 1"):
         player.z -= 0.1
 
     # ROTATING HEAD
@@ -525,7 +527,8 @@ def update():
                         if blocks[int(player.x) + szer, int(player.y) + wys][i] != 0:
                             Voxel(position = (int(player.x) + szer, int(player.y) + wys, 0 + i),
                                   textureBlock = textureBlock[blocks[int(player.x) + szer, int(player.y) + wys][i]][0],
-                                  model = textureBlock[blocks[int(player.x) + szer, int(player.y) + wys][i]][1])
+                                  model = textureBlock[blocks[int(player.x) + szer, int(player.y) + wys][i]][1],
+                                  colid = textureBlock[blocks[int(player.x) + szer, int(player.y) + wys][i]][3])
 
                     blocks[int(player.x) + szer, int(player.y) + wys][3] = 1
             except Exception:
@@ -544,7 +547,7 @@ def input(key):
         save()
         application.quit()
 
-    if key == 'space' and PlayerHitboxes["Down 2"].intersects().hit:
+    if key == 'space' and blockSolid("Down 2"):
         accJump.y += 0.285
 
 app.run()

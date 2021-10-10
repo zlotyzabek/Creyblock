@@ -2,9 +2,8 @@ import random
 import sys
 import pickle
 import os
-import perlin
 from opensimplex import OpenSimplex
-tmp = OpenSimplex()
+tmp = OpenSimplex(seed = random.randint(1,1000000))
 
 
 class New_world:
@@ -40,6 +39,7 @@ class New_world:
                 oreAndTreeDiscrybution()
 
             playerInfo = [int(dlugosc / 2), int(tmp.noise2d(x=int(dlugosc / 2) / 8, y=1) * 6) + 2, 0, dlugosc, []]
+
         # SPAWN WORLD SETTER
             try:
                 os.makedirs("assest/saves/save")
