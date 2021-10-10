@@ -16,9 +16,16 @@ class New_world:
 
     def biomGenList(self, dlugosc):
         biomList = []
+        i = 1
         while len(biomList) <= dlugosc:
-            biom = random.randint(1, len(os.listdir(f"assest/structures")))
-            for i in range(random.randint(50, 200)):
+            i += 1
+            biom = ((int(tmp.noise2d(x=i, y=3) * 12)) % len(os.listdir(f"assest/structures")) + 1)
+            if biom < 0:
+                biom *= -1
+            szerBiom = int(tmp.noise2d(x=i / 8, y=3) * 200)
+            if szerBiom < 0:
+                szerBiom *= -1
+            for szer in range(szerBiom + 30):
                 biomList.append(biom)
 
         return biomList
