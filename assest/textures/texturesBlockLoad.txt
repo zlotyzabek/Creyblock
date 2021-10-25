@@ -25,7 +25,7 @@ assest/textures/glass.png;cube;1;solid
 assest/textures/grass_podzol.png;cube;1;solid
 assest/textures/cactus.png;cube;2;solid
 assest/textures/normal_snow.png;cube;1;solid
-assest/textures/powdery_snow.png;cube;1;solid
+assest/textures/powdery_snow.png;cube;1;liquid
 assest/textures/hot_leaves.png;cube;1;solid
 assest/textures/cold_leaves.png;cube;1;solid
 assest/textures/bush.png;quad;1;liquid
@@ -39,3 +39,4 @@ assest/textures/mushroom_blue.png;quad;1;liquid
 assest/textures/s_wart.png;quad;1;liquid
 assest/textures/m_wart.png;quad;1;liquid
 assest/textures/b_wart.png;quad;1;liquid
+assest/textures/grass_mycelium.png;cube;1;solid

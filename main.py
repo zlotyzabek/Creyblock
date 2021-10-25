@@ -98,9 +98,10 @@ class Equipment(Entity):
         for szer in range(10):
             eqMenage[("ID", szer)] = 0
             eqMenage[("Hot Bar", szer)] = Entity(position = ((szer - 5) * 1.1 + 0.5, -4.5),
-                                                 model = "cube", parent = self, scale = (1, 1),
+                                                 model = 'cube', parent = self, scale = (1, 1),
                                                  texture = "assest/textures/hotBar.png")
             eqMenage[("Item", szer)] = Button(position = ((szer - 5) * 1.1 + 0.5, -4.5),
+                                              model = 'assest/models/quad',
                                               texture = textureBlock[eqMenage[("ID", szer)]],
                                               color=color.white, parent=self, scale = (0.8, 0.8),
                                               on_click = self.equipmentSelect, always_on_top = True,
@@ -119,11 +120,11 @@ class Equipment(Entity):
                                  scale = (1, 1),
                                  visible = False,
                                  enabled = False)
-        eqMenage["Big", "equipment"] = Entity(model = 'quad',
+        eqMenage["Big", "equipment"] = Entity(model = 'assest/models/quad',
                                               texture = 'assest/textures/equipment.png',
                                               color=color.white, parent=eqMenage["Big"],
                                               scale = (15,8))
-        eqMenage[("Big", "Select")] = Entity(model = 'quad',
+        eqMenage[("Big", "Select")] = Entity(model = 'assest/models/quad',
                                              texture = 'assest/textures/air.png',
                                              color=color.white,
                                              parent=eqMenage["Big"],
@@ -138,7 +139,7 @@ class Equipment(Entity):
         for szer in range(10, 26):
             eqMenage[("ID", szer)] = 0
             eqMenage[("Item", szer)] = Button(position = (-0.38 + (int((szer - 10) % 4) / 8), 0.3 - (int((szer - 10) / 4) / 5)),
-                                              model = 'quad',
+                                              model = 'assest/models/quad',
                                               texture = textureBlock[eqMenage[("ID", szer)]],
                                               color=color.white, parent=eqMenage["Big", "equipment"],
                                               scale = (0.09, 0.16),
@@ -254,19 +255,19 @@ class Voxel(Button):
     def __init__(self, position = (0,0,0), textureBlock = textureBlock[0][0], model = 'cube', colid = "solid", **kwargs):
         super().__init__(parent = scene,
                          position = position,
-                         model = model,
+                         model = f"assest/models/{model}",
                          texture = textureBlock,
-                         color = color.gray,
-                         shader = lit_with_shadows_shader,
+                         color = light,
                          name = colid)
-
     def update(self):
+        self.color = light
         if -9 > self.x - player.x or 11 < self.x - player.x or -5 > self.y - player.y or 7 < self.y - player.y:
             blocks[self.x, self.y][3] = 0
             destroy(self)
 
     def input(self, key):
         global eqMenage
+        self.color = light
         if key == "left mouse down" and mouse.hovered_entity == self and textureBlock[blocks[self.x, self.y][int(self.z)]][2] < 100:
             temp = False
             for szer in range(0, 26):
@@ -307,10 +308,11 @@ class Voxel(Button):
                 if blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)] == 0:
                     eqMenage[("Count", eqMenage["Select"] - 1)].text = str(int(eqMenage[("Count", eqMenage["Select"] - 1)].text) - 1)
                     blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)] = eqMenage[("ID", eqMenage["Select"] - 1)]
-                    Voxel((int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y), int(self.z + mouse.world_normal.z)),
-                        textureBlock[blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)]][0],
-                        textureBlock[blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)]][1])
 
+                    Voxel(position=(int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y), int(self.z + mouse.world_normal.z)),
+                          textureBlock=textureBlock[blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)]][0],
+                          model=textureBlock[blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)]][1],
+                          colid=textureBlock[blocks[int(self.x + mouse.world_normal.x), int(self.y + mouse.world_normal.y)][int(self.z + mouse.world_normal.z)]][3])
 
 class Player(Entity):
     def __init__(self, **kwargs):
@@ -320,7 +322,6 @@ class Player(Entity):
         self.parent = scene
         self.position = (0,0,1)
         self.visible = True
-        self.shader = lit_with_shadows_shader
 
     def input(self, key):
         pass
@@ -329,15 +330,19 @@ class Player(Entity):
         pass
 
 class PlayerPart(Entity):
-    def __init__(self, position = (0, 0, 0), scale = (1, 1, 1), **kwargs):
+    def __init__(self, position = (0, 0, 0), scale = (1, 1, 1), texture = "brick", **kwargs):
         super().__init__()
-        self.model='cube'
+        texture = load_texture(texture)
+        self.model='assest/models/cube'
         self.color = color.random_color()
         self.scale = scale
         self.parent = player
         self.position = position
         self.visible = True
-        self.texture = "brick"
+        self.texture = texture
+
+    def update(self):
+        self.color = light
 
 class Hitboxes(Entity):
     def __init__(self, pos = (0,0,0), scale = (1,1,1),**kwargs):
@@ -365,6 +370,7 @@ player = Player()
 sky = Sky()
 eqMenage = {}
 eq = Equipment()
+light = 0
 player.x = playerInfo[0]
 player.y = playerInfo[1]
 player.z = playerInfo[2]
@@ -400,11 +406,8 @@ def save():
 
     with open(f'assest/saves/save/playerSave.data', 'wb') as filehandle:
         pickle.dump(playerInfo, filehandle)
-
-playerLight = PointLight(parent=player, y=0, shadows=True, color = color.orange)
-#skyLight = SpotLight(parent=scene, y=100, z = -100,shadows=True, color = color.white)
 tick = 0
-skyColor = 0
+skyColor = 1200
 
 # FIRST WORLDGEN
 for szer in range(-16, 18):
@@ -419,13 +422,12 @@ for szer in range(-12, 14):
 
 #Player
 playerParts = {}
-playerParts["Body"] = PlayerPart((0, 0.1, 0), (0.45, 0.4, 0.2))
-playerParts["Head"] = PlayerPart((0, 0.4, 0), (0.3, 0.2, 0.2))
-playerParts["LeftArm"] = PlayerPart((-0.37, 0.1, 0), (0.2, 0.38, 0.2))
-playerParts["RightArm"] = PlayerPart((0.37, 0.1, 0), (0.2, 0.38, 0.2))
-playerParts["LeftLeg"] = PlayerPart((-0.15, -0.31, 0), (0.2, 0.38, 0.2))
-playerParts["RightLeg"] = PlayerPart((0.15, -0.31, 0), (0.2, 0.38, 0.2))
-#PointLight(parent=player, z = -1)
+playerParts["Body"] = PlayerPart((0, 0.1, 0), (0.45, 0.4, 0.2), texture = "assest/textures/body.png")
+playerParts["Head"] = PlayerPart((0, 0.4, 0), (0.3, 0.2, 0.2), texture = "assest/textures/head.png")
+playerParts["LeftArm"] = PlayerPart((-0.37, 0.1, 0), (0.2, 0.38, 0.2), texture = "assest/textures/leftArm.png")
+playerParts["RightArm"] = PlayerPart((0.37, 0.1, 0), (0.2, 0.38, 0.2), texture = "assest/textures/rightArm.png")
+playerParts["LeftLeg"] = PlayerPart((-0.15, -0.31, 0), (0.2, 0.38, 0.2), texture = "assest/textures/leftLeg.png")
+playerParts["RightLeg"] = PlayerPart((0.15, -0.31, 0), (0.2, 0.38, 0.2), texture = "assest/textures/rightLeg.png")
 
 #Player Hitboxes
 PlayerHitboxes = {}
@@ -449,17 +451,36 @@ accFall = Vec2(-1, -1)
 acc = Vec2(0, 0)
 
 def blockSolid(hitbox):
-    if PlayerHitboxes[hitbox].intersects().entity != None:
-        if PlayerHitboxes[hitbox].intersects().entity.name == "solid":
+    if PlayerHitboxes[hitbox].intersects().entities != []:
+        solidBlocks = 0
+        for ent in PlayerHitboxes[hitbox].intersects().entities:
+            if ent.name == "solid":
+                solidBlocks += 1
+        if solidBlocks >= 1:
             return True
         else:
             return False
     else:
         return False
 
+def blockLiquid(hitbox):
+    if PlayerHitboxes[hitbox].intersects().entities != []:
+        liquidBlocks = 0
+        for ent in PlayerHitboxes[hitbox].intersects().entities:
+            if ent.name == "liquid":
+                liquidBlocks += 1
+        if liquidBlocks == len(PlayerHitboxes[hitbox].intersects().entities):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
 def update():
     #print(player.position)
     global skyColor
+    global light
     accRight.x *= 0.7
     accLeft.x *= 0.7
     acc.x = accRight.x + accLeft.x
@@ -470,12 +491,13 @@ def update():
         accJump.y = 0
         if not blockSolid("Down 2"):
             accFall.y *= 1.003
+        elif blockLiquid("Down 2"):
+            accFall.y *= 1
         else:
             accFall.y = -1
 
     player.position += acc
 
-    #skyLight.x = player.x
 
     accRight.x += held_keys['d'] * time.dt * 2
     accLeft.x -= held_keys['a'] * time.dt * 2
@@ -534,8 +556,11 @@ def update():
             except Exception:
                 pass
 
-    mediumColor = int((int(skyColorMap[int(skyColor)][0]) + int(skyColorMap[int(skyColor)][1]) + int(skyColorMap[int(skyColor)][2])) / 3)
-    playerLight.color = color.rgb(mediumColor, mediumColor, mediumColor)
+    mediumColor = int(((skyColorMap[int(skyColor)][0] + int(skyColorMap[int(skyColor)][1]) + int(skyColorMap[int(skyColor)][2])) / 3))
+    mediumColor1 = int((skyColorMap[int(skyColor)][0] + mediumColor + mediumColor + mediumColor) / 4)
+    mediumColor2 = int((skyColorMap[int(skyColor)][1] + mediumColor + mediumColor + mediumColor) / 4)
+    mediumColor3 = int((skyColorMap[int(skyColor)][2] + mediumColor + mediumColor + mediumColor) / 4)
+    light = color.rgb(mediumColor1 + 20, mediumColor2 + 20, mediumColor3 + 20)
     if skyColor >= 2390:
         skyColor = 0
     else:

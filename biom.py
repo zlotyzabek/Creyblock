@@ -26,7 +26,7 @@ class BiomGen:
         return structur
 
     def biomGen(self, sz, wys, swiat, biome):
-        biomes = {1: self.dessert, 2: self.frozen, 3: self.grass, 4: self.mountains, 5: self.path, 6: self.podzol}
+        biomes = {1: self.dessert, 2: self.frozen, 3: self.grass, 4: self.mountains, 5: self.mushroom, 6: self.path, 7: self.podzol}
         try:
             return biomes[biome](swiat)[wys]
         except Exception:
@@ -102,4 +102,15 @@ class BiomGen:
         for i in range(-1, -100 - swiat, -1):
             worldGen[i + swiat] = ([2, 2, 2, 0])
         worldGen[-97] = ([1, 1, 1, 0])
+        return worldGen
+
+    def mushroom(self, swiat):
+        worldGen = {}
+        worldGen[3 + swiat] = ([41, 41, 41,0])
+        worldGen[2 + swiat] = ([15, 15, 15, 0])
+        worldGen[1 + swiat] = ([14, 14, 14, 0])
+        worldGen[0 + swiat] = ([4, 4, 4, 0])
+        for i in range(-1, -100 - swiat, -1):
+            worldGen[i + swiat] = ([2, 2, 2, 0])
+        worldGen[-98] = ([1, 1, 1, 0])
         return worldGen

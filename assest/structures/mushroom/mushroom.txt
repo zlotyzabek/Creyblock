@@ -1,0 +1,12 @@
+0,1,mushroom_blue,1,0,0,41
+2,4,mushroom_brown,1,0,0,41
+5,8,mushroom_red,1,0,0,41
+9,10,blueMushroom,6,0,0,41
+11,30,redMushroom,6,0,0,41
+31,54,brownMushroom,6,0,0,41
+55,60,coal,4,20,50,2
+61,65,iron,3,20,50,2
+66,69,gold,2,20,50,2
+70,72,diament,2,20,50,2
+73,93,emerald,1,20,50,2
+94,100,sgc,1,20,50,2
